@@ -101,19 +101,30 @@ class _MyAppState extends State<MyApp> {
           ),
           body: Column(
             children: [
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchText = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Búsqueda de pictogramas',
+              Padding(
+                padding: const EdgeInsets.only(bottom:32.0),
+                child: TextField(
+                  style: const TextStyle(
+                    fontSize: 20,
+                    ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchText = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Búsqueda de pictogramas',
+                  ),
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 20),
+                  padding: const EdgeInsets.all(16),
+                  ),
                 onPressed: _searchImages,
                 child: const Text('Buscar'),
+                
               ),
               Expanded(
                 child: Stack(children: [
