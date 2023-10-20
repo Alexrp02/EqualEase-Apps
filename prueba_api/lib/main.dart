@@ -42,6 +42,8 @@ class _MyAppState extends State<MyApp> {
         'https://api.arasaac.org/v1/pictograms/es/search/$_searchText'));
     final List<dynamic> responseData = json.decode(response.body);
     setState(() {
+      _selected = false;
+      _selectedNumber = 0;
       _images = List.generate(
           responseData.length, (index) => {'url': null, 'selected': false});
     });
@@ -178,8 +180,7 @@ class _MyAppState extends State<MyApp> {
                                 copiedList.add(Map.from(element));
                               }
                             }
-                            return NewTaskScreen(
-                                images: copiedList);
+                            return NewTaskScreen(images: copiedList);
                           }));
                         },
                         child: Text('$_selectedNumber'),
