@@ -102,11 +102,14 @@ class _MyAppState extends State<MyApp> {
           body: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom:32.0),
+                padding: const EdgeInsets.only(bottom: 32.0),
                 child: TextField(
                   style: const TextStyle(
                     fontSize: 20,
-                    ),
+                  ),
+                  onSubmitted: (value) {
+                    _searchImages();
+                  },
                   onChanged: (value) {
                     setState(() {
                       _searchText = value;
@@ -121,10 +124,9 @@ class _MyAppState extends State<MyApp> {
                 style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 20),
                   padding: const EdgeInsets.all(16),
-                  ),
+                ),
                 onPressed: _searchImages,
                 child: const Text('Buscar'),
-                
               ),
               Expanded(
                 child: Stack(children: [
