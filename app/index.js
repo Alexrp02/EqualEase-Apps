@@ -5,6 +5,9 @@ import express  from "express";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+// API port
+const PORT = 3000;
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -17,22 +20,23 @@ const firebaseConfig = {
   measurementId: "G-KQB4HDZTZ4"
 };
 
-const api = express() ;
-api.use(express.json());
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const citiesRef = collection(db, "cities");
+const api = express() ;
+api.use(express.json());
 
-    const docRef = doc(db, "cities", "SF");
-const docSnap = await getDoc(docRef);
+// Import route files
+import tasksRoutes from "./routes/tasks.js";
+import studentsRoutes from "./routes/students.js";
+import teachersRoutes from "./routes/teachers.js";
 
-if (docSnap.exists()) {
-  console.log("Document data:", docSnap.data());
-} else {
-  // docSnap.data() will be undefined in this case
-  console.log("No such document!");
-}
+api.use("/tasks", tasksRoutes);
+api.use("/students", studentsRoutes);
+api.use("/teachers", teachersRoutes);
+
+api.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`) ;
+})
