@@ -10,8 +10,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install nodemon
+RUN npm install -g nodemon
+
 # Expose a port (if your Node.js app needs it)
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "./app/index.js"]
+CMD ["nodemon", "./app/index.js"]
