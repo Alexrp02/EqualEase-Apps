@@ -1,6 +1,7 @@
-const { initializeApp } = require('firebase/app');
-const { getFirestore, collection, doc, getDoc} = require('firebase/firestore');
-const express = require('express');
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, doc, setDoc, getDoc } from "firebase/firestore";
+import express  from "express";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -26,9 +27,7 @@ const db = getFirestore(app);
 
 const citiesRef = collection(db, "cities");
 
-async function getcity(){
-
-const docRef = doc(db, "cities", "SF");
+    const docRef = doc(db, "cities", "SF");
 const docSnap = await getDoc(docRef);
 
 if (docSnap.exists()) {
@@ -37,6 +36,3 @@ if (docSnap.exists()) {
   // docSnap.data() will be undefined in this case
   console.log("No such document!");
 }
-}
-
-getcity();
