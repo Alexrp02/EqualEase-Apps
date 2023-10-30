@@ -1,11 +1,15 @@
-import express from "express" ;
-const router = express.Router();
+const express = require("express");
+const SubtaskController = require("../controllers/students");
 
-// Define your routes here
-router.get('/', (req, res) => {
-    // Handle GET request for users
-    res.send('Get all users');
-  });
+const api = express.Router();
 
-// Export the router
-export default router;
+// Métodos: post (crear), get(leer), put(actualizar)
+
+api.post("/createStudent", SubtaskController.createStudent);
+// api.get("/task", TaskController.getAllTasks);
+// api.get("/task/:id", TaskController.getTask);
+// api.put("/task/:id", TaskController.updateTask);
+// api.delete("/task/:id", TaskController.deleteTask);
+
+
+module.exports = api;

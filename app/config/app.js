@@ -9,9 +9,11 @@ app.use(express.urlencoded({extended:true}));
 
 // Cargar rutas (cargar aquí todas las rutas)
 const subtask_routes = require("../routes/subtasks.js");
+const student_routes = require("../routes/students.js");
 
 // Rutas base
 app.use("/api", subtask_routes);
+app.use("/students", student_routes);
 
 module.exports = {
     app,
