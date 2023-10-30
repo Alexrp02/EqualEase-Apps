@@ -109,35 +109,6 @@ async function getSubtask(req, res) {
     }
 }
 
-// async function getSubtaskByTitle(req, res) {
-    
-//     const title = req.params.title;
-//     console.log(title);
-
-//     try {
-//         // Obtener la subtarea por título
-//         const subtaskRef = doc(db, "subtasks", title);
-//         const subtaskSnapshot = await getDoc(subtaskRef);
-
-//         // Comprobar si el documento de subtarea existe
-//         if (subtaskSnapshot.exists()) {
-//             const subtaskData = subtaskSnapshot.data();
-//             const subtask = new SubTask();
-//             subtask.title = subtaskData.title;
-//             subtask.description = subtaskData.description;
-//             subtask.images = subtaskData.images;
-//             subtask.pictograms = subtaskData.pictograms;
-            
-//             res.status(200).json({id: subtaskRef.id, ...subtask });
-//         } else {
-//             res.status(404).json({ error: "La subtarea no existe." });
-//         }
-//     } catch (error) {
-//         console.error("Error al obtener la subtarea por título:", error);
-//         res.status(500).send("Error en el servidor.");
-//     }
-// }
-
 async function getSubtaskByTitle(req, res) {
     const title = req.params.title;
 
