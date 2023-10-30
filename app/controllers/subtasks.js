@@ -1,21 +1,13 @@
 const { addDoc, collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc } = require("firebase/firestore");
 const { db } = require("../config/database.js");
-
-// Esto quizá sería mejor crear una subcarpeta /models que almacene
-// la estructura de cada una de las colecciones. Y así separar el modelo.
-// ¿Preguntar?
-
-// Define la estructura de datos para las subtareas
-const subtaskData = {
-    title: '',          // Título de la subtarea (string)
-    description: '',    // Descripción de la subtarea (string) - No puede estar vacía
-    images: [],         // Array de imágenes
-    pictograms: []      // Array de imágenes de pictogramas
-};
+const SubTask = require("../models/subtasks.js");
 
 // Crear una subtarea
 async function createSubtask(req, res) {
+
     // Obtén los datos de la solicitud y asígnales los valores adecuados
+    const subtaskData = new SubTask();
+
     subtaskData.title = req.body.title;
     subtaskData.description = req.body.description;
     subtaskData.images = req.body.images || [];
@@ -43,10 +35,12 @@ async function createSubtask(req, res) {
             res.status(400).json({ error: "La tarea ya existe." });
         } else {
             // Si no hay resultados, procedemos a crearla
-            const subtaskRef = await addDoc(collection(db, "subtasks"), subtaskData);
+            const subtaskRef = await addDoc(collection(db, "subtasks"), subtaskData.toJSON());
         
             console.log("Subtarea creada exitosamente!");
             res.status(201).json({ subtask: { id: subtaskRef.id, ...subtaskData } });
+            //const subtaskRef = await addDoc(collection(db, "subtasks"), subtaskJSON);
+
         }
 
     } catch (error) {
@@ -54,6 +48,9 @@ async function createSubtask(req, res) {
       res.status(500).send("Error en el servidor.");
     }
 }
+
+
+
 
 // Exportamos las funciones
 module.exports = {
