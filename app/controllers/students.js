@@ -10,21 +10,14 @@ const {
   deleteDoc,
 } = require("firebase/firestore");
 const { db } = require("../config/database.js");
+const Student  = require("../models/students.js");
 
 // Esto quizá sería mejor crear una subcarpeta /models que almacene
 // la estructura de cada una de las colecciones. Y así separar el modelo.
 // ¿Preguntar?
 
 // Define la estructura de datos para las subtareas
-const studentData = {
-  name: "", // Nombre del alumno (string)
-  surname: "", // Apellidos del alumno (string)
-  birthDate: "", // Fecha de nacimiento (string)
-  profilePicture: "", // Imagen de perfil (string)
-  parentsContact: "", // Contacto de los padres (string)
-  pendingTasks: [], // Array de referencias a tareas pendientes
-  doneTasks: [], // Array de referencias a tareas completadas
-};
+const studentData = new Student();
 
 // Crear una subtarea
 async function createStudent(req, res) {
@@ -76,13 +69,13 @@ async function createStudent(req, res) {
         .json({ error: "El estudiante ya está en la base de datos" });
     } else {
       // Si no hay resultados, procedemos a crearla
-      const studentRef = await addDoc(collection(db, "Students"), studentData);
+      const studentRef = await addDoc(collection(db, "Students"), studentData.toJSON());
 
       console.log(
         "Estudiante añadido a la base de datos con ID: ",
         studentRef.id
       );
-      res.status(201).json({ student: { id: studentRef.id, ...studentData } });
+      res.status(201).json({ student: { id: studentRef.id, ...studentData.toJSON() } });
     }
   } catch (error) {
     console.error("Error al crear el estudiante en Firestore:", error);
