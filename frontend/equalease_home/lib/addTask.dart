@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'addSubtask.dart';
 
 class AgregarTareaPage extends StatefulWidget {
   @override
@@ -66,7 +67,18 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Add functionality for adding subtasks
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CrearSubtareaForm(),
+                    ),
+                  ).then((subtarea) {
+                    if (subtarea != null) {
+                      // Aquí puedes manejar la lógica para agregar la subtarea a la tarea principal
+                      print('Subtarea guardada: $subtarea');
+                      // Agrega lógica para guardar la subtarea en la tarea principal
+                    }
+                  });
                 },
                 child: Text('Añadir Subtarea'),
               ),

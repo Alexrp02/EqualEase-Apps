@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 // Add functionality for Button 1
               },
-              child: const Text('ALUMNOS'),
+              child: const Text('ADMINISTRADORES'),
             ),
           ),
         ),
@@ -90,7 +90,7 @@ class MyApp extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => TasksPage()),
                 );
               },
-              child: const Text('ALUMNOS'),
+              child: const Text('ADMINISTRADORES'),
             ),
           ),
         ),
