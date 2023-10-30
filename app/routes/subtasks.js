@@ -6,10 +6,10 @@ const api = express.Router();
 // Métodos: post (crear), get(leer), put(actualizar)
 
 api.post("/subtask", SubtaskController.createSubtask);
-// api.get("/task", TaskController.getAllTasks);
-// api.get("/task/:id", TaskController.getTask);
-// api.put("/task/:id", TaskController.updateTask);
-// api.delete("/task/:id", TaskController.deleteTask);
-
+api.get("/subtask", SubtaskController.getAllSubtasks);
+api.get("/subtask/id/:id", SubtaskController.getSubtask);
+api.get("/subtask/title/:title", SubtaskController.getSubtaskByTitle);
+api.put("/subtask/id/:id", SubtaskController.updateSubtask);
+api.put("/subtask/id/:id", SubtaskController.deleteSubtask);
 
 module.exports = api;
