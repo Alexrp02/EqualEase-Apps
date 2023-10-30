@@ -10,7 +10,9 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  final _subtareasController = TextEditingController();
+  List<String> subtareas = [];
+  int contador = 1;
+  //final _subtareasController = TextEditingController();
   final _tipoController = TextEditingController();
   // File? _image;
 
@@ -18,9 +20,16 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
   void dispose() {
     _tituloController.dispose();
     _descripcionController.dispose();
-    _subtareasController.dispose();
+    //_subtareasController.dispose();
     _tipoController.dispose();
     super.dispose();
+  }
+
+  void _addSubtarea(String subtarea) {
+    setState(() {
+      subtareas.add('Subtarea $contador: $subtarea');
+      contador++;
+    });
   }
 
   @override
@@ -59,26 +68,20 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _subtareasController,
-                decoration: InputDecoration(
-                  labelText: 'Subtareas',
-                ),
+              Text(
+                'Subtareas:',
               ),
+              for (var subtarea in subtareas) Text(subtarea),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CrearSubtareaForm(),
+                      builder: (context) => CrearSubtareaForm(
+                        onSubtareaSaved: _addSubtarea,
+                      ),
                     ),
-                  ).then((subtarea) {
-                    if (subtarea != null) {
-                      // Aquí puedes manejar la lógica para agregar la subtarea a la tarea principal
-                      print('Subtarea guardada: $subtarea');
-                      // Agrega lógica para guardar la subtarea en la tarea principal
-                    }
-                  });
+                  );
                 },
                 child: Text('Añadir Subtarea'),
               ),
