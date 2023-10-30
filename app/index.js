@@ -1,3 +1,18 @@
+// Cargamos el fichero app
+const { app } = require("./config/app.js");
+const port = 3000
+
+// Levantamos el servidor
+app.listen(port, () => {
+  console.log(`API REST server is working on http://localhost:${port}`)
+});
+
+app.get("/", (req,res) => {
+  console.log("Recibida peticion");
+})
+
+/*
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, setDoc, getDoc } from "firebase/firestore";
@@ -41,3 +56,5 @@ api.use("/teachers", teachersRoutes);
 api.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`) ;
 })
+
+*/
