@@ -8,12 +8,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 // Cargar rutas (cargar aquí todas las rutas)
-//const hello_routes = require("../routes/hello.js");
-//const task_routes = require("../routes/tasks.js");
+const subtask_routes = require("../routes/subtasks.js");
 
 // Rutas base
-//app.use("/api", hello_routes);
-//app.use("/api", task_routes);
+app.use("/api", subtask_routes);
 
 module.exports = {
     app,
