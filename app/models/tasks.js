@@ -8,6 +8,14 @@ class Task {
         this.type = type;
     }
 
+    constructor (task) {
+        this.title = task.title;
+        this.description = task.description;
+        this.subtasks = task.subtasks;
+        this.image = task.image;
+        this.type = task.type;
+    }
+
     constructor () {
         this.title = "";
         this.description = "";

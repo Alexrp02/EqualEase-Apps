@@ -7,6 +7,14 @@ class Teacher {
         this.profilePicture = profilePicture;
     }
 
+    constructor (teacher) {
+        this.name = teacher.name;
+        this.surname = teacher.surname;
+        this.email = teacher.email;
+        this.students = teacher.students;
+        this.profilePicture = teacher.profilePicture;
+    }
+
     constructor () {
         this.name = "";
         this.surname = "";
