@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'tasks.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,8 +20,8 @@ class MyApp extends StatelessWidget {
             ),
             body: Center(
               child: (orientation == Orientation.portrait)
-                  ? _buildPortraitLayout()
-                  : _buildLandscapeLayout(),
+                  ? _buildPortraitLayout(context)
+                  : _buildLandscapeLayout(context),
             ),
           );
         },
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Widget _buildPortraitLayout() {
+  Widget _buildPortraitLayout(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -69,7 +70,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Widget _buildLandscapeLayout() {
+  Widget _buildLandscapeLayout(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -84,7 +85,10 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // Add functionality for Button 1
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TasksPage()),
+                );
               },
               child: const Text('ALUMNOS'),
             ),
