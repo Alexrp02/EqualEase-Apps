@@ -7,10 +7,6 @@ app.listen(port, () => {
   console.log(`API REST server is working on http://localhost:${port}`)
 });
 
-app.get("/", (req,res) => {
-  console.log("Recibida peticion");
-})
-
 /*
 
 // Import the functions you need from the SDKs you need
