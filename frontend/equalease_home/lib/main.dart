@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 // Add functionality for Button 1
               },
-              child: const Text('ADMINISTRADORES'),
+              child: const Text('ADMINISTRADORES_notyet'),
             ),
           ),
         ),
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 // Add functionality for Button 2
               },
-              child: const Text('ESTUDIANTES'),
+              child: const Text('ESTUDIANTES_notyet'),
             ),
           ),
         ),

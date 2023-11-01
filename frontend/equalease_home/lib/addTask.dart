@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'addSubtask.dart';
+import 'task.dart'; // Importar la clase Tarea
 
 class AgregarTareaPage extends StatefulWidget {
+  final Function(Tarea) onTareaSaved; // Ajusta el tipo de parámetro
+
+  AgregarTareaPage({required this.onTareaSaved});
+
   @override
   _AgregarTareaPageState createState() => _AgregarTareaPageState();
 }
@@ -12,15 +17,12 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
   final _descripcionController = TextEditingController();
   List<String> subtareas = [];
   int contador = 1;
-  //final _subtareasController = TextEditingController();
   final _tipoController = TextEditingController();
-  // File? _image;
 
   @override
   void dispose() {
     _tituloController.dispose();
     _descripcionController.dispose();
-    //_subtareasController.dispose();
     _tipoController.dispose();
     super.dispose();
   }
@@ -93,20 +95,14 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  //pickImage();
-                },
-                child: Text('Seleccionar Imagen'),
-              ),
-              // _image != null
-              //     ? Image.file(_image!)
-              //     : SizedBox(
-              //         height: 100,
-              //       ),
-              ElevatedButton(
-                onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Add functionality for saving task
-                    // AÑADIR AQUI EL INGRESO DE DATOS A LA BASE DE DATOS
+                    Tarea nuevaTarea = Tarea( // Crear una nueva instancia de Tarea
+                      titulo: _tituloController.text,
+                      descripcion: _descripcionController.text,
+                      subtareas: subtareas,
+                      tipo: _tipoController.text,
+                    );
+                    widget.onTareaSaved(nuevaTarea); // Llamar a la función onTareaSaved con la nueva tarea
                     Navigator.pop(context);
                   }
                 },
@@ -118,13 +114,4 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
       ),
     );
   }
-
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 }
