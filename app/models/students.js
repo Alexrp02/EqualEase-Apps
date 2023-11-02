@@ -1,14 +1,14 @@
 class Student {
 
-    constructor (student) {
-        this.name = student.name;
-        this.surname = student.surname;
-        this.birthDate = student.birthDate;
-        this.profilePicture = student.profilePicture;
-        this.parentsContact = student.parentsContact;
-        this.pendingTasks = student.pendingTasks;
-        this.doneTasks = student.doneTasks;
-    }
+    // constructor (student) {
+    //     this.name = student.name;
+    //     this.surname = student.surname;
+    //     this.birthDate = student.birthDate;
+    //     this.profilePicture = student.profilePicture;
+    //     this.parentsContact = student.parentsContact;
+    //     this.pendingTasks = student.pendingTasks;
+    //     this.doneTasks = student.doneTasks;
+    // }
 
     toJSON() {
         return {
