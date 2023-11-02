@@ -88,11 +88,7 @@ async function getSubtask(req, res) {
         // Comprobar si el documento de subtarea existe
         if (subtaskSnapshot.exists()) {
             const subtaskData = subtaskSnapshot.data();
-            const subtask = new Subtask();
-            subtask.title = subtaskData.title;
-            subtask.description = subtaskData.description;
-            subtask.images = subtaskData.images;
-            subtask.pictograms = subtaskData.pictograms;
+            const subtask = new Subtask(subtaskData);
 
             res.status(200).json({id: subtaskRef.id, ...subtask });
         } else {
@@ -118,11 +114,7 @@ async function getSubtaskByTitle(req, res) {
             // Obtener el primer documento que coincide con el título
             const subtaskDoc = subtaskQuerySnapshot.docs[0];
             const subtaskData = subtaskDoc.data();
-            const subtask = new Subtask();
-            subtask.title = subtaskData.title;
-            subtask.description = subtaskData.description;
-            subtask.images = subtaskData.images;
-            subtask.pictograms = subtaskData.pictograms;
+            const subtask = new Subtask(subtaskData);
 
             res.status(200).json({id: subtaskDoc.id, ...subtask });
         } else {
