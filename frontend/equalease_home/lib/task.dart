@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Tarea {
   String titulo;
   String descripcion;

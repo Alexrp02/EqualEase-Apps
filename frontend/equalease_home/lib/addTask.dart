@@ -17,13 +17,13 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
   final _descripcionController = TextEditingController();
   List<String> subtareas = [];
   int contador = 1;
-  final _tipoController = TextEditingController();
+  String? _tipoSeleccionado;
+  final List<String> _opcionesTipo = ['Fija', 'Demanda']; // Opciones de tipo
 
   @override
   void dispose() {
     _tituloController.dispose();
     _descripcionController.dispose();
-    _tipoController.dispose();
     super.dispose();
   }
 
@@ -87,11 +87,26 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
                 },
                 child: Text('Añadir Subtarea'),
               ),
-              TextFormField(
-                controller: _tipoController,
-                decoration: InputDecoration(
-                  labelText: 'Tipo',
-                ),
+              DropdownButtonFormField<String>(
+                value: _tipoSeleccionado,
+                decoration: InputDecoration(labelText: 'Tipo'),
+                items: _opcionesTipo.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _tipoSeleccionado = newValue;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty || value == 'Tipo') {
+                    return 'Por favor seleccione un tipo';
+                  }
+                  return null;
+                },
               ),
               ElevatedButton(
                 onPressed: () {
@@ -100,7 +115,7 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
                       titulo: _tituloController.text,
                       descripcion: _descripcionController.text,
                       subtareas: subtareas,
-                      tipo: _tipoController.text,
+                      tipo: _tipoSeleccionado!,
                     );
                     widget.onTareaSaved(nuevaTarea); // Llamar a la función onTareaSaved con la nueva tarea
                     Navigator.pop(context);
