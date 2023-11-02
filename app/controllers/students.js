@@ -54,7 +54,7 @@ async function createStudent(req, res) {
       return;
     }
 
-    // Verificar si ya existe una subtarea con el mismo titulo
+    // Verificar si ya existe un alumno con el mismo nombre
     const studentQuery = query(
       collection(db, "Students"),
       where("name", "==", studentData.name),
@@ -63,7 +63,7 @@ async function createStudent(req, res) {
     const studentQuerySnapshot = await getDocs(studentQuery);
 
     if (!studentQuerySnapshot.empty) {
-      // Si hay resultados en la consulta, significa que ya existe una tarea con el mismo título
+      // Si hay resultados en la consulta, significa que ya existe un alumno con el mismo título
       res
         .status(400)
         .json({ error: "El estudiante ya está en la base de datos" });
