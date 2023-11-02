@@ -6,12 +6,7 @@ const Subtask = require("../models/subtasks.js");
 async function createSubtask(req, res) {
 
     // Obtén los datos de la solicitud y asígnales los valores adecuados
-    const subtaskData = new Subtask();
-
-    subtaskData.title = req.body.title;
-    subtaskData.description = req.body.description;
-    subtaskData.images = req.body.images || [];
-    subtaskData.pictograms = req.body.pictograms || [];
+    const subtaskData = new Subtask(req.body);
   
     try {
 

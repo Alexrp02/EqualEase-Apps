@@ -3,8 +3,8 @@ class Subtask {
     constructor(subtask) {
         this.title = subtask.title;
         this.description = subtask.description;
-        this.images = subtask.images;
-        this.pictograms = subtask.pictograms;
+        this.images = subtask.images || [];
+        this.pictograms = subtask.pictograms || [];
     }
 
     toJSON() {

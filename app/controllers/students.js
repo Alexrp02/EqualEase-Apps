@@ -16,9 +16,6 @@ const Student  = require("../models/students.js");
 // la estructura de cada una de las colecciones. Y así separar el modelo.
 // ¿Preguntar?
 
-// Define la estructura de datos para las subtareas
-const studentData = new Student();
-
 // Crear una subtarea
 async function createStudent(req, res) {
   // Obtén los datos de la solicitud y asígnales los valores adecuados
