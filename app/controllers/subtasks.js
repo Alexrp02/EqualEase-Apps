@@ -30,7 +30,7 @@ async function createSubtask(req, res) {
             res.status(400).json({ error: "La tarea ya existe." });
         } else {
             // Si no hay resultados, procedemos a crearla
-            const subtaskRef = await addDoc(collection(db, "subtasks"), subtaskData.toJSON());
+            const subtaskRef = await addDoc(collection(db, "subtasksPrueba"), subtaskData.toJSON());
                    
             console.log("Subtarea creada exitosamente!");
             res.status(201).json({id: subtaskRef.id, ...subtaskData });

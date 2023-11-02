@@ -10,6 +10,6 @@ api.get("/subtask", SubtaskController.getAllSubtasks);
 api.get("/subtask/id/:id", SubtaskController.getSubtask);
 api.get("/subtask/title/:title", SubtaskController.getSubtaskByTitle);
 api.put("/subtask/id/:id", SubtaskController.updateSubtask);
-api.put("/subtask/id/:id", SubtaskController.deleteSubtask);
+api.delete("/subtask/id/:id", SubtaskController.deleteSubtask);
 
 module.exports = api;

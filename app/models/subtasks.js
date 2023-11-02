@@ -9,6 +9,7 @@ class Subtask {
 
     toJSON() {
         return {
+            _id: this.title,
             title: this.title,
             description: this.description,
             images: this.images,
