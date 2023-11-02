@@ -13,7 +13,7 @@ const student_routes = require("../routes/students.js");
 
 // Rutas base
 app.use("/api", subtask_routes);
-app.use("/students", student_routes);
+app.use("/api", student_routes);
 
 module.exports = {
     app,

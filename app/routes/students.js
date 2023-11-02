@@ -5,7 +5,7 @@ const api = express.Router();
 
 // Métodos: post (crear), get(leer), put(actualizar)
 
-api.post("/createStudent", SubtaskController.createStudent);
+api.post("/student/new", SubtaskController.createStudent);
 // api.get("/task", TaskController.getAllTasks);
 // api.get("/task/:id", TaskController.getTask);
 // api.put("/task/:id", TaskController.updateTask);
