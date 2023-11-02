@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 
-class CrearSubtareaForm extends StatefulWidget {
-  final Function(String) onSubtareaSaved;
+class CrearSubtaskForm extends StatefulWidget {
+  final Function(String) onSubtaskSaved;
 
-  CrearSubtareaForm({required this.onSubtareaSaved});
+  CrearSubtaskForm({required this.onSubtaskSaved});
 
   @override
-  _CrearSubtareaFormState createState() => _CrearSubtareaFormState();
+  _CrearSubtaskFormState createState() => _CrearSubtaskFormState();
 }
 
-class _CrearSubtareaFormState extends State<CrearSubtareaForm> {
-  final _subtareaController = TextEditingController();
+class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
+  final _subtaskController = TextEditingController();
   String? _errorText;
 
   @override
   void dispose() {
-    _subtareaController.dispose();
+    _subtaskController.dispose();
     super.dispose();
   }
 
-  void _saveSubtarea() {
-    if (_subtareaController.text.isEmpty) {
+  void _saveSubtask() {
+    if (_subtaskController.text.isEmpty) {
       setState(() {
-        _errorText = 'Este campo no puede estar vacío';
+        _errorText = 'Este campo no puede estar vacio';
       });
     } else {
-      widget.onSubtareaSaved(_subtareaController.text);
+      widget.onSubtaskSaved(_subtaskController.text);
       Navigator.pop(context);
     }
   }
@@ -42,15 +42,15 @@ class _CrearSubtareaFormState extends State<CrearSubtareaForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              controller: _subtareaController,
+              controller: _subtaskController,
               decoration: InputDecoration(
-                labelText: 'Subtarea',
+                labelText: 'Subtask',
                 errorText: _errorText,
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _saveSubtarea,
+              onPressed: _saveSubtask,
               child: Text('Guardar Subtarea'),
             ),
              ElevatedButton(

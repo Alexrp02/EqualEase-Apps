@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:api_treatment/models/subtask.dart';
+import 'package:equalease_home/models/task.dart';
 
 // Ejemplo de formato de respuesta de peticion GET: http://localhost:3000/api/subtask/id/$id
 // {
@@ -10,16 +10,16 @@ import 'package:api_treatment/models/subtask.dart';
 //     "images": [],
 //     "pictograms": []
 // }
-Future<Subtask> getSubtaskById(String id) async {
-  var url = Uri.parse("http://localhost:3000/api/subtask/id/$id");
+Future<Task> getTaskById(String id) async {
+  var url = Uri.parse("http://localhost:3000/api/task/id/$id");
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
-    final subtask = Subtask.fromJson(response.body);
-    return subtask; // Devolver el objeto Subtask en caso de éxito
+    final task = Task.fromJson(response.body);
+    return task; // Devolver el objeto Subtask en caso de éxito
   } else {
     throw Exception(
-        "No se pudo obtener la subtask con id = $id"); // Lanzar una excepción en caso de error
+        "No se pudo obtener la task con id = $id"); // Lanzar una excepción en caso de error
   }
 }
 
@@ -31,17 +31,17 @@ Future<Subtask> getSubtaskById(String id) async {
 //     "images": [],
 //     "pictograms": []
 // }
-Future<Subtask> getSubtaskByTitle(String title) async {
+Future<Task> getTaskByTitle(String title) async {
   String encodedTitle = Uri.encodeComponent(title);
-  var url = Uri.parse("http://localhost:3000/api/subtask/title/$encodedTitle");
+  var url = Uri.parse("http://localhost:3000/api/task/title/$encodedTitle");
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
-    final subtask = Subtask.fromJson(response.body);
-    return subtask; // Devolver el objeto Subtask en caso de éxito
+    final task = Task.fromJson(response.body);
+    return task; // Devolver el objeto Subtask en caso de éxito
   } else {
     throw Exception(
-        "No se pudo obtener la subtask con titulo = $title"); // Lanzar una excepción en caso de error
+        "No se pudo obtener la task con titulo = $title"); // Lanzar una excepción en caso de error
   }
 }
 
@@ -64,21 +64,21 @@ Future<Subtask> getSubtaskByTitle(String title) async {
 //         }
 //     ]
 // }
-Future<List<Subtask>> getAllSubtasks() async {
-  var url = Uri.parse("http://localhost:3000/api/subtask");
+Future<List<Task>> getAllTasks() async {
+  var url = Uri.parse("http://localhost:3000/api/task");
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
-    final List<dynamic> subtaskListData =
-        json.decode(response.body)['subtasks'];
+    final List<dynamic> tasksListData =
+        json.decode(response.body)['tasks'];
 
-    List<Subtask> subtasks = subtaskListData.map((data) {
-      return Subtask.fromMap(data);
+    List<Task> tasks = tasksListData.map((data) {
+      return Task.fromMap(data);
     }).toList();
 
-    return subtasks; // Devolver la lista de objetos Subtask en caso de éxito
+    return tasks; // Devolver la lista de objetos Subtask en caso de éxito
   } else {
-    throw Exception("No se pudieron obtener las subtasks");
+    throw Exception("No se pudieron obtener las tasks");
   }
 }
 
@@ -90,11 +90,11 @@ Future<List<Subtask>> getAllSubtasks() async {
 //     "images": [],
 //     "pictograms": []
 // }
-Future<void> createSubtask(Subtask subtask) async {
-  var url = Uri.parse("http://localhost:3000/api/subtask");
+Future<void> createTask(Task task) async {
+  var url = Uri.parse("http://localhost:3000/api/task");
 
   // Convierte el objeto Subtask a una cadena JSON (sin meter el id).
-  String jsonBody = subtask.toJsonWithoutId();
+  String jsonBody = task.toJsonWithoutId();
 
   // Petición tipo post
   var response = await http.post(
@@ -107,18 +107,18 @@ Future<void> createSubtask(Subtask subtask) async {
 
   if (response.statusCode == 201) {
     // La solicitud POST fue exitosa.
-    print("Subtask creada con éxito.");
+    print("task creada con éxito.");
     // La respuesta incluye los datos de la tarea recién creada,
     // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
     // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
     final body = json.decode(response.body);
     // print('id: ${body['id']}');
-    subtask.id = body['id'];
+    task.id = body['id'];
     // print('subtask.id (createSubtask): ${subtask.id}');
   } else {
     // Manejar errores u otra lógica en caso de que la solicitud no sea exitosa.
     print(
-        "Error al crear la subtask [${response.statusCode}: ${response.body}]");
+        "Error al crear la task [${response.statusCode}: ${response.body}]");
   }
 }
 
@@ -126,12 +126,12 @@ Future<void> createSubtask(Subtask subtask) async {
 // {
 //     "message": "Subtarea actualizada con éxito"
 // }
-Future<void> updateSubtask(Subtask subtask) async {
-  var url = Uri.parse("http://localhost:3000/api/subtask/id/${subtask.id}");
+Future<void> updateTask(Task task) async {
+  var url = Uri.parse("http://localhost:3000/api/task/id/${task.id}");
 
   // Se debe tener cuidado porque el id no debe modificarse
   // Por ello no se pasa nunca como argumento json
-  String jsonBody = subtask.toJsonWithoutId();
+  String jsonBody = task.toJsonWithoutId();
 
   var response = await http.put(
     url,
@@ -143,11 +143,11 @@ Future<void> updateSubtask(Subtask subtask) async {
 
   if (response.statusCode == 200) {
     // La solicitud PUT fue exitosa.
-    print("Subtask actualizada con éxito.");
+    print("Task actualizada con éxito.");
   } else {
     // Manejar errores u otra lógica en caso de que la solicitud no sea exitosa.
     print(
-        "Error al actualizar la subtask [${response.statusCode}: ${response.body}]");
+        "Error al actualizar la task [${response.statusCode}: ${response.body}]");
   }
 }
 
