@@ -1,9 +1,10 @@
 class Subtask {
-    constructor() {
-        this.title = '';
-        this.description = '';
-        this.images = [];
-        this.pictograms = [];
+
+    constructor(subtask) {
+        this.title = subtask.title;
+        this.description = subtask.description;
+        this.images = subtask.images;
+        this.pictograms = subtask.pictograms;
     }
 
     toJSON() {

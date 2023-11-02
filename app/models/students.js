@@ -1,15 +1,4 @@
 class Student {
-    constructor() {
-        
-            this.name= ""; // Nombre del alumno (string)
-            this.surname= ""; // Apellidos del alumno (string)
-            this.birthDate= ""; // Fecha de nacimiento (string)
-            this.profilePicture= ""; // Imagen de perfil (string)
-            this.parentsContact= ""; // Contacto de los padres (string)
-            this.pendingTasks= []; // Array de referencias a tareas pendientes
-            this.doneTasks= []; // Array de referencias a tareas completadas
-          
-    }
 
     constructor (student) {
         this.name = student.name;
