@@ -1,3 +1,4 @@
+import 'package:equalease_home/students.dart';
 import 'package:flutter/material.dart';
 import 'tasks.dart';
 
@@ -104,7 +105,10 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // Add functionality for Button 2
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StudentsPage()),
+                );
               },
               child: const Text('ESTUDIANTES'),
             ),
