@@ -1,15 +1,13 @@
 const express = require("express");
-const SubtaskController = require("../controllers/students");
+const StudentsController = require("../controllers/students");
 
 const api = express.Router();
 
-// Métodos: post (crear), get(leer), put(actualizar)
+// Métodos: post (crear), get(leer), put(actualizar), delete(eliminar)
 
-api.post("/student/new", SubtaskController.createStudent);
-// api.get("/task", TaskController.getAllTasks);
-// api.get("/task/:id", TaskController.getTask);
-// api.put("/task/:id", TaskController.updateTask);
-// api.delete("/task/:id", TaskController.deleteTask);
-
+api.post("/student", StudentsController.createStudent);
+api.get("/student/id/:id", StudentsController.getStudentById);
+api.get("/student/name/:name", StudentsController.getStudentByName);
+api.put("/student/id/:id", StudentsController.updateStudent);
 
 module.exports = api;

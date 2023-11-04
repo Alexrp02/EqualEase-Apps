@@ -1,86 +1,117 @@
-const {
-  addDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-} = require("firebase/firestore");
+const { addDoc, collection, query, where, getDocs, doc, getDoc, updateDoc } = require("firebase/firestore");
 const { db } = require("../config/database.js");
-const Student  = require("../models/students.js");
+const Student = require("../models/students.js");
 
-// Esto quizá sería mejor crear una subcarpeta /models que almacene
-// la estructura de cada una de las colecciones. Y así separar el modelo.
-// ¿Preguntar?
+const collectionName = "students";
 
-// Crear una subtarea
+// Create a student
 async function createStudent(req, res) {
-  // Obtén los datos de la solicitud y asígnales los valores adecuados
-  studentData.name = req.body.name;
-  studentData.surname = req.body.surname;
-  studentData.birthDate = req.body.birthDate;
-  studentData.profilePicture = req.body.profilePicture || "";
-  studentData.parentsContact = req.body.parentsContact;
-  studentData.pendingTasks = req.body.pendingTasks || [];
-  studentData.doneTasks = req.body.doneTasks || [];
+  const studentData = new Student(req.body);
 
   try {
-    // Verificar campos vacíos
-    if (!studentData.name) {
-      res.status(400).json({ error: "Student's name can't be empty." });
-      return;
-    }
 
-    if (!studentData.surname) {
-      res.status(400).json({ error: "Student's surname can't be empty." });
-      return;
-    }
+      // Verificar campos vacíos
+      if (!studentData.name) {
+          res.status(400).json({ error: "Student's name cannot be empty.'" });
+          return;
+      }
 
-    if (!studentData.birthDate) {
-      res.status(400).json({ error: "Student's birthdate can't be empty." });
-      return;
-    }
+      if (!studentData.surname) {
+          res.status(400).json({ error: "Student's surname cannot be empty." });
+          return;
+      }
 
-    if (!studentData.parentsContact) {
-      res
-        .status(400)
-        .json({ error: "Student's partents contact can't be empty." });
-      return;
-    }
+      // check if student exists. how??
 
-    // Verificar si ya existe un alumno con el mismo nombre
-    const studentQuery = query(
-      collection(db, "Students"),
-      where("name", "==", studentData.name),
-      where("surname", "==", studentData.surname)
-    );
-    const studentQuerySnapshot = await getDocs(studentQuery);
+      const ref = await addDoc(collection(db, collectionName), studentData.toJSON());
+              
+      console.log(`Created new student (name: ${studentData.name}, surname: ${studentData.surname}).`);
+      res.status(201).json({id: ref.id, ...studentData });
+      
 
-    if (!studentQuerySnapshot.empty) {
-      // Si hay resultados en la consulta, significa que ya existe un alumno con el mismo título
-      res
-        .status(400)
-        .json({ error: "El estudiante ya está en la base de datos" });
-    } else {
-      // Si no hay resultados, procedemos a crearla
-      const studentRef = await addDoc(collection(db, "Students"), studentData.toJSON());
-
-      console.log(
-        "Estudiante añadido a la base de datos con ID: ",
-        studentRef.id
-      );
-      res.status(201).json({ student: { id: studentRef.id, ...studentData.toJSON() } });
-    }
   } catch (error) {
-    console.error("Error al crear el estudiante en Firestore:", error);
-    res.status(500).send("Error en el servidor.");
+      console.error("Error creating student in Firestore:", error);
+      res.status(500).send("Server error.");        
   }
+}
+
+// Get student (id)
+async function getStudentById(req, res) {
+    const id = req.params.id;
+
+    try {
+        // Obtener una referencia al documento de subtarea por su ID
+        const ref = doc(db, collectionName, id);
+
+        // Obtener el documento
+        const snapshot = await getDoc(ref);
+
+        // Comprobar si el documento de subtarea existe
+        if (snapshot.exists()) {
+            const studentData = snapshot.data();
+            const student = new Student(studentData);
+
+            res.status(200).json({id: ref.id, ...student });
+        } else {
+            res.status(404).json({ error: `Student with id=${id} does not exist.`});
+        }
+    } catch (error) {
+        console.error("Error getting student from Firestore:", error);
+        res.status(500).send("Server error.");   
+    }
+}
+
+// Get teacher (name)
+async function getStudentByName(req, res) {
+    const name = req.params.name; // Assuming the teacher's name is part of the route parameters
+
+    try {
+        // Query the Firestore collection to find a teacher with the specified name
+        const nameQuery = query(collection(db, collectionName), where("name", "==", name));
+        const querySnapshot = await getDocs(nameQuery);
+
+        if (!querySnapshot.empty) {
+            // Assuming you want to get the first teacher found with the specified name
+            const studentId = querySnapshot.docs[0].id;
+            const studentData = querySnapshot.docs[0].data();
+            const student = new Student(studentData);
+
+            res.status(200).json({id: studentId, ...student});
+        } else {
+            res.status(404).json({ error: `Student with name ${name} does not exist.` });
+        }
+    } catch (error) {
+        console.error("Error getting student from Firestore:", error);
+        res.status(500).send("Server error.");
+    }
+}
+
+async function updateStudent(req, res) {
+    const id = req.params.id;
+    const updatedData = req.body;
+
+    try {
+        const ref = doc(db, collectionName, id);
+        const snapshot = await getDoc(ref);
+
+        if (snapshot.exists()) {
+            // El documento existe, proceder a la actualización
+            await updateDoc(ref, updatedData);
+            res.status(200).json({ message: `Student with id=${id} updated successfully` });
+        } else {
+            // El documento no existe
+            res.status(404).json({ error: `Student with id=${id} does not exist.`});
+        }
+    } catch (error) {
+        console.error("Error updating student from Firestore:", error);
+        res.status(500).send("Server error.");
+    }
 }
 
 // Exportamos las funciones
 module.exports = {
-  createStudent,
-};
+    createStudent,
+    getStudentById,
+    getStudentByName,
+    updateStudent,
+}
