@@ -4,8 +4,8 @@ class Student {
         this.name = student.name;
         this.surname = student.surname;
         this.profilePicture = student.profilePicture || "";
-        this.pendingTasks = student.pendingTasks || "";
-        this.doneTasks = student.doneTasks || "";
+        this.pendingTasks = student.pendingTasks || [];
+        this.doneTasks = student.doneTasks || [];
     }
 
     toJSON() {

@@ -3,7 +3,7 @@ const SubtaskController = require("../controllers/subtasks");
 
 const api = express.Router();
 
-// Métodos: post (crear), get(leer), put(actualizar)
+// Métodos: post (crear), get(leer), put(actualizar), delete(eliminar)
 
 api.post("/subtask", SubtaskController.createSubtask);
 api.get("/subtask", SubtaskController.getAllSubtasks);
