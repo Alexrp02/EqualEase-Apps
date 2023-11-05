@@ -1,18 +1,93 @@
 openapi: 3.0.0
 info:
-  title: Subtasks API
-  description: API for managing subtasks.
+  title: EqualEase-home API
   version: 1.0.0
+  description: API para gestionar las alumnos, profesores y tareas y subtareas
 servers:
-  - url: https://api.yourdomain.com/v1
-    description: Main production server
+  - url: 'http://localhost:3000/api'
+    description: Local server
 paths:
+  /student:
+    post:
+      tags:
+        - Student
+      summary: Create a new student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '201':
+          description: Student created successfully
+    get:
+      tags:
+        - Student
+      summary: Retrieve a list of students
+      responses:
+        '200':
+          description: A list of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+  /student/id/{id}:
+    get:
+      tags:
+        - Student
+      summary: Get a student by their ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Student retrieved successfully
+    put:
+      tags:
+        - Student
+      summary: Update a student by their ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Student updated successfully
+  /student/name/{name}:
+    get:
+      tags:
+        - Student
+      summary: Get a student by their name
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Student retrieved successfully
+
+  # Subtasks
   /subtask:
     post:
-      summary: Create a new subtask
-      operationId: createSubtask
       tags:
         - Subtask
+      summary: Create a new subtask
       requestBody:
         required: true
         content:
@@ -22,59 +97,41 @@ paths:
       responses:
         '201':
           description: Subtask created successfully
-        '400':
-          description: Bad request
-
     get:
-      summary: Get all subtasks
-      operationId: getAllSubtasks
       tags:
         - Subtask
+      summary: Retrieve all subtasks
       responses:
         '200':
-          description: An array of subtasks
+          description: A list of subtasks
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Subtask'
-        '404':
-          description: No subtasks found
-
   /subtask/id/{id}:
     get:
-      summary: Get a subtask by ID
-      operationId: getSubtask
       tags:
         - Subtask
+      summary: Get a subtask by ID
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          description: Unique identifier of the subtask
           schema:
             type: string
       responses:
         '200':
-          description: Details of the subtask
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Subtask'
-        '404':
-          description: Subtask not found
-
+          description: Subtask retrieved successfully
     put:
-      summary: Update a subtask by ID
-      operationId: updateSubtask
       tags:
         - Subtask
+      summary: Update a subtask by ID
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          description: Unique identifier of the subtask to update
           schema:
             type: string
       requestBody:
@@ -86,66 +143,283 @@ paths:
       responses:
         '200':
           description: Subtask updated successfully
-        '404':
-          description: Subtask not found
-
     delete:
+      tags:
+        - Subtask
       summary: Delete a subtask by ID
-      operationId: deleteSubtask
-      tags:
-        - Subtask
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          description: Unique identifier of the subtask to delete
           schema:
             type: string
       responses:
-        '200':
+        '204':
           description: Subtask deleted successfully
-        '404':
-          description: Subtask not found
-
-  /subtask/title/{title}:
-    get:
-      summary: Get a subtask by title
-      operationId: getSubtaskByTitle
+  # Tasks
+  /task:
+    post:
       tags:
-        - Subtask
-      parameters:
-        - name: title
-          in: path
-          required: true
-          description: Title of the subtask
-          schema:
-            type: string
+        - Task
+      summary: Create a new task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task created successfully
+    get:
+      tags:
+        - Task
+      summary: Retrieve all tasks
       responses:
         '200':
-          description: Details of the subtask
+          description: A list of all tasks
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Subtask'
-        '404':
-          description: Subtask not found
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+  /task/id/{id}:
+    get:
+      tags:
+        - Task
+      summary: Get a task by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task retrieved successfully
+    put:
+      tags:
+        - Task
+      summary: Update a task by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Task updated successfully
+    delete:
+      tags:
+        - Task
+      summary: Delete a task by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Task deleted successfully
+  /task/type/{type}:
+    get:
+      tags:
+        - Task
+      summary: Get tasks by type
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+  /task/title/{title}:
+    get:
+      tags:
+        - Task
+      summary: Get a task by title
+      parameters:
+        - in: path
+          name: title
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task retrieved successfully
 
+  # Teachers
+  /teacher:
+    post:
+      tags:
+        - Teacher
+      summary: Create a new teacher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+      responses:
+        '201':
+          description: Teacher created successfully
+  /teacher/id/{id}:
+    get:
+      tags:
+        - Teacher
+      summary: Get a teacher by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Teacher retrieved successfully
+    put:
+      tags:
+        - Teacher
+      summary: Update a teacher by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+      responses:
+        '200':
+          description: Teacher updated successfully
+  /teacher/name/{name}:
+    get:
+      tags:
+        - Teacher
+      summary: Get a teacher by name
+      parameters:
+        - in: path
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Teacher retrieved successfully
 components:
   schemas:
+    Student:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        profilePicture:
+          type: string
+          format: uri
+        pendingTasks:
+          type: array
+          items:
+            type: string
+            format: Reference to Task
+        doneTasks:
+          type: array
+          items:
+            type: string
+            format: Reference to Task
+      required:
+        - name
+        - surname
+
     Subtask:
       type: object
-      required:
-        - id
-        - title
-        - status
       properties:
-        id:
+        _id:
           type: string
-          description: Unique identifier for the subtask
         title:
           type: string
-          description: Title of the subtask
-        status:
+        description:
           type: string
-          description: Current status of the subtask
-        # Add other subtask properties here
+        image:
+          type: string
+          format: uri
+        pictogram:
+          type: string
+          format: uri
+        audio:
+          type: string
+          format: uri
+        video:
+          type: string
+          format: uri
+      required:
+        - _id
+        - title
+        - description
+
+    Task:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        subtasks:
+          type: array
+          items:
+            type: string
+            format: Reference to Subtask
+        image:
+          type: string
+          format: uri
+        pictogram:
+          type: string
+          format: uri
+        type:
+          type: string
+          enum:
+            - FixedType
+            - RequestType
+      required:
+        - title
+        - description
+
+    Teacher:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+          format: email
+        profilePicture:
+          type: string
+          format: uri
+        students:
+          type: array
+          items:
+            type: string
+            format: Reference to Student
+      required:
+        - name
+        - surname
+        - email
+
