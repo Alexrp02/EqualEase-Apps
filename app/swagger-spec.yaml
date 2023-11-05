@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+  title: Subtasks API
+  description: API for managing subtasks.
+  version: 1.0.0
+servers:
+  - url: https://api.yourdomain.com/v1
+    description: Main production server
+paths:
+  /subtask:
+    post:
+      summary: Create a new subtask
+      operationId: createSubtask
+      tags:
+        - Subtask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subtask'
+      responses:
+        '201':
+          description: Subtask created successfully
+        '400':
+          description: Bad request
+
+    get:
+      summary: Get all subtasks
+      operationId: getAllSubtasks
+      tags:
+        - Subtask
+      responses:
+        '200':
+          description: An array of subtasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subtask'
+        '404':
+          description: No subtasks found
+
+  /subtask/id/{id}:
+    get:
+      summary: Get a subtask by ID
+      operationId: getSubtask
+      tags:
+        - Subtask
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the subtask
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the subtask
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subtask'
+        '404':
+          description: Subtask not found
+
+    put:
+      summary: Update a subtask by ID
+      operationId: updateSubtask
+      tags:
+        - Subtask
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the subtask to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subtask'
+      responses:
+        '200':
+          description: Subtask updated successfully
+        '404':
+          description: Subtask not found
+
+    delete:
+      summary: Delete a subtask by ID
+      operationId: deleteSubtask
+      tags:
+        - Subtask
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the subtask to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Subtask deleted successfully
+        '404':
+          description: Subtask not found
+
+  /subtask/title/{title}:
+    get:
+      summary: Get a subtask by title
+      operationId: getSubtaskByTitle
+      tags:
+        - Subtask
+      parameters:
+        - name: title
+          in: path
+          required: true
+          description: Title of the subtask
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the subtask
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subtask'
+        '404':
+          description: Subtask not found
+
+components:
+  schemas:
+    Subtask:
+      type: object
+      required:
+        - id
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the subtask
+        title:
+          type: string
+          description: Title of the subtask
+        status:
+          type: string
+          description: Current status of the subtask
+        # Add other subtask properties here
