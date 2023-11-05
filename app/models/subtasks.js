@@ -3,17 +3,20 @@ class Subtask {
     constructor(subtask) {
         this.title = subtask.title;
         this.description = subtask.description;
-        this.images = subtask.images || [];
-        this.pictograms = subtask.pictograms || [];
+        this.image = subtask.images || "";
+        this.pictogram = subtask.pictograms || "";
+        this.audio = subtask.audio || "";
+        this.video = subtask.video || "";
     }
 
     toJSON() {
         return {
-            _id: this.title,
             title: this.title,
             description: this.description,
-            images: this.images,
-            pictograms: this.pictograms
+            image: this.image,
+            pictogram: this.pictogram,
+            audio: this.audio,
+            video: this.video
         };
     }
 }

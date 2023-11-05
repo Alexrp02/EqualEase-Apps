@@ -108,6 +108,10 @@ async function updateStudent(req, res) {
     }
 }
 
+// Cuando se implemente la operación de eliminar estudiante,
+// tener en cuenta las dependencias y eliminarlo de los arrays teacher.students[].
+// Para ver como se implementa, ver el ejemplo deleteTask
+
 // Exportamos las funciones
 module.exports = {
     createStudent,

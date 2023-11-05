@@ -148,12 +148,12 @@ async function getTaskByTitle(req, res) {
     try {
         // Query the Firestore collection to find a teacher with the specified name
         const titleQuery = query(collection(db, collectionName), where("title", "==", title));
-        const querySnapshot = await getDocs(titleQuery);
+        const snapshot = await getDocs(titleQuery);
 
-        if (!querySnapshot.empty) {
+        if (!snapshot.empty) {
             // Assuming you want to get the first task found with the specified (title is unique).
-            const taskId = querySnapshot.docs[0].id;
-            const taskData = querySnapshot.docs[0].data();
+            const taskId = snapshot.docs[0].id;
+            const taskData = snapshot.docs[0].data();
             const task = new Task(taskData);
 
             res.status(200).json({id: taskId, ...task});
@@ -236,14 +236,14 @@ async function deleteTask(req, res) {
                 if (studentData.pendingTasks.includes(id)) {
                     const pendingTasks = studentData.pendingTasks.filter(taskId => taskId !== id);
                     await updateDoc(studentDoc.ref, { pendingTasks });
-                    console.log(`Updated 'pendingTasks' for student (ID: ${studentDoc.ref}). Removed task with ID ${id}`);
+                    console.log(`Updated 'pendingTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
                 }
 
                 // Comprobar si la tarea está en el array de doneTasks
                 if (studentData.doneTasks.includes(id)) {
                     const doneTasks = studentData.doneTasks.filter(taskId => taskId !== id);
                     await updateDoc(studentDoc.ref, { doneTasks });
-                    console.log(`Updated 'doneTasks' for student (ID: ${studentDoc.ref}). Removed task with ID ${id}`);
+                    console.log(`Updated 'doneTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
                 }
             });
 
