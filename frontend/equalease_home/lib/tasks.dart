@@ -3,6 +3,7 @@ import 'addTask.dart';
 import 'models/task.dart'; // Importa la clase Task
 import 'models/subtask.dart';
 import 'controllers/controllerSubstask.dart';
+import 'controllers/controllerTask.dart';
 
 class TasksPage extends StatefulWidget {
   @override
@@ -14,6 +15,9 @@ class _TasksPageState extends State<TasksPage> {
 
   @override
   Widget build(BuildContext context) {
+    getAllTasks().then((data) {
+      _TasksAgregadas = data;
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Tasks'),
@@ -78,26 +82,10 @@ class DetallesTaskPage extends StatelessWidget {
           children: [
             Text('Título: ${task.title}'),
             Text('Descripción: ${task.description}'),
-            FutureBuilder<List<Subtask>>(
-              future: getAllSubtasks(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('SubTasks:'),
-                      for (var subtarea in snapshot.data!) Text(subtarea.title),
-                    ],
-                  );
-                } else {
-                  return Text('No se pudieron obtener las subtareas.');
-                }
-              },
+            Text(
+              'SubTasks:',
             ),
+            for (var subTask in task.subtasks) Text(subTask.description),
             Text('Tipo: ${task.type}'),
           ],
         ),
