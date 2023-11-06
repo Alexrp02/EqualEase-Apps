@@ -133,6 +133,7 @@ async function updateStudent(req, res) {
 
 // Exportamos las funciones
 module.exports = {
+    getStudents,
     createStudent,
     getStudentById,
     getStudentByName,
