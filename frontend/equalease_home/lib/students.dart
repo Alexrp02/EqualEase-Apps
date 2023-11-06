@@ -1,3 +1,4 @@
+import 'package:equalease_home/StudentsAssignedTask.dart';
 import 'package:equalease_home/controllers/controllerStudent.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,9 @@ class _StudentsPageState extends State<StudentsPage> {
   @override
   void initState() {
     super.initState();
-    print("Agregando estudiantes");
     _controller.getAllStudents().then((students) {
       setState(() {
         _StudentsAdded = students;
-        print(_StudentsAdded.length);
       });
     });
   }
@@ -43,50 +42,60 @@ class _StudentsPageState extends State<StudentsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 for (int i = 0; i < _StudentsAdded.length; i++)
-                  ElevatedButton(
-                    onPressed: () {
-                      // Acción a realizar cuando se presione el botón
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(0), // Ajusta el relleno a 0 para controlar la altura
-                      minimumSize: Size(double.infinity, 80),
-                      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: const Color.fromARGB(255, 170, 172, 174), width: 2.0), // Borde
-                        borderRadius: BorderRadius.circular(0), // Borde cuadrado
-                      ), // Establece la altura deseada (en este caso, 50 píxeles)
+                  Container(
+                    padding: EdgeInsets.all(0),
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 170, 172, 174),
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(0),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide el espacio en tres partes
                       children: <Widget>[
                         Text('${_StudentsAdded[i].name}'), // Primera parte
-                        ElevatedButton(
-                          onPressed: () {
-                            // Acción a realizar cuando se presione el botón "Tareas"
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(color: Color.fromARGB(255, 100, 100, 101), width: 2.0), // Borde
-                                borderRadius: BorderRadius.circular(10), // Borde cuadrado
-                              ),
-                          ),
-                          child: Text('Tareas'), // Segunda parte
+                        Container(
+                          width: 200,
+                          height:50,
+                          child: ElevatedButton(
+                            onPressed: () {
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => StudentsAssignedTask(_StudentsAdded[i].id)),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: Color.fromARGB(255, 100, 100, 101), width: 2.0), // Borde
+                                  borderRadius: BorderRadius.circular(10), // Borde cuadrado
+                                ),
+                            ),
+                            child: Text('Tareas'), // Segunda parte
+                          )
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Acción a realizar cuando se presione el botón "Datos"
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: EdgeInsets.all(0),
-                             shape: RoundedRectangleBorder(
-                                side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0), // Borde
-                                borderRadius: BorderRadius.circular(10), // Borde cuadrado
-                              ),
-                          ),
-                          child: Text('Datos'), // Tercera parte
+                        Container(
+                          width: 200,
+                          height:50,
+                          child:ElevatedButton(
+                            onPressed: () {
+                              // Acción a realizar cuando se presione el botón "Datos"
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0), // Borde
+                                  borderRadius: BorderRadius.circular(10), // Borde cuadrado
+                                ),
+                            ),
+                            child: Text('Datos'), // Tercera parte
+                          )
                         ),
                       ],
                     ),
