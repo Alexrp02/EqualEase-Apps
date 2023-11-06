@@ -4,6 +4,25 @@ const Student = require("../models/students.js");
 
 const collectionName = "students";
 
+async function getStudents(req, res) {
+    try {
+        const students = [];
+        const querySnapshot = await getDocs(collection(db, collectionName));
+
+        querySnapshot.forEach((doc) => {
+            const studentData = doc.data();
+            const student = new Student(studentData);
+
+            students.push({ id: doc.id, ...student });
+        });
+
+        res.status(200).json(students);
+    } catch (error) {
+        console.error("Error getting students from Firestore:", error);
+        res.status(500).send("Server error.");
+    }
+}
+
 // Create a student
 async function createStudent(req, res) {
   const studentData = new Student(req.body);
