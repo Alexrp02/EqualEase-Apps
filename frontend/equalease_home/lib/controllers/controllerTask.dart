@@ -69,8 +69,7 @@ Future<List<Task>> getAllTasks() async {
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
-    final List<dynamic> tasksListData =
-        json.decode(response.body)['tasks'];
+    final List<dynamic> tasksListData = json.decode(response.body);
 
     List<Task> tasks = tasksListData.map((data) {
       return Task.fromMap(data);
@@ -117,8 +116,7 @@ Future<void> createTask(Task task) async {
     // print('subtask.id (createSubtask): ${subtask.id}');
   } else {
     // Manejar errores u otra lógica en caso de que la solicitud no sea exitosa.
-    print(
-        "Error al crear la task [${response.statusCode}: ${response.body}]");
+    print("Error al crear la task [${response.statusCode}: ${response.body}]");
   }
 }
 

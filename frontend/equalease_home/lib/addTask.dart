@@ -17,7 +17,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  List<Subtask> subTasks = [];
+  List<String> subTasks = [];
   int contador = 1;
   String? _tipoSeleccionado;
   final List<String> _opcionesTipo = ['Fija', 'Demanda']; // Opciones de tipo
@@ -31,11 +31,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
 
   void _addSubTask(String subTask) {
     setState(() {
-      Subtask nuevaSubtarea = Subtask(
-        id: 'subid $contador',
-        title: 'Subtarea $contador',
-        description: subTask,
-      );
+      String nuevaSubtarea = "test";
       subTasks.add(nuevaSubtarea);
       contador++;
     });
@@ -80,7 +76,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
               Text(
                 'SubTasks:',
               ),
-              for (var subTask in subTasks) Text(subTask.description),
+              // for (var subTask in subTasks) Text(subTask.description),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -119,15 +115,17 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     Task nuevaTask = Task(
-                      id : 'a',
+                      id: 'a',
                       title: _tituloController.text,
                       description: _descripcionController.text,
                       subtasks: subTasks,
                       type: _tipoSeleccionado!,
                     );
 
-                    createTask(nuevaTask); // Utilizar la función post para crear una nueva tarea
-                    widget.onTaskSaved(nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
+                    createTask(
+                        nuevaTask); // Utilizar la función post para crear una nueva tarea
+                    widget.onTaskSaved(
+                        nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
                     Navigator.pop(context);
                   }
                 },

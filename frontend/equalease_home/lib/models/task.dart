@@ -6,7 +6,7 @@ class Task {
   String id;
   String title;
   String description;
-  List<Subtask> subtasks;
+  List<dynamic> subtasks;
   String type;
 
   Task({
@@ -33,8 +33,8 @@ class Task {
         'id': id,
         'title': title,
         'description': description,
-        'subtasks' : subtasks,
-        'type' : type,
+        'subtasks': subtasks,
+        'type': type,
         // 'images': images,
         // 'pictograms': pictograms
       };

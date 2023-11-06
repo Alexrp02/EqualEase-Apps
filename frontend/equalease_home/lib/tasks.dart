@@ -16,8 +16,11 @@ class _TasksPageState extends State<TasksPage> {
   @override
   Widget build(BuildContext context) {
     getAllTasks().then((data) {
-      _TasksAgregadas = data;
+      setState(() {
+        _TasksAgregadas = data;
+      });
     });
+    print(_TasksAgregadas);
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Tasks'),
@@ -85,7 +88,7 @@ class DetallesTaskPage extends StatelessWidget {
             Text(
               'SubTasks:',
             ),
-            for (var subTask in task.subtasks) Text(subTask.description),
+            // for (var subTask in task.subtasks) Text(subTask.description),
             Text('Tipo: ${task.type}'),
           ],
         ),
