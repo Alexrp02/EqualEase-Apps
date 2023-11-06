@@ -28,9 +28,28 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('TAREAS ASIGNADAS'),
-      ),
+     appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0),
+          child: AppBar(
+            backgroundColor: Color.fromARGB(255,161, 182, 236),
+            title: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'TAREAS ASIGNADAS',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white, // Cambia el color de la fuente a blanco
+                      fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                      fontSize: 24.0, // Cambia el tamaño de la fuente
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       body: _student == null
           ? Center(
               child: CircularProgressIndicator(),
