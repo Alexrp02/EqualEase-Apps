@@ -12,22 +12,21 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  List<Subtask> subtasks = [
-    Subtask(
-        id: "Prueba",
-        title: "Coger las sabanas",
-        description: "Acercate al armario y coge las sabanas"),
-    Subtask(
-        id: "afad",
-        title: "Extender las sábanas",
-        description: "Extiende las sábanas en algún lado plano.")
-  ];
   List<Task> _TasksAgregadas = [
     Task(
         id: "prueba",
         title: "Tarea de prueba",
         description: "Esta es una tarea de prueba para probar el carrusel",
-        subtasks: ["Subtask1"],
+        subtasks: [
+          Subtask(
+              id: "Prueba",
+              title: "Coger las sabanas",
+              description: "Acercate al armario y coge las sabanas"),
+          Subtask(
+              id: "afad",
+              title: "Extender las sábanas",
+              description: "Extiende las sábanas en algún lado plano.")
+        ],
         type: "FixedType")
   ]; // Cambiar la lista a una lista de Tasks
 
@@ -55,7 +54,8 @@ class _TasksPageState extends State<TasksPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SubtasksCarousel(subtasks: subtasks),
+                  builder: (context) =>
+                      SubtasksCarousel(subtasks: _TasksAgregadas[i].subtasks),
                 ),
               );
             },

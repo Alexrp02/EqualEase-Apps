@@ -30,8 +30,7 @@ class SubtasksCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return Scaffold(
       appBar: AppBar(title: Text('Subtasks Carousel')),
       body: Column(
         children: [
@@ -73,7 +72,7 @@ class SubtasksCarousel extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 }
 
