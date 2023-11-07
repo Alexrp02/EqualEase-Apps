@@ -20,7 +20,6 @@ class _TasksPageState extends State<TasksPage> {
         _TasksAgregadas = data;
       });
     });
-    print(_TasksAgregadas);
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Tasks'),
@@ -86,7 +85,7 @@ class DetallesTaskPage extends StatelessWidget {
             Text('Título: ${task.title}'),
             Text('Descripción: ${task.description}'),
             Text(
-              'SubTasks:',
+              'SubTasks:${task.subtasks.toString()}',
             ),
             // for (var subTask in task.subtasks) Text(subTask.description),
             Text('Tipo: ${task.type}'),

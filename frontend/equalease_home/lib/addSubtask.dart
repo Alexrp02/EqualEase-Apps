@@ -32,15 +32,15 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
     } else {
       Subtask nuevaSubtarea = Subtask(
         id: 'subid', // Proporciona un ID adecuado para la subtarea
-        title: _titleController.text, // Utiliza el título del campo de texto para el título de la subtarea
+        title: _titleController
+            .text, // Utiliza el título del campo de texto para el título de la subtarea
         description: _descriptionController.text,
       );
 
-      await createSubtask(nuevaSubtarea); // Utiliza la función post para crear una nueva subtarea
-
-      widget.onSubtaskSaved(nuevaSubtarea
-          .title); // Pasa el título de la subtarea en lugar del texto del campo de texto
-      Navigator.pop(context);
+      createSubtask(nuevaSubtarea).then((value) => Navigator.pop(
+          context,
+          nuevaSubtarea
+              .id)); // Utiliza la función post para crear una nueva subtarea
     }
   }
 

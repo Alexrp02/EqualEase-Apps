@@ -86,7 +86,10 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                         onSubtaskSaved: _addSubTask,
                       ),
                     ),
-                  );
+                  ).then((value) {
+                    subTasks.add(value);
+                    print(subTasks);
+                  });
                 },
                 child: Text('Añadir SubTask'),
               ),
@@ -123,13 +126,27 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                     );
 
                     createTask(
-                        nuevaTask); // Utilizar la función post para crear una nueva tarea
-                    widget.onTaskSaved(
                         nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
                     Navigator.pop(context);
                   }
                 },
                 child: Text('Guardar Task'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Task nuevaTask = Task(
+                      id: 'a',
+                      title: _tituloController.text,
+                      description: _descripcionController.text,
+                      subtasks: subTasks,
+                      type: _tipoSeleccionado!,
+                    );
+
+                    print(nuevaTask.toJson());
+                  }
+                },
+                child: Text('Mostrar Task'),
               ),
             ],
           ),

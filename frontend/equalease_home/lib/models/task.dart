@@ -47,6 +47,7 @@ class Task {
     Map<String, dynamic> data = {
       'title': title,
       'description': description,
+      'subtasks': subtasks,
       // 'images': images,
       // 'pictograms': pictograms
     };
