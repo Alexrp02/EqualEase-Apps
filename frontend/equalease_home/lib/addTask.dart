@@ -17,7 +17,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  List<String> subTasks = [];
+  List<Subtask> subTasks = [];
   int contador = 1;
   String? _tipoSeleccionado;
   final List<String> _opcionesTipo = ['Fija', 'Demanda']; // Opciones de tipo
@@ -31,7 +31,10 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
 
   void _addSubTask(String subTask) {
     setState(() {
-      String nuevaSubtarea = "test";
+      Subtask nuevaSubtarea = Subtask(
+          id: contador.toString(),
+          title: 'Subtarea $contador',
+          description: "Prueba");
       subTasks.add(nuevaSubtarea);
       contador++;
     });

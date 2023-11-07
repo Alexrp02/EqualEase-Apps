@@ -1,3 +1,4 @@
+import 'package:equalease_home/components/subtasks_widget.dart';
 import 'package:flutter/material.dart';
 import 'addTask.dart';
 import 'models/task.dart'; // Importa la clase Task
@@ -11,15 +12,31 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
-  List<Task> _TasksAgregadas = []; // Cambiar la lista a una lista de Tasks
+  List<Task> _TasksAgregadas = [
+    Task(
+        id: "prueba",
+        title: "Tarea de prueba",
+        description: "Esta es una tarea de prueba para probar el carrusel",
+        subtasks: [
+          Subtask(
+              id: "Prueba",
+              title: "Coger las sabanas",
+              description: "Acercate al armario y coge las sabanas"),
+          Subtask(
+              id: "afad",
+              title: "Extender las sábanas",
+              description: "Extiende las sábanas en algún lado plano.")
+        ],
+        type: "FixedType")
+  ]; // Cambiar la lista a una lista de Tasks
 
   @override
   Widget build(BuildContext context) {
-    getAllTasks().then((data) {
-      setState(() {
-        _TasksAgregadas = data;
-      });
-    });
+    // getAllTasks().then((data) {
+    //   setState(() {
+    //     _TasksAgregadas = data;
+    //   });
+    // });
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Tasks'),
@@ -37,7 +54,8 @@ class _TasksPageState extends State<TasksPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetallesTaskPage(task: TaskAgregada),
+                  builder: (context) =>
+                      SubtasksCarousel(subtasks: _TasksAgregadas[i].subtasks),
                 ),
               );
             },
@@ -68,6 +86,11 @@ class _TasksPageState extends State<TasksPage> {
 
 class DetallesTaskPage extends StatelessWidget {
   final Task task;
+  final Subtask subtask = new Subtask(
+      id: "prueba",
+      title: "Coger sábanas",
+      description:
+          "Acércate al armario donde se guardan las sábanas y cógelas.");
 
   DetallesTaskPage({required this.task});
 
