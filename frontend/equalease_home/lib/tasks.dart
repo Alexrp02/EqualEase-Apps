@@ -1,10 +1,10 @@
-import 'package:equalease_home/components/subtasks_widget.dart';
 import 'package:flutter/material.dart';
 import 'addTask.dart';
 import 'models/task.dart'; // Importa la clase Task
 import 'models/subtask.dart';
 import 'controllers/controllerSubstask.dart';
 import 'controllers/controllerTask.dart';
+// import 'components/subtasks_widget.dart'; // Comenta la importación del carrusel de fotos
 
 class TasksPage extends StatefulWidget {
   @override
@@ -32,35 +32,101 @@ class _TasksPageState extends State<TasksPage> {
 
   @override
   Widget build(BuildContext context) {
-    // getAllTasks().then((data) {
-    //   setState(() {
-    //     _TasksAgregadas = data;
-    //   });
-    // });
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Lista de Tasks'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'LISTA DE TAREAS',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 70.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-      body: ListView.builder(
-        itemCount: _TasksAgregadas.length,
-        itemBuilder: (context, i) {
-          final Task TaskAgregada =
-              _TasksAgregadas[i]; // Cambiar el tipo de la variable
-          int currentIndex = i + 1; // Número de Task actual
-          return ListTile(
-            title: Text(
-                'Task $currentIndex: ${TaskAgregada.title}'), // Mostrar el título de la Task
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      SubtasksCarousel(subtasks: _TasksAgregadas[i].subtasks),
+      body: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8, // Ancho del 80%
+          child: ListView.builder(
+            itemCount: _TasksAgregadas.length,
+            itemBuilder: (context, i) {
+              final Task TaskAgregada = _TasksAgregadas[i];
+              int currentIndex = i + 1;
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetallesTaskPage(task: TaskAgregada),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(255, 170, 172, 174),
+                      width: 3.0,
+                    ),
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  margin: EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'TAREA $currentIndex: ${TaskAgregada.title}',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 0, 0, 0),
+                            fontSize: 30.0, // Ajusta el tamaño del texto
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              iconSize: 50.0,
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                // Lógica para editar la tarea
+                              },
+                            ),
+                            IconButton(
+                              iconSize: 50.0,
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                // Lógica para eliminar la tarea
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    tileColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Color.fromARGB(255, 170, 172, 174),
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(0),
+                    ),
+                  ),
                 ),
               );
             },
-          );
-        },
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -86,11 +152,11 @@ class _TasksPageState extends State<TasksPage> {
 
 class DetallesTaskPage extends StatelessWidget {
   final Task task;
-  final Subtask subtask = new Subtask(
-      id: "prueba",
-      title: "Coger sábanas",
-      description:
-          "Acércate al armario donde se guardan las sábanas y cógelas.");
+  // final Subtask subtask = new Subtask(
+  //     id: "prueba",
+  //     title: "Coger sábanas",
+  //     description:
+  //         "Acércate al armario donde se guardan las sábanas y cógelas.");
 
   DetallesTaskPage({required this.task});
 
@@ -105,13 +171,14 @@ class DetallesTaskPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Título: ${task.title}'),
-            Text('Descripción: ${task.description}'),
+            Text('Título: ${task.title}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
+            Text('Descripción: ${task.description}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
             Text(
               'SubTasks:${task.subtasks.toString()}',
+              style: TextStyle(fontSize: 20.0), // Ajusta el tamaño del texto
             ),
             // for (var subTask in task.subtasks) Text(subTask.description),
-            Text('Tipo: ${task.type}'),
+            Text('Tipo: ${task.type}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
           ],
         ),
       ),
