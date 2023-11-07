@@ -1,11 +1,14 @@
-import express from "express" ;
-const router = express.Router();
+const express = require("express");
+const StudentsController = require("../controllers/students");
 
-// Define your routes here
-router.get('/', (req, res) => {
-    // Handle GET request for users
-    res.send('Get all users');
-  });
+const api = express.Router();
 
-// Export the router
-export default router;
+// Métodos: post (crear), get(leer), put(actualizar), delete(eliminar)
+
+api.post("/student", StudentsController.createStudent);
+api.get("/student", StudentsController.getStudents);
+api.get("/student/id/:id", StudentsController.getStudentById);
+api.get("/student/name/:name", StudentsController.getStudentByName);
+api.put("/student/id/:id", StudentsController.updateStudent);
+
+module.exports = api;
