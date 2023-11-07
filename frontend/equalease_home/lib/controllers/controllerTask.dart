@@ -89,6 +89,7 @@ Future<List<Task>> getAllTasks() async {
 //     "images": [],
 //     "pictograms": []
 // }
+
 Future<void> createTask(Task task) async {
   var url = Uri.parse("http://localhost:3000/api/task");
 
