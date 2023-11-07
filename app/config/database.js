@@ -3,7 +3,7 @@ const { getFirestore, doc, getDoc } = require("firebase/firestore");
 const fs = require("fs");
 
 //Load the configuration file
-const configFile = fs.readFileSync("./config.json");
+const configFile = fs.readFileSync("./app/config/config.json");
 
 
 // Configuracion de la conexion con la BD: Google Firebase.
