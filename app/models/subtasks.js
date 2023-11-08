@@ -3,8 +3,8 @@ class Subtask {
     constructor(subtask) {
         this.title = subtask.title;
         this.description = subtask.description;
-        this.image = subtask.images || "";
-        this.pictogram = subtask.pictograms || "";
+        this.image = subtask.image || "";
+        this.pictogram = subtask.pictogram || "";
         this.audio = subtask.audio || "";
         this.video = subtask.video || "";
     }

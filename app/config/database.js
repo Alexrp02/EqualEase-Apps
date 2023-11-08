@@ -1,5 +1,6 @@
 const { initializeApp } = require("firebase/app");
 const { getFirestore, doc, getDoc } = require("firebase/firestore");
+const {getStorage} = require("firebase/storage");
 const fs = require("fs");
 
 //Load the configuration file
@@ -10,14 +11,22 @@ const configFile = fs.readFileSync("./app/config/config.json");
 // Your web app's Firebase configuration
 const firebaseConfig = JSON.parse(configFile);
 
+const firebaseApp = initializeApp(firebaseConfig);
+
 // Inicialización de Firebase y Firestore
-const initializeFirebase = () => {
-    const firebaseApp = initializeApp(firebaseConfig);
+const initializeFirebase = (firebaseApp) => {
     const db = getFirestore(firebaseApp);
     return db;
 };
 
-const db = initializeFirebase();
+const initializeStorage = (firebaseApp) => {
+    const storage = getStorage(firebaseApp);
+    return storage;
+}
+
+const db = initializeFirebase(firebaseApp);
+
+const storage = initializeStorage(firebaseApp);
 
 // Función para realizar un "ping" periódico
 async function pingFirestore() {
@@ -37,4 +46,5 @@ setInterval(pingFirestore, pingInterval);
 
 module.exports = {
     db,
+    storage,
 };
