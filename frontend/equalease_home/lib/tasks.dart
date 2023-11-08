@@ -68,7 +68,8 @@ class _TasksPageState extends State<TasksPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetallesTaskPage(task: TaskAgregada),
+                      builder: (context) =>
+                          DetallesTaskPage(task: TaskAgregada),
                     ),
                   );
                 },
@@ -171,14 +172,17 @@ class DetallesTaskPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Título: ${task.title}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
-            Text('Descripción: ${task.description}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
+            Text('Título: ${task.title}',
+                style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
+            Text('Descripción: ${task.description}',
+                style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
             Text(
               'SubTasks:${task.subtasks.toString()}',
               style: TextStyle(fontSize: 20.0), // Ajusta el tamaño del texto
             ),
             // for (var subTask in task.subtasks) Text(subTask.description),
-            Text('Tipo: ${task.type}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
+            Text('Tipo: ${task.type}',
+                style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
           ],
         ),
       ),
