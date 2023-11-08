@@ -6,7 +6,7 @@ class Task {
   String id;
   String title;
   String description;
-  List<Subtask> subtasks;
+  List<dynamic> subtasks;
   String type;
 
   Task({

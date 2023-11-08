@@ -12,23 +12,35 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
+  bool isLoading = true;
   List<Task> _TasksAgregadas = [
-    Task(
-        id: "prueba",
-        title: "Tarea de prueba",
-        description: "Esta es una tarea de prueba para probar el carrusel",
-        subtasks: [
-          Subtask(
-              id: "Prueba",
-              title: "Coger las sabanas",
-              description: "Acercate al armario y coge las sabanas"),
-          Subtask(
-              id: "afad",
-              title: "Extender las sábanas",
-              description: "Extiende las sábanas en algún lado plano.")
-        ],
-        type: "FixedType")
+    // Task(
+    //     id: "prueba",
+    //     title: "Tarea de prueba",
+    //     description: "Esta es una tarea de prueba para probar el carrusel",
+    //     subtasks: [
+    //       Subtask(
+    //           id: "Prueba",
+    //           title: "Coger las sabanas",
+    //           description: "Acercate al armario y coge las sabanas"),
+    //       Subtask(
+    //           id: "afad",
+    //           title: "Extender las sábanas",
+    //           description: "Extiende las sábanas en algún lado plano.")
+    //     ],
+    //     type: "FixedType")
   ]; // Cambiar la lista a una lista de Tasks
+
+  @override
+  void initState() {
+    super.initState();
+    getAllTasks().then((value) {
+      setState(() {
+        _TasksAgregadas = value;
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +48,7 @@ class _TasksPageState extends State<TasksPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          backgroundColor: Color.fromARGB(255, 55, 55, 56),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -55,80 +67,84 @@ class _TasksPageState extends State<TasksPage> {
           ),
         ),
       ),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8, // Ancho del 80%
-          child: ListView.builder(
-            itemCount: _TasksAgregadas.length,
-            itemBuilder: (context, i) {
-              final Task TaskAgregada = _TasksAgregadas[i];
-              int currentIndex = i + 1;
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          DetallesTaskPage(task: TaskAgregada),
-                    ),
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color.fromARGB(255, 170, 172, 174),
-                      width: 3.0,
-                    ),
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(0),
-                  ),
-                  margin: EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'TAREA $currentIndex: ${TaskAgregada.title}',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            fontSize: 30.0, // Ajusta el tamaño del texto
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8, // Ancho del 80%
+                child: ListView.builder(
+                  itemCount: _TasksAgregadas.length,
+                  itemBuilder: (context, i) {
+                    final Task TaskAgregada = _TasksAgregadas[i];
+                    int currentIndex = i + 1;
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetallesTaskPage(task: TaskAgregada),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color.fromARGB(255, 170, 172, 174),
+                            width: 3.0,
+                          ),
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                        margin: EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'TAREA $currentIndex: ${TaskAgregada.title}',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontSize: 30.0, // Ajusta el tamaño del texto
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    iconSize: 50.0,
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () {
+                                      // Lógica para editar la tarea
+                                    },
+                                  ),
+                                  IconButton(
+                                    iconSize: 50.0,
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      // Lógica para eliminar la tarea
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          tileColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              color: Color.fromARGB(255, 170, 172, 174),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(0),
                           ),
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              iconSize: 50.0,
-                              icon: Icon(Icons.edit),
-                              onPressed: () {
-                                // Lógica para editar la tarea
-                              },
-                            ),
-                            IconButton(
-                              iconSize: 50.0,
-                              icon: Icon(Icons.delete),
-                              onPressed: () {
-                                // Lógica para eliminar la tarea
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    tileColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: Color.fromARGB(255, 170, 172, 174),
-                        width: 2.0,
                       ),
-                      borderRadius: BorderRadius.circular(0),
-                    ),
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        ),
-      ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
