@@ -69,7 +69,8 @@ class _TasksPageState extends State<TasksPage> {
       ),
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: SizedBox(
+                  width: 100, height: 100, child: CircularProgressIndicator()),
             )
           : Center(
               child: Container(
