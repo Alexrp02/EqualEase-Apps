@@ -1,3 +1,4 @@
+import 'package:equalease_home/editTaskPage.dart';
 import 'package:flutter/material.dart';
 import 'addTask.dart';
 import 'models/task.dart'; // Importa la clase Task
@@ -5,6 +6,7 @@ import 'models/subtask.dart';
 import 'controllers/controllerSubstask.dart';
 import 'controllers/controllerTask.dart';
 // import 'components/subtasks_widget.dart'; // Comenta la importación del carrusel de fotos
+import 'editTaskPage.dart';
 
 class TasksPage extends StatefulWidget {
   @override
@@ -26,6 +28,17 @@ class _TasksPageState extends State<TasksPage> {
               id: "afad",
               title: "Extender las sábanas",
               description: "Extiende las sábanas en algún lado plano.")
+        ],
+        type: "FixedType"),
+    Task(
+        id: "prueba_2",
+        title: "Volvemos a probar",
+        description: "tarea para ver como funciona ",
+        subtasks: [
+          Subtask(
+              id: "Pruebecita",
+              title: "Coger los platos",
+              description: "Acercate al armario y cogelos"),
         ],
         type: "FixedType")
   ]; // Cambiar la lista a una lista de Tasks
@@ -68,7 +81,8 @@ class _TasksPageState extends State<TasksPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetallesTaskPage(task: TaskAgregada),
+                      builder: (context) =>
+                          DetallesTaskPage(task: TaskAgregada),
                     ),
                   );
                 },
@@ -99,14 +113,20 @@ class _TasksPageState extends State<TasksPage> {
                               iconSize: 50.0,
                               icon: Icon(Icons.edit),
                               onPressed: () {
-                                // Lógica para editar la tarea
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditTaskPage(task: TaskAgregada),
+                                  ),
+                                );
                               },
                             ),
                             IconButton(
                               iconSize: 50.0,
                               icon: Icon(Icons.delete),
                               onPressed: () {
-                                // Lógica para eliminar la tarea
+                                _showDeleteConfirmationDialog(TaskAgregada);
                               },
                             ),
                           ],
@@ -148,37 +168,141 @@ class _TasksPageState extends State<TasksPage> {
       ),
     );
   }
+
+  void _showDeleteConfirmationDialog(Task task) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "ELIMINAR TAREA",
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Text(
+                  "¿ESTA SEGURO?",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                "CANCELAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                "ACEPTAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                setState(() {
+                  _TasksAgregadas.remove(task);
+                  // Llamar al controlador de eliminación
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+        );
+      },
+    );
+  }
 }
 
 class DetallesTaskPage extends StatelessWidget {
   final Task task;
-  // final Subtask subtask = new Subtask(
-  //     id: "prueba",
-  //     title: "Coger sábanas",
-  //     description:
-  //         "Acércate al armario donde se guardan las sábanas y cógelas.");
 
   DetallesTaskPage({required this.task});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Detalles de la Task'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'DETALLES DE LA TAREA',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 70.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Título: ${task.title}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
-            Text('Descripción: ${task.description}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
-            Text(
-              'SubTasks:${task.subtasks.toString()}',
-              style: TextStyle(fontSize: 20.0), // Ajusta el tamaño del texto
-            ),
-            // for (var subTask in task.subtasks) Text(subTask.description),
-            Text('Tipo: ${task.type}', style: TextStyle(fontSize: 20.0)), // Ajusta el tamaño del texto
+            Text('TITULO: ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+            Text('${task.title}',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                )), // Ajusta el tamaño y el estilo del texto
+            SizedBox(height: 16),
+            Text('DESCRIPCION: ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+            Text('${task.description}',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                )), // Ajusta el tamaño y el estilo del texto
+            SizedBox(height: 16),
+            Text('SUBTAREAS: ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+            Text('${task.subtasks.toString()}',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                )), // Ajusta el tamaño y el estilo del texto
+            SizedBox(height: 16),
+            Text('TIPO: ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+            Text('${task.type}',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                )), // Ajusta el tamaño y el estilo del texto
           ],
         ),
       ),

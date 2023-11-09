@@ -27,7 +27,7 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
   void _saveSubtask() async {
     if (_titleController.text.isEmpty) {
       setState(() {
-        _titleErrorText = 'Este campo no puede estar vacío';
+        _titleErrorText = 'ESTE CAMPO NO PUEDE ESTAR VACIO';
       });
     } else {
       Subtask nuevaSubtarea = Subtask(
@@ -47,8 +47,27 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Crear Subtarea'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'CREAR SUBTAREA',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 70.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -58,28 +77,64 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
             TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'Título',
+                labelText: 'TITULO',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
                 errorText: _titleErrorText,
               ),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18.0,
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             TextFormField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: 'Descripción',
+                labelText: 'DESCRIPCION',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
                 errorText: _descriptionErrorText,
               ),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18.0,
+              ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
             ElevatedButton(
               onPressed: _saveSubtask,
-              child: Text('Guardar Subtarea'),
+              child: Text(
+                'GUARDAR SUBTAREA',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(255, 161, 182, 236),
+                onPrimary: Colors.white,
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 //pickImage();
               },
-              child: Text('Seleccionar Imagen'),
+              child: Text(
+                'SELECCIONAR IMAGEN',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(255, 161, 182, 236),
+                onPrimary: Colors.white,
+              ),
             ),
           ],
         ),
