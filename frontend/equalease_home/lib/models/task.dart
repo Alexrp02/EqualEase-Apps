@@ -1,56 +1,47 @@
 import 'dart:convert';
 
-import 'package:equalease_home/models/subtask.dart';
-
 class Task {
   String id;
   String title;
   String description;
-  List<dynamic> subtasks;
-  String type;
+  List<String> subtasks;
+  String image;
+  String pictogram;
+  String type; // "FixedType" || "RequestType"
 
-  Task({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.subtasks,
-    required this.type,
-  });
+  Task(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.subtasks,
+      required this.image,
+      required this.pictogram,
+      required this.type});
 
   factory Task.fromMap(Map<String, dynamic> json) => Task(
-        id: json['id'],
-        title: json['title'],
-        description: json['description'],
-        subtasks: json['subtasks'],
-        type: json['type'],
-        // images: json['images'],
-        // pictograms: json['pictograms']
-      );
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      subtasks: List<String>.from(json['subtasks']),
+      image: json['image'],
+      pictogram: json['pictogram'],
+      type: json['type']);
 
   factory Task.fromJson(String str) => Task.fromMap(json.decode(str));
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'subtasks': subtasks,
-        'type': type,
-        // 'images': images,
-        // 'pictograms': pictograms
-      };
-
-  String toJson() => json.encode(toMap());
-
-  // Necesario cuando se quiera crear una nueva tarea, puesto
-  // que el id es asignado automáticamente
-  String toJsonWithoutId() {
-    Map<String, dynamic> data = {
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
       'title': title,
       'description': description,
       'subtasks': subtasks,
-      // 'images': images,
-      // 'pictograms': pictograms
+      'image': image,
+      'pictogram': pictogram,
+      'type': type
     };
-    return json.encode(data);
   }
+
+  String toJson() => json.encode(toMap());
+
+  // ... Resto del código ...
 }

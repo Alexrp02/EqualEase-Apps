@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'addSubtask.dart';
 import 'models/task.dart'; // Importar la clase Task
 import 'models/subtask.dart';
-import 'controllers/controllerTask.dart'; // Importar el controlador
+//import 'controllers/controllerTask.dart'; // Importar el controlador
+import 'controllers/controller_api.dart';
 
 class AgregarTaskPage extends StatefulWidget {
   final Function(Task) onTaskSaved; // Ajusta el tipo de parámetro

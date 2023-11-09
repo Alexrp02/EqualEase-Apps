@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'addTask.dart';
 import 'models/task.dart'; // Importa la clase Task
 import 'models/subtask.dart';
-import 'controllers/controllerSubstask.dart';
-import 'controllers/controllerTask.dart';
+import 'controllers/controller_api.dart';
+//import 'controllers/controllerSubstask.dart';
+//import 'controllers/controllerTask.dart';
 // import 'components/subtasks_widget.dart'; // Comenta la importación del carrusel de fotos
 import 'editTaskPage.dart';
 
@@ -15,6 +16,8 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   bool isLoading = true;
+  final 
+
   List<Task> _TasksAgregadas = [
     // Task(
     //     id: "prueba",
@@ -36,7 +39,7 @@ class _TasksPageState extends State<TasksPage> {
   @override
   void initState() {
     super.initState();
-    getAllTasks().then((value) {
+    await getAllTasks().then((value) {
       setState(() {
         _TasksAgregadas = value;
         isLoading = false;
@@ -50,7 +53,7 @@ class _TasksPageState extends State<TasksPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor: Color.fromARGB(255, 55, 55, 56),
+          backgroundColor:  Color.fromARGB(255, 161, 182, 236),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
