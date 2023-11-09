@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/subtask.dart';
+import '../controllers/controller_api.dart';
 
 class SubtaskWidget extends StatelessWidget {
   final Subtask subtask;
@@ -22,11 +23,34 @@ class SubtaskWidget extends StatelessWidget {
 }
 
 // Main carousel widget
-class SubtasksCarousel extends StatelessWidget {
-  final List<Subtask> subtasks;
-  final PageController pageController = PageController();
+class SubtasksCarousel extends StatefulWidget {
+  final String taskId;
 
-  SubtasksCarousel({Key? key, required this.subtasks}) : super(key: key);
+  SubtasksCarousel({Key? key, required this.taskId}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SubtasksCarouselState(taskId: taskId);
+  }
+}
+
+class _SubtasksCarouselState extends State<SubtasksCarousel> {
+  final String taskId;
+  List<Subtask> subtasks = [];
+  final PageController pageController = PageController();
+  APIController controller = APIController();
+
+  _SubtasksCarouselState({required this.taskId});
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getSubtasksFromTaskList(taskId).then((value) {
+      setState(() {
+        subtasks = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,23 +100,23 @@ class SubtasksCarousel extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(title: Text('Subtasks Carousel')),
-      body: SubtasksCarousel(
-        subtasks: [
-          Subtask(
-              id: "nothing",
-              title: 'Subtask 1',
-              description: 'Description of subtask 1',
-              image: '',
-              pictogram: '',
-              audio: '',
-              video: ''),
-          // Add more subtasks here
-        ],
-      ),
-    ),
-  ));
-}
+// void main() {
+//   runApp(MaterialApp(
+//     home: Scaffold(
+//       appBar: AppBar(title: Text('Subtasks Carousel')),
+//       body: SubtasksCarousel(
+//         subtasks: [
+//           Subtask(
+//               id: "nothing",
+//               title: 'Subtask 1',
+//               description: 'Description of subtask 1',
+//               image: '',
+//               pictogram: '',
+//               audio: '',
+//               video: ''),
+//           // Add more subtasks here
+//         ],
+//       ),
+//     ),
+//   ));
+// }

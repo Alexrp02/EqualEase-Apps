@@ -1,6 +1,9 @@
 import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
 import 'models/student.dart';
+import 'controllers/controller_api.dart';
+import 'components/subtasks_widget.dart';
+import 'models/subtask.dart';
 
 class StudentPage extends StatefulWidget {
   @override
@@ -10,6 +13,15 @@ class StudentPage extends StatefulWidget {
 class _StudentPageState extends State<StudentPage> {
   // final ControllerStudent _controller =
   //     ControllerStudent('http://www.google.es');
+  APIController controller = APIController();
+  Student student = Student(
+      id: "",
+      name: "",
+      surname: "",
+      pendingTasks: [],
+      doneTasks: [],
+      profilePicture: "");
+  List<Task> doneTasks = [];
   List<Task> pendingTasks = [
     // Task(
     //     id: "alfjn",
@@ -26,6 +38,26 @@ class _StudentPageState extends State<StudentPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    controller.getStudent("BzeOSKjQKDhh2Da3JHYC").then((value) {
+      setState(() {
+        student = value;
+      });
+      controller.getPendingTasksFromStudent(student.id).then((value) {
+        setState(() {
+          pendingTasks = value;
+        });
+      });
+      controller.getDoneTasksFromStudent(student.id).then((value) {
+        setState(() {
+          doneTasks = value;
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -37,7 +69,7 @@ class _StudentPageState extends State<StudentPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'LISTA DE TAREAS',
+                  'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color:
@@ -70,7 +102,14 @@ class _StudentPageState extends State<StudentPage> {
                 children: <Widget>[
                   for (int i = 0; i < pendingTasks.length; i++)
                     InkWell(
-                      onTap: () => print('Tarea pulsada'),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SubtasksCarousel(
+                            taskId: pendingTasks[i].id,
+                          );
+                        }));
+                      },
                       child: Container(
                         padding: EdgeInsets.all(16),
                         // height: 80,
@@ -102,6 +141,63 @@ class _StudentPageState extends State<StudentPage> {
                               children: <Widget>[
                                 Text(
                                   '${pendingTasks[i].title}',
+                                  style: TextStyle(
+                                    fontSize: 40.0,
+                                  ),
+                                ), // Primera parte
+                                Text(
+                                  pendingTasks[i].description,
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  for (int i = 0; i < doneTasks.length; i++)
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SubtasksCarousel(
+                            taskId: doneTasks[i].id,
+                          );
+                        }));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        // height: 80,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 170, 172, 174),
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(0),
+                        ),
+                        child: Row(
+                          children: [
+                            Transform.scale(
+                              scale: 1.5,
+                              child: Checkbox(
+                                value:
+                                    true, // Replace with your boolean variable
+                                onChanged: (bool? value) {
+                                  // Handle change
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                                width:
+                                    20.0), // Espacio entre el checkbox y el texto (tarea
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '${doneTasks[i].title}',
                                   style: TextStyle(
                                     fontSize: 40.0,
                                   ),
