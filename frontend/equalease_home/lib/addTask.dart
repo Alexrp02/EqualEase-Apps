@@ -196,18 +196,23 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    var _tipo = 'FixedType';
+                    if (_tipoSeleccionado == 'DEMANDA') {
+                      _tipo = 'RequestType';
+                    }
                     Task nuevaTask = Task(
                         id: 'a',
                         title: _tituloController.text,
                         description: _descripcionController.text,
                         subtasks: subTasks,
-                        type: _tipoSeleccionado!,
+                        type: _tipo,
                         image: "",
                         pictogram: '');
 
                     controller.createTask(
                         nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
-                    Navigator.pop(context);
+                    Navigator.pop(context, nuevaTask);
+                    
                   }
                 },
                 child: Text(
@@ -224,12 +229,18 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    //NOTHING
+                    var _tipo = 'FixedType';
+                    if (_tipoSeleccionado! == 'DEMANDA') {
+                      _tipo = 'RequestType';
+                    }
+
                     Task nuevaTask = Task(
                       id: 'a',
                       title: _tituloController.text,
                       description: _descripcionController.text,
                       subtasks: subTasks,
-                      type: _tipoSeleccionado!,
+                      type: _tipo,
                       image: '',
                       pictogram: '',
                     );

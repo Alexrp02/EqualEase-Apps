@@ -41,7 +41,6 @@ class _TasksPageState extends State<TasksPage> {
   void initState() {
     super.initState();
 
-  
     controller.getTasks().then((value) {
       setState(() {
         _TasksAgregadas = value;
@@ -56,7 +55,7 @@ class _TasksPageState extends State<TasksPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor:  Color.fromARGB(255, 161, 182, 236),
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -167,15 +166,16 @@ class _TasksPageState extends State<TasksPage> {
             context,
             MaterialPageRoute(
               builder: (context) => AgregarTaskPage(
-                onTaskSaved: (Task) {
+                onTaskSaved: (task) {
                   // Ajusta el parámetro para que sea de tipo Task
-                  setState(() {
-                    _TasksAgregadas.add(Task);
-                  });
                 },
               ),
             ),
-          );
+          ).then((value) {
+            setState(() {
+              _TasksAgregadas.add(value);
+            });
+          });
         },
         child: Icon(Icons.add),
       ),
