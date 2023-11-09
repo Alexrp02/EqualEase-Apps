@@ -60,4 +60,9 @@ class Subtask {
     };
     return json.encode(data);
   }
+
+  @override
+  String toString() {
+    return title;
+  }
 }

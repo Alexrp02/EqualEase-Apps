@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:equalease_home/models/task.dart';
 
-// Ejemplo de formato de respuesta de peticion GET: http://localhost:3000/api/subtask/id/$id
+// Ejemplo de formato de respuesta de peticion GET: $serverUrl/api/subtask/id/$id
 // {
 //     "id": "aAmlJnXo785HjgTrdewX",
 //     "title": "Poner mantel",
@@ -10,8 +10,11 @@ import 'package:equalease_home/models/task.dart';
 //     "images": [],
 //     "pictograms": []
 // }
+
+String serverUrl = "http://10.0.2.2:3000";
+
 Future<Task> getTaskById(String id) async {
-  var url = Uri.parse("http://localhost:3000/api/task/id/$id");
+  var url = Uri.parse("$serverUrl/api/task/id/$id");
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
@@ -23,7 +26,7 @@ Future<Task> getTaskById(String id) async {
   }
 }
 
-// Ejemplo de formato de respuesta de peticion GET: http://localhost:3000/api/subtask/title/$title
+// Ejemplo de formato de respuesta de peticion GET: $serverUrl/api/subtask/title/$title
 // {
 //     "id": "aAmlJnXo785HjgTrdewX",
 //     "title": "Poner mantel",
@@ -33,7 +36,7 @@ Future<Task> getTaskById(String id) async {
 // }
 Future<Task> getTaskByTitle(String title) async {
   String encodedTitle = Uri.encodeComponent(title);
-  var url = Uri.parse("http://localhost:3000/api/task/title/$encodedTitle");
+  var url = Uri.parse("$serverUrl/api/task/title/$encodedTitle");
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
@@ -45,7 +48,7 @@ Future<Task> getTaskByTitle(String title) async {
   }
 }
 
-// Ejemplo de formato de respuesta de peticion GET: http://localhost:3000/api/subtask
+// Ejemplo de formato de respuesta de peticion GET: $serverUrl/api/subtask
 // {
 //     "subtasks": [
 //         {
@@ -65,7 +68,7 @@ Future<Task> getTaskByTitle(String title) async {
 //     ]
 // }
 Future<List<Task>> getAllTasks() async {
-  var url = Uri.parse("http://localhost:3000/api/task");
+  var url = Uri.parse("$serverUrl/api/task");
 
   final response = await http.get(url);
   if (response.statusCode == 200) {
@@ -74,14 +77,14 @@ Future<List<Task>> getAllTasks() async {
     List<Task> tasks = tasksListData.map((data) {
       return Task.fromMap(data);
     }).toList();
-
+    print("Returned tasks.");
     return tasks; // Devolver la lista de objetos Subtask en caso de éxito
   } else {
     throw Exception("No se pudieron obtener las tasks");
   }
 }
 
-// Ejemplo de formato de respuesta de peticion POST: http://localhost:3000/api/subtask
+// Ejemplo de formato de respuesta de peticion POST: $serverUrl/api/subtask
 // {
 //     "id": "aAmlJnXo785HjgTrdewX",
 //     "title": "Poner mantel",
@@ -91,7 +94,7 @@ Future<List<Task>> getAllTasks() async {
 // }
 
 Future<void> createTask(Task task) async {
-  var url = Uri.parse("http://localhost:3000/api/task");
+  var url = Uri.parse("$serverUrl/api/task");
 
   // Convierte el objeto Subtask a una cadena JSON (sin meter el id).
   String jsonBody = task.toJsonWithoutId();
@@ -121,12 +124,12 @@ Future<void> createTask(Task task) async {
   }
 }
 
-// Ejemplo de formato de respuesta de peticion PUT: http://localhost:3000/api/subtask/id/aAmlJnXo785HjgTrdewX
+// Ejemplo de formato de respuesta de peticion PUT: $serverUrl/api/subtask/id/aAmlJnXo785HjgTrdewX
 // {
 //     "message": "Subtarea actualizada con éxito"
 // }
 Future<void> updateTask(Task task) async {
-  var url = Uri.parse("http://localhost:3000/api/task/id/${task.id}");
+  var url = Uri.parse("$serverUrl/api/task/id/${task.id}");
 
   // Se debe tener cuidado porque el id no debe modificarse
   // Por ello no se pasa nunca como argumento json
@@ -154,7 +157,7 @@ Future<void> updateTask(Task task) async {
 
 // ¿Cómo hacer el delete? En la API no deja eliminar, arreglar eso antes de probar esta función
 // Future<void> deleteSubtask(String id) async {
-//   var url = Uri.parse("http://localhost:3000/api/subtask/$id");
+//   var url = Uri.parse("$serverUrl/api/subtask/$id");
 
 //   var response = await http.delete(url);
 
