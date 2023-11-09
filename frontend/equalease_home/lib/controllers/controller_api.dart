@@ -524,6 +524,7 @@ class APIController {
 
   // modify any field from student
   Future<bool> updateStudent(Student student) async {
+
     // Crea el JSON con las tareas actualizadas.
     var jsonBody = student.toJsonWithoutId();
 

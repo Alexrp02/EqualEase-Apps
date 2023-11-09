@@ -25,7 +25,14 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   _StudentsAssignedTaskState() {
     // IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Inicializar totalTasks y selectedTasks en el constructor con llamadas al controlador (actualmente solo es local)
-    print("Inicializando");
+    _controller.getTasks().then((tasks){
+          setState((){
+            for (Task task in tasks){
+              totalTasks.add(task);
+            }
+          });
+      }
+    );
   }
 
   void _openTaskSelectionDialog(BuildContext context) {
@@ -47,8 +54,12 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                         if (value) {
                           //llamar a la funcion del controlador assignTaskToStudent
                           selectedTasks.add(task);
+                          _student!.pendingTasks.add(task.id);
+                          _controller.updateStudent(_student!);
                         } else {
                           selectedTasks.remove(task);
+                          _student!.pendingTasks.remove(task.id);
+                          _controller.updateStudent(_student!);
                         }
                       }
                     });
@@ -161,7 +172,12 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           setState(() {
-                                            selectedTasks.remove(selectedTasks[i]);
+                                      
+                                            selectedTasks.remove(selectedTasks[i]); //Lo quitamos por ser local?
+
+                                            _student!.pendingTasks.remove(_student!.pendingTasks[i]);
+
+                                            _controller.updateStudent(_student!);
                                           });
                                         },
                                         style: ElevatedButton.styleFrom(
