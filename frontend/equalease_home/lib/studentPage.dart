@@ -2,6 +2,8 @@ import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
 import 'models/student.dart';
 import 'controllers/controller_api.dart';
+import 'components/subtasks_widget.dart';
+import 'models/subtask.dart';
 
 class StudentPage extends StatefulWidget {
   @override
@@ -100,7 +102,14 @@ class _StudentPageState extends State<StudentPage> {
                 children: <Widget>[
                   for (int i = 0; i < pendingTasks.length; i++)
                     InkWell(
-                      onTap: () => print('Tarea pulsada'),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SubtasksCarousel(
+                            taskId: pendingTasks[i].id,
+                          );
+                        }));
+                      },
                       child: Container(
                         padding: EdgeInsets.all(16),
                         // height: 80,
@@ -150,7 +159,14 @@ class _StudentPageState extends State<StudentPage> {
                     ),
                   for (int i = 0; i < doneTasks.length; i++)
                     InkWell(
-                      onTap: () => print('Tarea pulsada'),
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return SubtasksCarousel(
+                            taskId: doneTasks[i].id,
+                          );
+                        }));
+                      },
                       child: Container(
                         padding: EdgeInsets.all(16),
                         // height: 80,
