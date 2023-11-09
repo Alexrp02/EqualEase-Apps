@@ -6,7 +6,7 @@ import 'package:equalease_home/models/task.dart';
 class StudentsAssignedTask extends StatefulWidget {
   final String _id;
 
-  StudentsAssignedTask(String id) : _id = id;
+  StudentsAssignedTask(String studentId) : _id = studentId;
 
   @override
   _StudentsAssignedTaskState createState() => _StudentsAssignedTaskState();
@@ -16,13 +16,19 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   final ControllerStudent _controller = ControllerStudent('http://www.google.es');
   Student? _student;
   List<Task> selectedTasks = []; // Lista para almacenar tareas seleccionadas
-  Task tarea1 = Task(
-    id: '1',
-    title: 'Tarea 1',
-    description: 'Descripción de la tarea 1',
-    subtasks: [],
-    type: 'FixedType',
-  );
+  List<Task> totalTasks = []; // Lista para almacenar todas las tareas
+
+  _StudentsAssignedTaskState() {
+    // Inicializar totalTasks en el constructor
+    Task tarea1 = Task(
+      id: '1',
+      title: 'Tarea 1',
+      description: 'Descripción de la tarea 1',
+      subtasks: [],
+      type: 'FixedType',
+    );
+    totalTasks.add(tarea1);
+  }
 
   void _openTaskSelectionDialog(BuildContext context) {
     showDialog(
@@ -33,23 +39,22 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              CheckboxListTile(
-                title: Text("Tarea 1"),
-                value: selectedTasks.contains("Tarea 1"),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null) {
-                      if (value) {
-                        //llamar al metodo del controlador assignTaskToStudent
-                        selectedTasks.add(tarea1);
-                      } else {
-                        selectedTasks.remove(tarea1);
+              for (Task task in totalTasks)
+                CheckboxListTile(
+                  title: Text(task.title),
+                  value: selectedTasks.contains(task),
+                  onChanged: (bool? value) {
+                    setState(() {
+                      if (value != null) {
+                        if (value) {
+                          selectedTasks.add(task);
+                        } else {
+                          selectedTasks.remove(task);
+                        }
                       }
-                    }
-                  });
-                },
-              ),
-              // Agrega más CheckBoxListTiles para otras tareas si es necesario
+                    });
+                  },
+                ),
             ],
           ),
           actions: <Widget>[

@@ -18,7 +18,7 @@ class _StudentPageState extends State<StudentPage> {
         subtasks: [],
         type: "FixedType"),
     Task(
-        id: "alfjn",
+        id: "alfjm",
         title: "Hacer un sandwich",
         description: "Pasos para hacer un sandwich de jamón y queso.",
         subtasks: [],
