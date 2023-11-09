@@ -52,6 +52,7 @@ class SubtasksCarousel extends StatefulWidget {
 }
 
 class _SubtasksCarouselState extends State<SubtasksCarousel> {
+  int page = 0;
   final String taskId;
   List<Subtask> subtasks = [];
   final PageController pageController = PageController();
@@ -87,30 +88,40 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                iconSize: 200,
-                onPressed: () {
-                  if (pageController.page! > 0) {
-                    pageController.previousPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_forward),
-                iconSize: 200,
-                onPressed: () {
-                  if (pageController.page! < subtasks.length - 1) {
-                    pageController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                },
-              ),
+              page > 0
+                  ? IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      iconSize: 200,
+                      onPressed: () {
+                        setState(() {
+                          page--;
+                        });
+                        if (pageController.page! > 0) {
+                          pageController.previousPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                    )
+                  : Container(),
+              page < subtasks.length - 1
+                  ? IconButton(
+                      icon: Icon(Icons.arrow_forward),
+                      iconSize: 200,
+                      onPressed: () {
+                        setState(() {
+                          page++;
+                        });
+                        if (pageController.page! < subtasks.length - 1) {
+                          pageController.nextPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                    )
+                  : Container(),
             ],
           ),
         ],
