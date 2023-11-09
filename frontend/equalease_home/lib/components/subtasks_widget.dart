@@ -63,6 +63,11 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
   @override
   void initState() {
     super.initState();
+    pageController.addListener(() {
+      setState(() {
+        page = pageController.page!.round();
+      });
+    });
     controller.getSubtasksFromTaskList(taskId).then((value) {
       setState(() {
         subtasks = value;
@@ -71,60 +76,95 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
   }
 
   @override
+  void dispose() {
+    pageController.removeListener(() {});
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Subtasks Carousel')),
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: pageController,
-              itemCount: subtasks.length,
-              itemBuilder: (context, index) {
-                return SubtaskWidget(subtask: subtasks[index]);
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          toolbarHeight: 100.0,
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
               },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'PASOS PARA REALIZAR LA TAREA',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color:
+                        Colors.white, // Cambia el color de la fuente a blanco
+                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                    fontSize: 50.0, // Cambia el tamaño de la fuente
+                  ),
+                ),
+              ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              page > 0
-                  ? IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      iconSize: 200,
-                      onPressed: () {
-                        setState(() {
-                          page--;
-                        });
-                        if (pageController.page! > 0) {
-                          pageController.previousPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      },
-                    )
-                  : Container(),
-              page < subtasks.length - 1
-                  ? IconButton(
-                      icon: Icon(Icons.arrow_forward),
-                      iconSize: 200,
-                      onPressed: () {
-                        setState(() {
-                          page++;
-                        });
-                        if (pageController.page! < subtasks.length - 1) {
-                          pageController.nextPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      },
-                    )
-                  : Container(),
-            ],
-          ),
-        ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 32.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: pageController,
+                itemCount: subtasks.length,
+                itemBuilder: (context, index) {
+                  return SubtaskWidget(subtask: subtasks[index]);
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                page > 0
+                    ? IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        iconSize: 120,
+                        onPressed: () {
+                          if (pageController.page! > 0) {
+                            pageController.previousPage(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
+                page < subtasks.length - 1
+                    ? IconButton(
+                        icon: Icon(Icons.arrow_forward),
+                        iconSize: 120,
+                        onPressed: () {
+                          if (pageController.page! < subtasks.length - 1) {
+                            pageController.nextPage(
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          }
+                        },
+                      )
+                    : Container(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

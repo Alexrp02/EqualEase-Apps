@@ -63,7 +63,16 @@ class _StudentPageState extends State<StudentPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +84,7 @@ class _StudentPageState extends State<StudentPage> {
                     color:
                         Colors.white, // Cambia el color de la fuente a blanco
                     fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                    fontSize: 24.0, // Cambia el tamaño de la fuente
+                    fontSize: 50.0, // Cambia el tamaño de la fuente
                   ),
                 ),
               ],
