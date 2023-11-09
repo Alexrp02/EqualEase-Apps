@@ -13,9 +13,26 @@ class SubtaskWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Add Audio and Video players based on the URLs
-        Center(child: Text(subtask.title)),
-        Center(child: Text(subtask.description)),
+        Center(
+            child: Text(
+          subtask.title,
+          style: TextStyle(fontSize: 60),
+        )),
+        Center(
+            child: Text(
+          subtask.description,
+          style: TextStyle(fontSize: 40),
+        )),
+        // Image of the subtask
+        Center(
+            child: Container(
+          height: 400,
+          width: 400,
+          child: Image.network(
+            "https://api.arasaac.org/v1/pictograms/11299?download=false",
+            fit: BoxFit.cover,
+          ),
+        )),
         // Add buttons or gestures to play audio and video if they are available
       ],
     );
@@ -72,6 +89,7 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
             children: [
               IconButton(
                 icon: Icon(Icons.arrow_back),
+                iconSize: 200,
                 onPressed: () {
                   if (pageController.page! > 0) {
                     pageController.previousPage(
@@ -83,6 +101,7 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
               ),
               IconButton(
                 icon: Icon(Icons.arrow_forward),
+                iconSize: 200,
                 onPressed: () {
                   if (pageController.page! < subtasks.length - 1) {
                     pageController.nextPage(
