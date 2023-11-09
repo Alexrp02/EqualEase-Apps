@@ -1,3 +1,5 @@
+import 'package:equalease_home/models/subtask.dart';
+import 'package:equalease_home/models/task.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:equalease_home/models/student.dart';
@@ -15,20 +17,29 @@ class ControllerStudent {
   /// Return:
   ///  -Lanza un error si no puede conectar con la API
   ///  -Estudiante del tipo Student (en caso de que exista)
+  
+  Future<Student> getStudent(String id) async {
+    final String apiUrl =
+        '$_apiUrl/student/id/$id'; // Construye la URL específica para obtener un estudiante por ID.
 
-  Future<Student> getStudentById(String id) async {
-    var url = Uri.parse('$_apiUrl/id/$id');
+    try {
+      final response = await http.get(Uri.parse(
+          apiUrl)); // Realiza una solicitud HTTP GET para obtener el estudiante.
 
-    final response = await http.get(url);
-    bool debug = true;
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Student st = Student.fromJson(response.body);
+      
+        return st;
 
-    if (response.statusCode == 200 || debug) {
-      //final student = Student.fromJson(response.body);
-      final student = Student(id: '123', name: 'estudiante1');
-      return student; // Devolver el objeto Subtask en caso de éxito
-    } else {
-      throw Exception(
-          "No se pudo obtener el estudiante con id = $id"); // Lanzar una excepción en caso de error
+        
+      } else {
+        throw Exception(
+          
+            'Error al obtener el estudiante: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
     }
   }
 
@@ -38,44 +49,75 @@ class ControllerStudent {
   ///  -Lanza un error si no puede conectar con la API
   ///  -Lista de estudiantes almacenados del tipo Future<List<Student>> (en caso de que exista)
   ///
-  Future<List<Student>> getAllStudents() async {
-    var url = Uri.parse(_apiUrl);
-
-    String jsonRaw = '''
-    {
-      "students": [
-        {
-          "id": "asdfg",
-          "name": "Estudiante 1"
-        },
-        {
-          "id": "qwerty",
-          "name": "Estudiante 2"
-        }
-      ]
-    }
-  ''';
-
-    final response = await http.get(url);
-    bool debug = true;
-
-    if (response.statusCode == 200 || debug) {
-      // final List<dynamic> studentsListData =
-      //     json.decode(response.body)['students'];
-
-      // List<Task> students = studentsListData.map((data) {
-      //   return Task.fromMap(data);
-      // }).toList();
-
-      final List<dynamic> studentsListData = json.decode(jsonRaw)['students'];
-
-      List<Student> students = studentsListData.map((data) {
-        return Student.fromMap(data);
-      }).toList();
-
-      return students; // Devolver la lista de objetos Subtask en caso de éxito
+  Future<List<Student>> getStudents() async {
+    final String apiUrl =
+        '$_apiUrl/student'; // Construye la URL específica para obtener un estudiante por ID.
+    
+    List<Student> students = [];
+    final response = await http.get(Uri.parse(apiUrl));
+    
+    if (response.statusCode == 200) {
+      // Analizar la respuesta JSON
+      final List<dynamic> list = json.decode(response.body);
+      for (var element in list) {
+        students.add(Student.fromMap(element));
+      }
     } else {
-      throw Exception("No se pudieron obtener las tasks");
+      throw Exception(
+          'Error al obtener los estudiantes: ${response.statusCode}');
     }
+
+    return students;
+  }
+  //Temporal
+  Future<Task> getTask(String id) async {
+    final String apiUrl = '$_apiUrl/task/id/$id';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Task task = Task.fromJson(response.body);
+        return task;
+      } else {
+        throw Exception(
+            'Error al obtener la tarea con id $id: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
+
+  /// Obtiene las tareas pendientes asignadas a un estudiante
+  ///
+  /// Return:
+  ///  -Lanza un error si no puede conectar con la API
+  ///  -Lista de estudiantes almacenados del tipo Future<List<Student>> (en caso de que exista)
+  ///
+  Future<List<Task>> getPendingTasksFromStudent(String studentId) async {
+      try {
+        // Obtener student
+        Student student = await getStudent(studentId);
+
+        List<Task> list = [];
+
+        
+        for (String taskId in student.pendingTasks) {
+          try {
+            Task task = await getTask(taskId);
+            list.add(task);
+          } catch (e) {
+            print('Error al obtener la tarea $taskId: $e');
+          }
+
+        }
+        
+        return list;
+      } catch (e) {
+        print('Error al obtener el estudiante con id $studentId: $e');
+        throw Exception(
+            'No se pudo obtener la lista de tareas pendientes del estudiante con id $studentId.');
+      }
   }
 }

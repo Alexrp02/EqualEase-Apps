@@ -1,5 +1,6 @@
 import 'package:equalease_home/controllers/controllerStudent.dart';
 import 'package:equalease_home/models/student.dart';
+import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
 
 class StudentsAssignedTask extends StatefulWidget {
@@ -12,15 +13,24 @@ class StudentsAssignedTask extends StatefulWidget {
 }
 
 class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
-  final ControllerStudent _controller = ControllerStudent('http://www.google.es');
+  final ControllerStudent _controller = ControllerStudent('http://10.0.2.2:3000/api');
   Student? _student;
+  List<Task> _pendingTasks= [];
 
   @override
   void initState() {
     super.initState();
-    _controller.getStudentById(widget._id).then((student) {
+    _controller.getStudent(widget._id).then((student) {
       setState(() {
         _student = student;
+        _controller.getPendingTasksFromStudent(widget._id).then((tasks){
+          setState((){
+            for (Task task in tasks){
+              _pendingTasks.add(task);
+            }
+          });
+            
+        });
       });
     });
   }
@@ -57,7 +67,13 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
           : Center(
             child: Column(
               children: <Widget>[
-                Text('NOMBRE DEL ALUMNO'),
+                Text(
+                  _student!.name,
+                  style: TextStyle(
+                    fontSize: 40, 
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
                 Expanded( // Utiliza un Expanded para que el SingleChildScrollView ocupe el espacio restante
                   child: Container(
                     decoration: BoxDecoration(
@@ -72,7 +88,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          for (int i = 0; i < 1; i++)
+                          for (int i = 0; i < _pendingTasks.length; i++)
                             Container(
                               padding: EdgeInsets.all(0),
                               height: 80,
@@ -87,7 +103,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: <Widget>[
-                                  Text('TAREA 1'),
+                                  Text(_pendingTasks[i].title),
                                   Container(
                                     width: 200,
                                     height: 50,

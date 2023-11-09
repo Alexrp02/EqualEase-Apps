@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:equalease_home/models/task.dart';
+
 /*
   Student model
   Student attributes:
@@ -12,15 +14,18 @@ import 'dart:convert';
 class Student {
   String id;
   String name;
+  List<String> pendingTasks;
 
   Student({
     required this.id,
     required this.name,
+    required this.pendingTasks
   });
 
   factory Student.fromMap(Map<String, dynamic> json) => Student(
         id: json['id'],
-        name: json['name']
+        name: json['name'],
+        pendingTasks: List<String>.from(json['pendingTasks']),
         // images: json['images'],
         // pictograms: json['pictograms']
   );
@@ -29,7 +34,8 @@ class Student {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'name': name
+        'name': name,
+        'pendingTasks': pendingTasks
   };
 
   String toJson() => json.encode(toMap());
@@ -38,8 +44,8 @@ class Student {
   // que el id es asignado automáticamente
   String toJsonWithoutId() {
     Map<String, dynamic> data = {
-      'name': name
-      
+      'name': name,
+      'pendingTasks':pendingTasks
     };
     return json.encode(data);
   }

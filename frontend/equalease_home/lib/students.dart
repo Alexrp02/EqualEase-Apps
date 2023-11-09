@@ -10,13 +10,13 @@ class StudentsPage extends StatefulWidget {
 
 class _StudentsPageState extends State<StudentsPage> {
   final ControllerStudent _controller =
-      ControllerStudent('http://www.google.es');
+      ControllerStudent('http://10.0.2.2:3000/api');
   List<Student> _StudentsAdded = [];
 
   @override
   void initState() {
     super.initState();
-    _controller.getAllStudents().then((students) {
+    _controller.getStudents().then((students) {
       setState(() {
         _StudentsAdded = students;
       });
