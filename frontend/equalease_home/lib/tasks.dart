@@ -41,8 +41,9 @@ class _TasksPageState extends State<TasksPage> {
   void initState() {
     super.initState();
 
-    setState(() {
-      controller.getTasks().then((value) {
+  
+    controller.getTasks().then((value) {
+      setState(() {
         _TasksAgregadas = value;
         isLoading = false;
       });
