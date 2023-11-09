@@ -232,8 +232,13 @@ class _TasksPageState extends State<TasksPage> {
                 ),
               ),
               onPressed: () {
+                for (var i = 0; i < task.subtasks.length; i++) {
+                  controller.deleteSubtask(task.subtasks[i]);
+                }
+                controller.deleteTask(task.id);
                 setState(() {
                   _TasksAgregadas.remove(task);
+
                   // Llamar al controlador de eliminación
                 });
                 Navigator.of(context).pop();

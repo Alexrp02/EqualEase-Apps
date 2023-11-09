@@ -4,9 +4,10 @@ import 'models/subtask.dart';
 import 'controllers/controller_api.dart';
 
 class CrearSubtaskForm extends StatefulWidget {
-  final Function(String) onSubtaskSaved;
+  //final Function(String) onSubtaskSaved;
 
-  CrearSubtaskForm({required this.onSubtaskSaved});
+  CrearSubtaskForm();
+  //CrearSubtaskForm({required this.onSubtaskSaved});
 
   @override
   _CrearSubtaskFormState createState() => _CrearSubtaskFormState();
@@ -41,8 +42,8 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
 
       controller.createSubtask(nuevaSubtarea).then((value) => Navigator.pop(
           context,
-          nuevaSubtarea
-              .id)); // Utiliza la función post para crear una nueva subtarea
+          value
+              )); // Utiliza la función post para crear una nueva subtarea
     }
   }
 

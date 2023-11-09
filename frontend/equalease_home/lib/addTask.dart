@@ -137,7 +137,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CrearSubtaskForm(
-                        onSubtaskSaved: _addSubTask,
+                        //onSubtaskSaved: _addSubTask,
                       ),
                     ),
                   ).then((value) {

@@ -60,7 +60,7 @@ class APIController {
   }
 
   // create subtask
-  Future<bool> createSubtask(Subtask subtask) async {
+  Future<String> createSubtask(Subtask subtask) async {
     final String apiUrl = '$baseUrl/subtask';
 
     // Necesitamos convertir el objeto a JSON pero sin su id
@@ -82,12 +82,12 @@ class APIController {
         // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
         final body = json.decode(response.body);
         subtask.id = body['id'];
-        return true;
+        return subtask.id;
       } else {
-        return false;
+        return '';
       }
     } catch (e) {
-      return false;
+      return '';
     }
   }
 
@@ -132,7 +132,8 @@ class APIController {
     try {
       final response = await http.delete(Uri.parse(apiUrl));
 
-      if (response.statusCode == 204) {
+      if (response.statusCode == 200) {
+        print('subtareas eliminadas correctamente');
         return true; // Devuelve true para indicar que la eliminación fue exitosa.
       } else {
         return false; // Devuelve false para indicar que la eliminación falló.
@@ -181,7 +182,7 @@ class APIController {
       } else {
         throw Exception('Error al obtener tareas: ${response.statusCode}');
       }
-     
+
       return tasks;
     } catch (e) {
       print('Error al obtener todas las tareas: $e');
@@ -291,6 +292,7 @@ class APIController {
       // Realiza la operacion de actualizacion en la BD
       var result = await _putTask(taskId, json.encode(requestJson));
 
+
       return result;
     } else {
       return false;
@@ -341,6 +343,7 @@ class APIController {
       final response = await http.delete(Uri.parse(apiUrl));
 
       if (response.statusCode == 204) {
+        //tarea eliminada
         return true; // Devuelve true para indicar que la eliminación fue exitosa.
       } else {
         return false; // Devuelve false para indicar que la eliminación falló.
