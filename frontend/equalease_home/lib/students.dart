@@ -7,8 +7,10 @@ class StudentsPage extends StatefulWidget {
   @override
   _StudentsPageState createState() => _StudentsPageState();
 }
+
 class _StudentsPageState extends State<StudentsPage> {
-  final ControllerStudent _controller = ControllerStudent('http://www.google.es');
+  final ControllerStudent _controller =
+      ControllerStudent('http://www.google.es');
   List<Student> _StudentsAdded = [];
 
   @override
@@ -24,29 +26,31 @@ class _StudentsPageState extends State<StudentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100.0),
-          child: AppBar(
-            backgroundColor: Color.fromARGB(255,161, 182, 236),
-            title: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'ESTUDIANTES',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white, // Cambia el color de la fuente a blanco
-                      fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                      fontSize: 24.0, // Cambia el tamaño de la fuente
-                    ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'ESTUDIANTES',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color:
+                        Colors.white, // Cambia el color de la fuente a blanco
+                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                    fontSize: 24.0, // Cambia el tamaño de la fuente
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
+      ),
       body: Center(
+        heightFactor: 1.0,
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
@@ -55,7 +59,7 @@ class _StudentsPageState extends State<StudentsPage> {
             ),
           ), // Color de fondo para mostrar el espacio del SingleChildScrollView
           width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height,
+          // height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,49 +77,57 @@ class _StudentsPageState extends State<StudentsPage> {
                       borderRadius: BorderRadius.circular(0),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround, // Divide el espacio en tres partes
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceAround, // Divide el espacio en tres partes
                       children: <Widget>[
                         Text('${_StudentsAdded[i].name}'), // Primera parte
                         Container(
-                          width: 200,
-                          height:50,
-                          child: ElevatedButton(
-                            onPressed: () {
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => StudentsAssignedTask(_StudentsAdded[i].id)),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding: EdgeInsets.all(0),
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: Color.fromARGB(255, 100, 100, 101), width: 2.0), // Borde
-                                  borderRadius: BorderRadius.circular(10), // Borde cuadrado
+                            width: 200,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          StudentsAssignedTask(
+                                              _StudentsAdded[i].id)),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                padding: EdgeInsets.all(0),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: Color.fromARGB(255, 100, 100, 101),
+                                      width: 2.0), // Borde
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Borde cuadrado
                                 ),
-                            ),
-                            child: Text('Tareas'), // Segunda parte
-                          )
-                        ),
+                              ),
+                              child: Text('Tareas'), // Segunda parte
+                            )),
                         Container(
-                          width: 200,
-                          height:50,
-                          child:ElevatedButton(
-                            onPressed: () {
-                              // Acción a realizar cuando se presione el botón "Datos"
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding: EdgeInsets.all(0),
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0), // Borde
-                                  borderRadius: BorderRadius.circular(10), // Borde cuadrado
+                            width: 200,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Acción a realizar cuando se presione el botón "Datos"
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                padding: EdgeInsets.all(0),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: const Color.fromARGB(
+                                          255, 100, 100, 101),
+                                      width: 2.0), // Borde
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Borde cuadrado
                                 ),
-                            ),
-                            child: Text('Datos'), // Tercera parte
-                          )
-                        ),
+                              ),
+                              child: Text('Datos'), // Tercera parte
+                            )),
                       ],
                     ),
                   ),
