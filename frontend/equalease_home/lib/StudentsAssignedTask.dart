@@ -1,6 +1,7 @@
 import 'package:equalease_home/controllers/controllerStudent.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
+import 'package:equalease_home/models/task.dart';
 
 class StudentsAssignedTask extends StatefulWidget {
   final String _id;
@@ -14,7 +15,14 @@ class StudentsAssignedTask extends StatefulWidget {
 class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   final ControllerStudent _controller = ControllerStudent('http://www.google.es');
   Student? _student;
-  List<String> selectedTasks = []; // Lista para almacenar tareas seleccionadas
+  List<Task> selectedTasks = []; // Lista para almacenar tareas seleccionadas
+  Task tarea1 = Task(
+    id: '1',
+    title: 'Tarea 1',
+    description: 'Descripción de la tarea 1',
+    subtasks: [],
+    type: 'FixedType',
+  );
 
   void _openTaskSelectionDialog(BuildContext context) {
     showDialog(
@@ -32,9 +40,10 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                   setState(() {
                     if (value != null) {
                       if (value) {
-                        selectedTasks.add("Tarea 1");
+                        //llamar al metodo del controlador assignTaskToStudent
+                        selectedTasks.add(tarea1);
                       } else {
-                        selectedTasks.remove("Tarea 1");
+                        selectedTasks.remove(tarea1);
                       }
                     }
                   });
@@ -127,7 +136,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: <Widget>[
-                                    Text(selectedTasks[i]),
+                                    Text(selectedTasks[i].title),
                                     Container(
                                       width: 200,
                                       height: 50,
