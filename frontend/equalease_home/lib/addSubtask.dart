@@ -37,13 +37,14 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
         id: 'subid', // Proporciona un ID adecuado para la subtarea
         title: _titleController
             .text, // Utiliza el título del campo de texto para el título de la subtarea
-        description: _descriptionController.text, image: '', pictogram: '', audio: '', video: '',
+        description: _descriptionController.text, image: '', pictogram: '',
+        audio: '', video: '',
       );
 
-      controller.createSubtask(nuevaSubtarea).then((value) => Navigator.pop(
-          context,
-          value
-              )); // Utiliza la función post para crear una nueva subtarea
+      controller.createSubtask(nuevaSubtarea).then((value) {
+        nuevaSubtarea.id = value;
+        Navigator.pop(context, nuevaSubtarea);
+      }); // Utiliza la función post para crear una nueva subtarea
     }
   }
 

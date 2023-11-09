@@ -185,8 +185,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   ).then((value) {
                     //_editedSubtasks.add(value);
                     //controller.addSubtaskToTaskList(widget.task.id, value);
-                    widget.task.subtasks.add(value);
-                    //print(subTasks);
+                    widget.task.subtasks.add(value.id);
+                    setState(() {
+                      _editedSubtasks.add(value); //print(subTasks);
+                    });
                   });
                 },
                 child: Text('AÑADIR SUBTAREA',

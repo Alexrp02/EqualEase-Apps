@@ -18,6 +18,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
+  List<Subtask> _editedSubtasks = [];
   List<String> subTasks = [];
   int contador = 1;
   String? _tipoSeleccionado;
@@ -123,13 +124,60 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
               ),
               SizedBox(
                   height: 30), // Agrega un espacio adicional entre los campos
-              Text(
-                'SUBTAREAS',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+              SizedBox(height: 30),
+              Text('SUBTAREAS:',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              Column(
+                children: _editedSubtasks.map(
+                  (subtask) {
+                    return Column(
+                      children: [
+                        Text('SUBTAREA ${_editedSubtasks.indexOf(subtask) + 1}',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                        TextFormField(
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          initialValue: subtask.title,
+                          onChanged: (value) {
+                            setState(() {
+                              subtask.title = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'TITULO SUBTAREA',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          initialValue: subtask.description,
+                          onChanged: (value) {
+                            setState(() {
+                              subtask.description = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'DESCRIPCION SUBTAREA',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                      ],
+                    );
+                  },
+                ).toList(),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -137,11 +185,14 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CrearSubtaskForm(
-                        //onSubtaskSaved: _addSubTask,
-                      ),
+                          //onSubtaskSaved: _addSubTask,
+                          ),
                     ),
                   ).then((value) {
-                    subTasks.add(value);
+                    subTasks.add(value.id);
+                    setState(() {
+                      _editedSubtasks.add(value);
+                    });
                     print(subTasks);
                   });
                 },
@@ -212,7 +263,6 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                     controller.createTask(
                         nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
                     Navigator.pop(context, nuevaTask);
-                    
                   }
                 },
                 child: Text(
