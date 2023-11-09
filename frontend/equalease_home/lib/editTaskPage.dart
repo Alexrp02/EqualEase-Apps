@@ -50,6 +50,12 @@ class _EditTaskPageState extends State<EditTaskPage> {
     }*/
   }
 
+  void _deleteSubtask(Subtask subtask) {
+    setState(() {
+      _editedSubtasks.remove(subtask);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     int subtaskCount = 1; // Contador de subtareas
@@ -128,9 +134,23 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   (subtask) {
                     return Column(
                       children: [
-                        Text('SUBTAREA ${subtaskCount++}',
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text('SUBTAREA ${subtaskCount++}',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black)),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteSubtask(subtask);
+                                widget.task.subtasks.remove(subtask.id);
+                                controller.deleteSubtask(subtask.id);
+                              },
+                            ),
+                          ],
+                        ),
                         TextFormField(
                           style: TextStyle(color: Colors.black, fontSize: 18),
                           initialValue: subtask.title,

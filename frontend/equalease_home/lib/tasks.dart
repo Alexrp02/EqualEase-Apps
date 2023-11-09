@@ -93,7 +93,7 @@ class _TasksPageState extends State<TasksPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                DetallesTaskPage(task: TaskAgregada),
+                                DetallesTaskPage(task: TaskAgregada, controller: controller,),
                           ),
                         );
                       },
@@ -257,8 +257,9 @@ class _TasksPageState extends State<TasksPage> {
 
 class DetallesTaskPage extends StatelessWidget {
   final Task task;
+  final APIController controller;
 
-  DetallesTaskPage({required this.task});
+  DetallesTaskPage({required this.task, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +297,7 @@ class DetallesTaskPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
+                )),
             SizedBox(height: 16),
             Text('DESCRIPCION: ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
@@ -304,15 +305,37 @@ class DetallesTaskPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
+                )),
             SizedBox(height: 16),
             Text('SUBTAREAS: ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.subtasks.toString()}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
+            FutureBuilder<List<Subtask>>(
+              future: controller.getSubtasksFromTaskList(task.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: snapshot.data!.map((subtask) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('TITULO: ${subtask.title}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 25)),
+                          Text('DESCRIPCION: ${subtask.description}',
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.black)),
+                          SizedBox(height: 16),
+                        ],
+                      );
+                    }).toList(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error al cargar las subtareas');
+                }
+                return CircularProgressIndicator(); // Muestra un indicador de progreso mientras se cargan las subtareas.
+              },
+            ),
             SizedBox(height: 16),
             Text('TIPO: ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
@@ -320,7 +343,7 @@ class DetallesTaskPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20.0,
                   color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
+                )),
           ],
         ),
       ),
