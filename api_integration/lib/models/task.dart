@@ -43,5 +43,17 @@ class Task {
 
   String toJson() => json.encode(toMap());
 
+  String toJsonWithoutId() {
+    Map<String, dynamic> data = {
+      'title': title,
+      'description': description,
+      'subtasks': subtasks,
+      'image': image,
+      'pictogram': pictogram,
+      'type': type
+    };
+    return json.encode(data);
+  }
+
   // ... Resto del código ...
 }

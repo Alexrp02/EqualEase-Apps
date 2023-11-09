@@ -41,5 +41,16 @@ class Teacher {
 
   String toJson() => json.encode(toMap());
 
+  String toJsonWithoutId() {
+    Map<String, dynamic> data = {
+      'name': name,
+      'surname': surname,
+      'email': email,
+      'students': students,
+      'profilePicture': profilePicture,
+    };
+    return json.encode(data);
+  }
+
   // ... Resto del código ...
 }
