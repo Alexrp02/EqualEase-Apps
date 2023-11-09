@@ -85,6 +85,8 @@ class APIController {
         body: jsonBody,
       );
 
+      print(jsonBody);
+
       if (response.statusCode == 201) {
         // La solicitud POST fue exitosa.
         // La respuesta incluye los datos de la tarea recién creada,
@@ -345,6 +347,27 @@ class APIController {
   }
 
   // get student(s) by name
+
+  // get students
+  Future<List<Student>> getStudents() async {
+    final String apiUrl =
+        '$baseUrl/student'; // Construye la URL específica para obtener un estudiante por ID.
+
+    List<Student> students = [];
+    final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      // Analizar la respuesta JSON
+      final List<dynamic> list = json.decode(response.body);
+      for (var element in list) {
+        students.add(Student.fromMap(element));
+      }
+    } else {
+      throw Exception(
+          'Error al obtener los estudiantes: ${response.statusCode}');
+    }
+
+    return students;
+  }
 
   // get pending tasks from student (studentId)
   Future<List<Task>> getPendingTasksFromStudent(String studentId) async {
