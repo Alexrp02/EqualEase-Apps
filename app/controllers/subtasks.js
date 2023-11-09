@@ -39,9 +39,9 @@ async function createSubtask(req, res) {
                  // Upload the image to Firebase Storage
                 const storageRef = ref(storage, `subtask/${subtaskData.title}.jpg`);
                 const metadata = {
-                    contentType: req.file.mimetype
+                    contentType: req.image.mimetype
                 }
-                const snapshot = await uploadBytesResumable(storageRef, req.file.buffer, metadata);
+                const snapshot = await uploadBytesResumable(storageRef, req.image.buffer, metadata);
                 const downloadURL = await getDownloadURL(snapshot.ref);
                 console.log("File available at", downloadURL) ;
 

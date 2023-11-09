@@ -12,6 +12,8 @@ RUN npm install
 
 RUN npm install express
 
+RUN npm install multer
+
 # Install nodemon
 RUN npm install -g nodemon
 
