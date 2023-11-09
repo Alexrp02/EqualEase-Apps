@@ -209,8 +209,9 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
         onPressed: () {
           _openTaskSelectionDialog(context);
         },
-        child: Icon(Icons.add),
-      ),
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor:  Color.fromARGB(255, 161, 182, 236)
+      )
     );
   }
 }
