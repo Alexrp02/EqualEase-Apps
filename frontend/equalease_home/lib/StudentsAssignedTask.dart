@@ -2,7 +2,7 @@ import 'package:equalease_home/controllers/controllerStudent.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
-import 'package:equalease_home/models/task.dart';
+   
 
 class StudentsAssignedTask extends StatefulWidget {
   final String _id;
@@ -16,7 +16,6 @@ class StudentsAssignedTask extends StatefulWidget {
 class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   final ControllerStudent _controller = ControllerStudent('http://10.0.2.2:3000/api');
   Student? _student;
-  List<Task> _pendingTasks= [];
   List<Task> selectedTasks = []; // Lista para almacenar tareas seleccionadas
   List<Task> totalTasks = []; // Lista para almacenar todas las tareas
 
@@ -81,7 +80,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
         _controller.getPendingTasksFromStudent(widget._id).then((tasks){
           setState((){
             for (Task task in tasks){
-              _pendingTasks.add(task);
+              selectedTasks.add(task);
             }
           });
             
@@ -122,7 +121,13 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
           : Center(
               child: Column(
                 children: <Widget>[
-                  Text('NOMBRE DEL ALUMNO'),
+                  Text(
+                  _student!.name,
+                  style: TextStyle(
+                    fontSize: 40, 
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
