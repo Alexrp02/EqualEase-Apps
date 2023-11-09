@@ -15,11 +15,15 @@ class StudentsAssignedTask extends StatefulWidget {
 class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   final ControllerStudent _controller = ControllerStudent('http://www.google.es');
   Student? _student;
+
+  //IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  //Preguntar al cliente si quiere que se puedan repetir las tareas asignadas. En caso contrario cambiar el list por un set
   List<Task> selectedTasks = []; // Lista para almacenar tareas seleccionadas
   List<Task> totalTasks = []; // Lista para almacenar todas las tareas
 
   _StudentsAssignedTaskState() {
-    // Inicializar totalTasks en el constructor
+    // IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Inicializar totalTasks y selectedTasks en el constructor con llamadas al controlador (actualmente solo es local)
     Task tarea1 = Task(
       id: '1',
       title: 'Tarea 1',
@@ -27,7 +31,23 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
       subtasks: [],
       type: 'FixedType',
     );
+    Task tarea2 = Task(
+      id: '2',
+      title: 'Tarea 2',
+      description: 'Descripción de la tarea 2',
+      subtasks: [],
+      type: 'FixedType',
+    );
+    Task tarea3 = Task(
+      id: '3',
+      title: 'Tarea 3',
+      description: 'Descripción de la tarea 3',
+      subtasks: [],
+      type: 'FixedType',
+    );
     totalTasks.add(tarea1);
+    totalTasks.add(tarea2);
+    totalTasks.add(tarea3);
   }
 
   void _openTaskSelectionDialog(BuildContext context) {
@@ -47,6 +67,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                     setState(() {
                       if (value != null) {
                         if (value) {
+                          //llamar a la funcion del controlador assignTaskToStudent
                           selectedTasks.add(task);
                         } else {
                           selectedTasks.remove(task);
@@ -147,7 +168,9 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                       height: 50,
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          // TODO
+                                          setState(() {
+                                            selectedTasks.remove(selectedTasks[i]);
+                                          });
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.white,
@@ -160,7 +183,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                         ),
-                                        child: Text('Borrar'),
+                                        child: Text('Quitar'),
                                       ),
                                     )
                                   ],
