@@ -1,4 +1,4 @@
-import 'package:equalease_home/controllers/controllerStudent.dart';
+import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ class StudentsAssignedTask extends StatefulWidget {
 }
 
 class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
-  final ControllerStudent _controller = ControllerStudent('http://10.0.2.2:3000/api');
+  final APIController _controller = APIController();
   Student? _student;
 
   //IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -25,30 +25,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   _StudentsAssignedTaskState() {
     // IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Inicializar totalTasks y selectedTasks en el constructor con llamadas al controlador (actualmente solo es local)
-    Task tarea1 = Task(
-      id: '1',
-      title: 'Tarea 1',
-      description: 'Descripción de la tarea 1',
-      subtasks: [],
-      type: 'FixedType',
-    );
-    Task tarea2 = Task(
-      id: '2',
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      subtasks: [],
-      type: 'FixedType',
-    );
-    Task tarea3 = Task(
-      id: '3',
-      title: 'Tarea 3',
-      description: 'Descripción de la tarea 3',
-      subtasks: [],
-      type: 'FixedType',
-    );
-    totalTasks.add(tarea1);
-    totalTasks.add(tarea2);
-    totalTasks.add(tarea3);
+    print("Inicializando");
   }
 
   void _openTaskSelectionDialog(BuildContext context) {

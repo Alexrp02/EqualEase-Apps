@@ -11,18 +11,18 @@ class _StudentPageState extends State<StudentPage> {
   // final ControllerStudent _controller =
   //     ControllerStudent('http://www.google.es');
   List<Task> pendingTasks = [
-    Task(
-        id: "alfjn",
-        title: "Hacer la cama",
-        description: "En esta tarea, tendrás que hacer la cama solito",
-        subtasks: [],
-        type: "FixedType"),
-    Task(
-        id: "alfjm",
-        title: "Hacer un sandwich",
-        description: "Pasos para hacer un sandwich de jamón y queso.",
-        subtasks: [],
-        type: "FixedType"),
+    // Task(
+    //     id: "alfjn",
+    //     title: "Hacer la cama",
+    //     description: "En esta tarea, tendrás que hacer la cama solito",
+    //     subtasks: [],
+    //     type: "FixedType"),
+    // Task(
+    //     id: "alfjm",
+    //     title: "Hacer un sandwich",
+    //     description: "Pasos para hacer un sandwich de jamón y queso.",
+    //     subtasks: [],
+    //     type: "FixedType"),
   ];
 
   @override
