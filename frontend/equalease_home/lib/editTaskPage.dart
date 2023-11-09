@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/task.dart';
 import 'models/subtask.dart';
+import 'controllers/controller_api.dart';
 
 class EditTaskPage extends StatefulWidget {
   final Task task;
@@ -16,13 +17,20 @@ class _EditTaskPageState extends State<EditTaskPage> {
   late String _editedDescription;
   late List<Subtask> _editedSubtasks;
   late String _editedType;
+  final controller = APIController();
 
   @override
   void initState() {
     super.initState();
     _editedTitle = widget.task.title;
     _editedDescription = widget.task.description;
-    _editedSubtasks = List.from(widget.task.subtasks);
+
+    setState(() {
+      controller.getSubtasksFromTaskList(widget.task.id).then((value) {
+        _editedSubtasks = value;
+      });
+    });
+  
     _editedType = widget.task.type;
   }
 
@@ -59,7 +67,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
-                style: TextStyle(color: Colors.black, fontSize:18),
+                style: TextStyle(color: Colors.black, fontSize: 18),
                 initialValue: _editedTitle,
                 onChanged: (value) {
                   setState(() {
@@ -68,7 +76,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 },
                 decoration: InputDecoration(
                   labelText: 'TITULO',
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -83,12 +94,19 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 },
                 decoration: InputDecoration(
                   labelText: 'DESCRIPCION',
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 30),
-              Text('SUBTAREAS:', style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold)),
+              Text('SUBTAREAS:',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
               Column(
                 children: _editedSubtasks.asMap().entries.map(
                   (entry) {
@@ -96,7 +114,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
                     Subtask subtask = entry.value;
                     return Column(
                       children: [
-                        Text('SUBTAREA ${subtaskCount++}', style: TextStyle(fontSize: 20, color: Colors.black)),
+                        Text('SUBTAREA ${subtaskCount++}',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
                         TextFormField(
                           style: TextStyle(color: Colors.black, fontSize: 18),
                           initialValue: subtask.title,
@@ -107,7 +127,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           },
                           decoration: InputDecoration(
                             labelText: 'TITULO SUBTAREA',
-                            labelStyle: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -122,7 +145,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           },
                           decoration: InputDecoration(
                             labelText: 'DESCRIPCION SUBTAREA',
-                            labelStyle: TextStyle(color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -143,7 +169,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 },
                 decoration: InputDecoration(
                   labelText: 'TIPO',
-                  labelStyle: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -153,16 +182,16 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   // Lógica para guardar los cambios realizados
                   widget.task.title = _editedTitle;
                   widget.task.description = _editedDescription;
-                  widget.task.subtasks = _editedSubtasks;
+                  //widget.task.subtasks = _editedSubtasks; LLAMAR AQUI AL METODO PARA ACTUALIZAR SUBTAREA
                   widget.task.type = _editedType;
                   // Aquí se pueden llamar a los controladores para guardar los cambios
                   Navigator.pop(context);
                 },
-                child: Text('GUARDAR CAMBIOS', style: TextStyle(color: Colors.white)),
+                child: Text('GUARDAR CAMBIOS',
+                    style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromARGB(255, 161, 182, 236),
                   onPrimary: Colors.white,
-                  
                 ),
               ),
             ],

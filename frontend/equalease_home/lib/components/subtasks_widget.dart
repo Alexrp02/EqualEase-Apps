@@ -85,7 +85,11 @@ void main() {
           Subtask(
               id: "nothing",
               title: 'Subtask 1',
-              description: 'Description of subtask 1'),
+              description: 'Description of subtask 1',
+              image: '',
+              pictogram: '',
+              audio: '',
+              video: ''),
           // Add more subtasks here
         ],
       ),

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'addSubtask.dart';
 import 'models/task.dart'; // Importar la clase Task
 import 'models/subtask.dart';
-import 'controllers/controllerTask.dart'; // Importar el controlador
+//import 'controllers/controllerTask.dart'; // Importar el controlador
+import 'controllers/controller_api.dart';
 
 class AgregarTaskPage extends StatefulWidget {
   final Function(Task) onTaskSaved; // Ajusta el tipo de parámetro
@@ -17,10 +18,11 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  List<Subtask> subTasks = [];
+  List<String> subTasks = [];
   int contador = 1;
   String? _tipoSeleccionado;
   final List<String> _opcionesTipo = ['FIJA', 'DEMANDA']; // Opciones de tipo
+  final controller = APIController();
 
   @override
   void dispose() {
@@ -30,14 +32,18 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   }
 
   void _addSubTask(String subTask) {
-    setState(() {
-      Subtask nuevaSubtarea = Subtask(
-          id: contador.toString(),
-          title: 'SUBTAREA $contador',
-          description: "PRUEBA");
-      subTasks.add(nuevaSubtarea);
-      contador++;
-    });
+    // setState(() {
+    //   Subtask nuevaSubtarea = Subtask(
+    //       id: contador.toString(),
+    //       title: 'SUBTAREA $contador',
+    //       description: "PRUEBA",
+    //       image: '',
+    //       pictogram: '',
+    //       audio: ' ',
+    //       video: ' ');
+    //   subTasks.add(nuevaSubtarea);
+    //   contador++;
+    // });
   }
 
   @override
@@ -92,7 +98,8 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 30), // Agrega un espacio adicional entre los campos
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               TextFormField(
                 controller: _descripcionController,
                 decoration: InputDecoration(
@@ -114,7 +121,8 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 30), // Agrega un espacio adicional entre los campos
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               Text(
                 'SUBTAREAS',
                 style: TextStyle(
@@ -148,7 +156,8 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   onPrimary: Colors.white,
                 ),
               ),
-              SizedBox(height: 30), // Agrega un espacio adicional entre los campos
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               DropdownButtonFormField<String>(
                 value: _tipoSeleccionado,
                 decoration: InputDecoration(
@@ -182,19 +191,21 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 30), // Agrega un espacio adicional entre los campos
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     Task nuevaTask = Task(
-                      id: 'a',
-                      title: _tituloController.text,
-                      description: _descripcionController.text,
-                      subtasks: subTasks,
-                      type: _tipoSeleccionado!,
-                    );
+                        id: 'a',
+                        title: _tituloController.text,
+                        description: _descripcionController.text,
+                        subtasks: subTasks,
+                        type: _tipoSeleccionado!,
+                        image: "",
+                        pictogram: '');
 
-                    createTask(
+                    controller.createTask(
                         nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
                     Navigator.pop(context);
                   }
@@ -219,6 +230,8 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                       description: _descripcionController.text,
                       subtasks: subTasks,
                       type: _tipoSeleccionado!,
+                      image: '',
+                      pictogram: '',
                     );
 
                     print(nuevaTask.toJson());
@@ -226,7 +239,8 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                 },
                 child: Text('MOSTRAR TAREA'),
               ),
-              SizedBox(height: 30), // Agrega un espacio adicional entre los campos
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
             ],
           ),
         ),

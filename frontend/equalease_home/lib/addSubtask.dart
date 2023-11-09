@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/subtask.dart';
-import 'controllers/controllerSubstask.dart';
+//import 'controllers/controllerSubstask.dart';
+import 'controllers/controller_api.dart';
 
 class CrearSubtaskForm extends StatefulWidget {
   final Function(String) onSubtaskSaved;
@@ -16,6 +17,7 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
   final _descriptionController = TextEditingController();
   String? _titleErrorText;
   String? _descriptionErrorText;
+  final controller = APIController();
 
   @override
   void dispose() {
@@ -34,10 +36,10 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
         id: 'subid', // Proporciona un ID adecuado para la subtarea
         title: _titleController
             .text, // Utiliza el título del campo de texto para el título de la subtarea
-        description: _descriptionController.text,
+        description: _descriptionController.text, image: '', pictogram: '', audio: '', video: '',
       );
 
-      createSubtask(nuevaSubtarea).then((value) => Navigator.pop(
+      controller.createSubtask(nuevaSubtarea).then((value) => Navigator.pop(
           context,
           nuevaSubtarea
               .id)); // Utiliza la función post para crear una nueva subtarea

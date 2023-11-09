@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'addTask.dart';
 import 'models/task.dart'; // Importa la clase Task
 import 'models/subtask.dart';
-import 'controllers/controllerSubstask.dart';
-import 'controllers/controllerTask.dart';
+//import 'controllers/controllerSubstask.dart';
+//import 'controllers/controllerTask.dart';
 // import 'components/subtasks_widget.dart'; // Comenta la importación del carrusel de fotos
 import 'editTaskPage.dart';
+import 'controllers/controller_api.dart';
 
 class TasksPage extends StatefulWidget {
   @override
@@ -15,6 +16,8 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   bool isLoading = true;
+  final controller = APIController();
+
   List<Task> _TasksAgregadas = [
     // Task(
     //     id: "prueba",
@@ -36,8 +39,9 @@ class _TasksPageState extends State<TasksPage> {
   @override
   void initState() {
     super.initState();
-    getAllTasks().then((value) {
-      setState(() {
+
+    setState(() {
+      controller.getTasks().then((value) {
         _TasksAgregadas = value;
         isLoading = false;
       });
@@ -88,8 +92,7 @@ class _TasksPageState extends State<TasksPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                               
-                          DetallesTaskPage(task: TaskAgregada),
+                                DetallesTaskPage(task: TaskAgregada),
                           ),
                         );
                       },
@@ -121,19 +124,20 @@ class _TasksPageState extends State<TasksPage> {
                                     icon: Icon(Icons.edit),
                                     onPressed: () {
                                       Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        EditTaskPage(task: TaskAgregada),
-                                  ),
-                                );
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              EditTaskPage(task: TaskAgregada),
+                                        ),
+                                      );
                                     },
                                   ),
                                   IconButton(
                                     iconSize: 50.0,
                                     icon: Icon(Icons.delete),
                                     onPressed: () {
-                                      _showDeleteConfirmationDialog(TaskAgregada);
+                                      _showDeleteConfirmationDialog(
+                                          TaskAgregada);
                                     },
                                   ),
                                 ],
