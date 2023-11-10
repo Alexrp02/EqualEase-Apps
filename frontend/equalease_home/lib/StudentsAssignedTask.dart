@@ -2,7 +2,6 @@ import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
-   
 
 class StudentsAssignedTask extends StatefulWidget {
   final String _id;
@@ -16,65 +15,30 @@ class StudentsAssignedTask extends StatefulWidget {
 class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
   final APIController _controller = APIController();
   Student? _student;
-
-  //IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
-  //Preguntar al cliente si quiere que se puedan repetir las tareas asignadas. En caso contrario cambiar el list por un set
-  List<Task> selectedTasks = []; // Lista para almacenar tareas seleccionadas
-  List<Task> totalTasks = []; // Lista para almacenar todas las tareas
+  List<Task> totalTasks = [];
 
   _StudentsAssignedTaskState() {
-    // IMPORTANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // Inicializar totalTasks y selectedTasks en el constructor con llamadas al controlador (actualmente solo es local)
-    _controller.getTasks().then((tasks){
-          setState((){
-            for (Task task in tasks){
-              totalTasks.add(task);
-            }
-          });
-      }
-    );
+    _controller.getTasks().then((tasks) {
+      setState(() {
+        totalTasks.addAll(tasks);
+      });
+    });
   }
 
   void _openTaskSelectionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Seleccionar Tareas"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              for (Task task in totalTasks)
-                CheckboxListTile(
-                  title: Text(task.title),
-                  value: selectedTasks.contains(task),
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value != null) {
-                        if (value) {
-                          //llamar a la funcion del controlador assignTaskToStudent
-                          selectedTasks.add(task);
-                          _student!.pendingTasks.add(task.id);
-                          _controller.updateStudent(_student!);
-                        } else {
-                          selectedTasks.remove(task);
-                          _student!.pendingTasks.remove(task.id);
-                          _controller.updateStudent(_student!);
-                        }
-                      }
-                    });
-                  },
-                ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Aceptar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        return CustomDialog(
+          pendingTasks: _student!.pendingTasks,
+          totalTasks: totalTasks,
+          student: _student,
+          onTasksUpdated: (updatedTasks) {
+            setState(() {
+              _student!.pendingTasks = updatedTasks;
+              _controller.updateStudent(_student!);
+            });
+          },
         );
       },
     );
@@ -86,14 +50,6 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
     _controller.getStudent(widget._id).then((student) {
       setState(() {
         _student = student;
-        _controller.getPendingTasksFromStudent(widget._id).then((tasks){
-          setState((){
-            for (Task task in tasks){
-              selectedTasks.add(task);
-            }
-          });
-            
-        });
       });
     });
   }
@@ -131,12 +87,10 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
               child: Column(
                 children: <Widget>[
                   Text(
-                  _student!.name,
-                  style: TextStyle(
-                    fontSize: 40, 
-                    fontWeight: FontWeight.bold
+                    _student!.name,
+                    style: TextStyle(
+                        fontSize: 40, fontWeight: FontWeight.bold),
                   ),
-                ),
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
@@ -150,33 +104,35 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            for (int i = 0; i < selectedTasks.length; i++)
+                            for (String taskId in _student!.pendingTasks)
                               Container(
                                 padding: EdgeInsets.all(0),
                                 height: 80,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 255, 255, 255),
                                   border: Border.all(
-                                    color: const Color.fromARGB(255, 170, 172, 174),
+                                    color:
+                                        const Color.fromARGB(255, 170, 172, 174),
                                     width: 2.0,
                                   ),
                                   borderRadius: BorderRadius.circular(0),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: <Widget>[
-                                    Text(selectedTasks[i].title),
+                                    Text(
+                                      totalTasks
+                                          .firstWhere((task) => task.id == taskId)
+                                          .title,
+                                    ),
                                     Container(
                                       width: 200,
                                       height: 50,
                                       child: ElevatedButton(
                                         onPressed: () {
                                           setState(() {
-                                      
-                                            selectedTasks.remove(selectedTasks[i]); //Lo quitamos por ser local?
-
-                                            _student!.pendingTasks.remove(_student!.pendingTasks[i]);
-
+                                            _student!.pendingTasks.remove(taskId);
                                             _controller.updateStudent(_student!);
                                           });
                                         },
@@ -185,10 +141,12 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                           padding: EdgeInsets.all(0),
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
-                                              color: Color.fromARGB(255, 100, 100, 101),
+                                              color: Color.fromARGB(
+                                                  255, 100, 100, 101),
                                               width: 2.0,
                                             ),
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
                                         ),
                                         child: Text('Quitar'),
@@ -206,12 +164,73 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
               ),
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _openTaskSelectionDialog(context);
-        },
-        child: Icon(Icons.add, color: Colors.white),
-        backgroundColor:  Color.fromARGB(255, 161, 182, 236)
-      )
+          onPressed: () {
+            _openTaskSelectionDialog(context);
+          },
+          child: Icon(Icons.add, color: Colors.white),
+          backgroundColor: Color.fromARGB(255, 161, 182, 236)),
     );
   }
 }
+
+class CustomDialog extends StatefulWidget {
+  final List<String> pendingTasks;
+  final List<Task> totalTasks;
+  final Function(List<String>) onTasksUpdated;
+  final Student? student;
+
+  CustomDialog({
+    required this.pendingTasks,
+    required this.totalTasks,
+    required this.onTasksUpdated,
+    required this.student,
+  });
+
+  @override
+  State<StatefulWidget> createState() {
+    return _CustomDialogState();
+  }
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Seleccionar Tareas"),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (Task task in widget.totalTasks)
+              CheckboxListTile(
+                title: Text(task.title),
+                value: widget.student!.pendingTasks.contains(task.id),
+                onChanged: (bool? value) {
+                  setState(() {
+                    if (value != null) {
+                      if (value) {
+                        widget.student!.pendingTasks.add(task.id);
+                      } else {
+                        widget.student!.pendingTasks.remove(task.id);
+                      }
+                    }
+
+                    widget.onTasksUpdated(widget.student!.pendingTasks);
+                  });
+                },
+              ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text("Aceptar"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+}
+

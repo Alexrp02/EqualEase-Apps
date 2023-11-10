@@ -10,8 +10,27 @@ class AdminPage extends StatelessWidget {
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Página de administrador'),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(100.0),
+            child: AppBar(
+              backgroundColor: Color.fromARGB(255, 161, 182, 236),
+              title: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'PÁGINA DEL ADMINISTRADOR',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           body: Center(
             child: _buildLandscapeLayout(context),
@@ -22,17 +41,24 @@ class AdminPage extends StatelessWidget {
   }
 
   Widget _buildLandscapeLayout(BuildContext context) {
+    Color buttonColor = Color.fromARGB(255, 161, 182, 236);
+    Color textColor = Colors.white; // Color blanco para el texto
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
             child: ElevatedButton(
               style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(buttonColor),
+                foregroundColor: MaterialStateProperty.all(textColor),
+                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
-                  TextStyle(fontSize: 48),
+                  TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold, // Texto en negrita
+                  ),
                 ),
               ),
               onPressed: () {
@@ -50,13 +76,21 @@ class AdminPage extends StatelessWidget {
             padding: const EdgeInsets.all(32.0),
             child: ElevatedButton(
               style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(buttonColor),
+                foregroundColor: MaterialStateProperty.all(textColor),
+                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
-                  TextStyle(fontSize: 48),
+                  TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold, // Texto en negrita
+                  ),
                 ),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => StudentsPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StudentsPage()),
+                );
               },
               child: const Text('ESTUDIANTES'),
             ),
@@ -64,5 +98,6 @@ class AdminPage extends StatelessWidget {
         ),
       ],
     );
+
   }
 }
