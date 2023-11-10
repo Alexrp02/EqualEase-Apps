@@ -140,10 +140,10 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                                 TextStyle(fontSize: 20, color: Colors.black)),
                         TextFormField(
                           style: TextStyle(color: Colors.black, fontSize: 18),
-                          initialValue: subtask.title,
+                          initialValue: subtask.title.toUpperCase(),
                           onChanged: (value) {
                             setState(() {
-                              subtask.title = value;
+                              subtask.title = value.toUpperCase();
                             });
                           },
                           decoration: InputDecoration(
@@ -253,7 +253,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                     }
                     Task nuevaTask = Task(
                         id: 'a',
-                        title: _tituloController.text,
+                        title: _tituloController.text.toUpperCase(),
                         description: _descripcionController.text,
                         subtasks: subTasks,
                         type: _tipo,
