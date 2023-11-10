@@ -55,6 +55,8 @@ class ControllerStudent {
     
     List<Student> students = [];
     final response = await http.get(Uri.parse(apiUrl));
+
+    print(apiUrl);
     
     if (response.statusCode == 200) {
       // Analizar la respuesta JSON

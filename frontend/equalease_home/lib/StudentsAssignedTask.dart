@@ -51,46 +51,25 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
     totalTasks.add(tarea3);
   }
 
+  
+
   void _openTaskSelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Seleccionar Tareas"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              for (Task task in totalTasks)
-                CheckboxListTile(
-                  title: Text(task.title),
-                  value: selectedTasks.contains(task),
-                  onChanged: (bool? value) {
-                    setState(() {
-                      if (value != null) {
-                        if (value) {
-                          //llamar a la funcion del controlador assignTaskToStudent
-                          selectedTasks.add(task);
-                        } else {
-                          selectedTasks.remove(task);
-                        }
-                      }
-                    });
-                  },
-                ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text("Aceptar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CustomDialog(
+        selectedTasks: selectedTasks,
+        totalTasks: totalTasks,
+        onTasksUpdated: (updatedTasks) {
+          setState(() {
+            selectedTasks = updatedTasks;
+          });
+        },
+      );
+    },
+  );
+}
+
 
   @override
   void initState() {
@@ -218,6 +197,65 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+}
+
+
+class CustomDialog extends StatefulWidget {
+  final List<Task> selectedTasks;
+  final List<Task> totalTasks;
+  final Function(List<Task>) onTasksUpdated;
+
+  CustomDialog({
+    required this.selectedTasks,
+    required this.totalTasks,
+    required this.onTasksUpdated,
+  });
+
+  @override
+  State<StatefulWidget> createState() {
+    return _CustomDialogState();
+  }
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Seleccionar Tareas"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          for (Task task in widget.totalTasks)
+            CheckboxListTile(
+              title: Text(task.title),
+              value: widget.selectedTasks.contains(task),
+              onChanged: (bool? value) {
+                if (value != null) {
+                  setState(() {
+                    if (value) {
+                      widget.selectedTasks.add(task);
+                    } else {
+                      widget.selectedTasks.remove(task);
+                    }
+                  });
+
+                  // Llamamos a la devolución de llamada para informar a StudentsAssignedTask
+                  widget.onTasksUpdated(widget.selectedTasks);
+                }
+              },
+            ),
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: Text("Aceptar"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
     );
   }
 }
