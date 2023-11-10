@@ -92,8 +92,10 @@ class _TasksPageState extends State<TasksPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DetallesTaskPage(task: TaskAgregada, controller: controller,),
+                            builder: (context) => DetallesTaskPage(
+                              task: TaskAgregada,
+                              controller: controller,
+                            ),
                           ),
                         );
                       },
@@ -286,66 +288,76 @@ class DetallesTaskPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('TITULO: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.title}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )),
-            SizedBox(height: 16),
-            Text('DESCRIPCION: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.description}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )),
-            SizedBox(height: 16),
-            Text('SUBTAREAS: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            FutureBuilder<List<Subtask>>(
-              future: controller.getSubtasksFromTaskList(task.id),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: snapshot.data!.map((subtask) {
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('TITULO: ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                Text('${task.title}',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.black,
+                    )),
+                SizedBox(height: 30),
+                Text('DESCRIPCION: ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                Text('${task.description}',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.black,
+                    )),
+                SizedBox(height: 30),
+                Text('SUBTAREAS: ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                FutureBuilder<List<Subtask>>(
+                  future: controller.getSubtasksFromTaskList(task.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('TITULO: ${subtask.title}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 25)),
-                          Text('DESCRIPCION: ${subtask.description}',
-                              style: TextStyle(
-                                  fontSize: 20, color: Colors.black)),
-                          SizedBox(height: 16),
-                        ],
+                        children: List.generate(snapshot.data!.length, (index) {
+                          final subtask = snapshot.data![index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('SUBTAREA ${index + 1}:',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
+                              Text('TITULO: ${subtask.title}',
+                                  style: TextStyle(fontSize: 22)),
+                              Text('DESCRIPCION: ${subtask.description}',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.black)),
+                              SizedBox(height: 30),
+                            ],
+                          );
+                        }),
                       );
-                    }).toList(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error al cargar las subtareas');
-                }
-                return CircularProgressIndicator(); // Muestra un indicador de progreso mientras se cargan las subtareas.
-              },
+                    } else if (snapshot.hasError) {
+                      return Text('Error al cargar las subtareas');
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
+                SizedBox(height: 30),
+                Text('TIPO: ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                Text(
+                  '${task.type == "RequestType" ? "DEMANDA" : "FIJA"}',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            Text('TIPO: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.type}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

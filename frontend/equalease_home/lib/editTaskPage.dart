@@ -53,6 +53,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   void _deleteSubtask(Subtask subtask) {
     setState(() {
       _editedSubtasks.remove(subtask);
+      controller.removeSubtaskFromTaskList(widget.task.id, subtask.id);
     });
   }
 
@@ -143,9 +144,11 @@ class _EditTaskPageState extends State<EditTaskPage> {
                             ),
                             IconButton(
                               icon: Icon(Icons.delete),
+                              iconSize: 50.0,
                               onPressed: () {
                                 _deleteSubtask(subtask);
                                 widget.task.subtasks.remove(subtask.id);
+
                                 controller.deleteSubtask(subtask.id);
                               },
                             ),
@@ -219,22 +222,35 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 ),
               ),
               SizedBox(height: 30),
-              TextFormField(
-                style: TextStyle(color: Colors.black, fontSize: 18),
-                initialValue: _editedType,
-                onChanged: (value) {
-                  setState(() {
-                    _editedType = value;
-                  });
-                },
+              DropdownButtonFormField<String>(
+                value: _editedType,
                 decoration: InputDecoration(
                   labelText: 'TIPO',
                   labelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                   border: OutlineInputBorder(),
                 ),
+                items: ['FixedType', 'RequestType'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value == 'RequestType' ? 'DEMANDA' : 'FIJA',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _editedType = newValue ??
+                        ''; // Asegúrate de manejar el caso en el que newValue sea nulo
+                  });
+                },
               ),
               SizedBox(height: 16),
               ElevatedButton(
