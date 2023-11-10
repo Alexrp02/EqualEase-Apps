@@ -264,8 +264,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   }
                   widget.task.type = _editedType;
                   // Llamar al controlador para guardar los cambios de la tarea
-                  await controller.updateTask(widget.task);
-                  Navigator.pop(context);
+                  controller.updateTask(widget.task).then((value) {
+                    //widget.task.title = value;
+                    Navigator.pop(context, widget.task.title);
+                  });
                 },
                 child: Text('GUARDAR CAMBIOS',
                     style: TextStyle(color: Colors.white)),

@@ -132,7 +132,11 @@ class _TasksPageState extends State<TasksPage> {
                                           builder: (context) =>
                                               EditTaskPage(task: TaskAgregada),
                                         ),
-                                      );
+                                      ).then((value) {
+                                        setState(() {
+                                          TaskAgregada.title = value;
+                                        });
+                                      });
                                     },
                                   ),
                                   IconButton(
@@ -296,7 +300,8 @@ class DetallesTaskPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('TITULO: ',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
                 Text('${task.title}',
                     style: TextStyle(
                       fontSize: 22.0,
@@ -304,7 +309,8 @@ class DetallesTaskPage extends StatelessWidget {
                     )),
                 SizedBox(height: 30),
                 Text('DESCRIPCION: ',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
                 Text('${task.description}',
                     style: TextStyle(
                       fontSize: 22.0,
@@ -312,7 +318,8 @@ class DetallesTaskPage extends StatelessWidget {
                     )),
                 SizedBox(height: 30),
                 Text('SUBTAREAS: ',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
                 FutureBuilder<List<Subtask>>(
                   future: controller.getSubtasksFromTaskList(task.id),
                   builder: (context, snapshot) {
@@ -346,7 +353,8 @@ class DetallesTaskPage extends StatelessWidget {
                 ),
                 SizedBox(height: 30),
                 Text('TIPO: ',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                 Text(
                   '${task.type == "RequestType" ? "DEMANDA" : "FIJA"}',
                   style: TextStyle(
