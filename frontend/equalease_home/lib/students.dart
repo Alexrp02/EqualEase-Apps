@@ -1,6 +1,7 @@
 import 'package:equalease_home/StudentsAssignedTask.dart';
-import 'package:equalease_home/controllers/controllerStudent.dart';
+import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
+import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
 
 class StudentsPage extends StatefulWidget {
@@ -9,8 +10,7 @@ class StudentsPage extends StatefulWidget {
 }
 
 class _StudentsPageState extends State<StudentsPage> {
-  final ControllerStudent _controller =
-      ControllerStudent('http://10.0.2.2:3000/api');
+  final APIController _controller = APIController();
   List<Student> _StudentsAdded = [];
 
   @override
@@ -112,7 +112,12 @@ class _StudentsPageState extends State<StudentsPage> {
                             height: 50,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Acción a realizar cuando se presione el botón "Datos"
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          StudentData(_StudentsAdded[i].id)),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,

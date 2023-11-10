@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'addSubtask.dart';
 import 'models/task.dart'; // Importar la clase Task
 import 'models/subtask.dart';
-import 'controllers/controllerTask.dart'; // Importar el controlador
+//import 'controllers/controllerTask.dart'; // Importar el controlador
+import 'controllers/controller_api.dart';
 
 class AgregarTaskPage extends StatefulWidget {
   final Function(Task) onTaskSaved; // Ajusta el tipo de parámetro
@@ -17,10 +18,11 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  List<Subtask> subTasks = [];
+  List<String> subTasks = [];
   int contador = 1;
   String? _tipoSeleccionado;
-  final List<String> _opcionesTipo = ['Fija', 'Demanda']; // Opciones de tipo
+  final List<String> _opcionesTipo = ['FIJA', 'DEMANDA']; // Opciones de tipo
+  final controller = APIController();
 
   @override
   void dispose() {
@@ -30,22 +32,44 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   }
 
   void _addSubTask(String subTask) {
-    setState(() {
-      Subtask nuevaSubtarea = Subtask(
-        id: 'subid $contador',
-        title: 'Subtarea $contador',
-        description: subTask,
-      );
-      subTasks.add(nuevaSubtarea);
-      contador++;
-    });
+    // setState(() {
+    //   Subtask nuevaSubtarea = Subtask(
+    //       id: contador.toString(),
+    //       title: 'SUBTAREA $contador',
+    //       description: "PRUEBA",
+    //       image: '',
+    //       pictogram: '',
+    //       audio: ' ',
+    //       video: ' ');
+    //   subTasks.add(nuevaSubtarea);
+    //   contador++;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Agregar Task'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'NUEVA TAREA',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 70.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -56,31 +80,57 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
               TextFormField(
                 controller: _tituloController,
                 decoration: InputDecoration(
-                  labelText: 'Título',
+                  labelText: 'TITULO',
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese un título';
+                    return 'POR FAVOR INGRESE UN TITULO';
                   }
                   return null;
                 },
               ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               TextFormField(
                 controller: _descripcionController,
                 decoration: InputDecoration(
-                  labelText: 'Descripción',
+                  labelText: 'DESCRIPCION',
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese una descripción';
+                    return 'POR FAVOR INGRESE UNA DESCRIPCION';
                   }
                   return null;
                 },
               ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               Text(
-                'SubTasks:',
+                'SUBTAREAS',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              for (var subTask in subTasks) Text(subTask.description),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -90,17 +140,43 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                         onSubtaskSaved: _addSubTask,
                       ),
                     ),
-                  );
+                  ).then((value) {
+                    subTasks.add(value);
+                    print(subTasks);
+                  });
                 },
-                child: Text('Añadir SubTask'),
+                child: Text(
+                  'AÑADIR SUBTAREA',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 161, 182, 236),
+                  onPrimary: Colors.white,
+                ),
               ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               DropdownButtonFormField<String>(
                 value: _tipoSeleccionado,
-                decoration: InputDecoration(labelText: 'Tipo'),
+                decoration: InputDecoration(
+                  labelText: 'TIPO',
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 items: _opcionesTipo.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -109,30 +185,62 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   });
                 },
                 validator: (value) {
-                  if (value == null || value.isEmpty || value == 'Tipo') {
-                    return 'Por favor seleccione un tipo';
+                  if (value == null || value.isEmpty || value == 'TIPO') {
+                    return 'POR FAVOR SELECCIONE UN TIPO';
                   }
                   return null;
                 },
+              ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Task nuevaTask = Task(
+                        id: 'a',
+                        title: _tituloController.text,
+                        description: _descripcionController.text,
+                        subtasks: subTasks,
+                        type: _tipoSeleccionado!,
+                        image: "",
+                        pictogram: '');
+
+                    controller.createTask(
+                        nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text(
+                  'GUARDAR TAREA',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 161, 182, 236),
+                  onPrimary: Colors.white,
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     Task nuevaTask = Task(
-                      id : 'a',
+                      id: 'a',
                       title: _tituloController.text,
                       description: _descripcionController.text,
                       subtasks: subTasks,
                       type: _tipoSeleccionado!,
+                      image: '',
+                      pictogram: '',
                     );
 
-                    createTask(nuevaTask); // Utilizar la función post para crear una nueva tarea
-                    widget.onTaskSaved(nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
-                    Navigator.pop(context);
+                    print(nuevaTask.toJson());
                   }
                 },
-                child: Text('Guardar Task'),
+                child: Text('MOSTRAR TAREA'),
               ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
             ],
           ),
         ),
