@@ -276,7 +276,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   onPrimary: Colors.white,
                 ),
               ),
-              ElevatedButton(
+              /*ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     //NOTHING
@@ -299,9 +299,9 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   }
                 },
                 child: Text('MOSTRAR TAREA'),
-              ),
-              SizedBox(
-                  height: 30), // Agrega un espacio adicional entre los campos
+              ),*/
+              //SizedBox(
+                //  height: 30), // Agrega un espacio adicional entre los campos
             ],
           ),
         ),
