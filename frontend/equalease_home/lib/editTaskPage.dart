@@ -91,10 +91,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
             children: [
               TextFormField(
                 style: TextStyle(color: Colors.black, fontSize: 18),
-                initialValue: _editedTitle,
+                initialValue: _editedTitle.toUpperCase(),
                 onChanged: (value) {
                   setState(() {
-                    _editedTitle = value;
+                    _editedTitle = value.toUpperCase();
                   });
                 },
                 decoration: InputDecoration(
