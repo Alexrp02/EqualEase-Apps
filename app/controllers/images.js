@@ -3,6 +3,10 @@ const { db, storage } = require("../config/database.js");
 
 async function uploadImage(req, res) {
     if(req.file && req.file.mimetype.startsWith("image/")){
+        if (!req.body.folder || !req.body.filename) {
+            res.status(400).json({message: "Folder and filename are required"});
+            return;
+        }
         const folder = req.body.folder;
         const filename = req.body.filename;
         console.log("folder: ", folder);
