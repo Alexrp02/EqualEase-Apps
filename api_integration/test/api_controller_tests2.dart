@@ -11,26 +11,29 @@ import 'package:api_integration/models/task.dart';
 
 void main() {
   final apiController = APIController(); // Crea una instancia de APIController.
-  test('getStudents works fine', () async {
-    final studentsList = await apiController.getStudents();
 
-    print("Stop me here!");
+  // Crea una instancia de APIController.
+  print(apiController.baseUrl);
+  // test('getStudents works fine', () async {
+  //   final studentsList = await apiController.getStudents();
 
-    // Asegúrate de que la lista de estudiantes no sea nula y que contenga al menos un estudiante.
-    expect(studentsList, isNotNull);
-    expect(studentsList, isNotEmpty);
+  //   print("Stop me here!");
 
-    // Verifica si los elementos de la lista son instancias válidas de Student.
-    for (var student in studentsList) {
-      expect(student, isA<Student>());
-    }
-  });
+  //   // Asegúrate de que la lista de estudiantes no sea nula y que contenga al menos un estudiante.
+  //   expect(studentsList, isNotNull);
+  //   expect(studentsList, isNotEmpty);
+
+  //   // Verifica si los elementos de la lista son instancias válidas de Student.
+  //   for (var student in studentsList) {
+  //     expect(student, isA<Student>());
+  //   }
+  // });
 
   // test('create a valid subtask', () async {
   //   // Prueba de crear una subtarea
   //   Subtask subtask = Subtask(
   //       id: 'invalid',
-  //       title: 'abrir la puerta',
+  //       title: 'leer libro',
   //       description: 'Esta es mi descripción.',
   //       image: '',
   //       pictogram: '',

@@ -44,5 +44,17 @@ class Subtask {
 
   String toJson() => json.encode(toMap());
 
+  String toJsonWithoutId() {
+    Map<String, dynamic> data = {
+      'title': title,
+      'description': description,
+      'image': image,
+      'pictogram': pictogram,
+      'audio': audio,
+      'video': video
+    };
+    return json.encode(data);
+  }
+
   // ... Resto del código ...
 }

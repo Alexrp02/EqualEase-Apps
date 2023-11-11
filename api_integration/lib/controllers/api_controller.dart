@@ -10,7 +10,7 @@ import 'package:api_integration/models/task.dart';
 
 // class containing all operations with API
 class APIController {
-  final String baseUrl = 'http://localhost:3000/api';
+  String baseUrl = 'http://localhost:3000/api';
 
   //-----------------------------------------------------------------------//
   /// Subtask operations
@@ -64,17 +64,7 @@ class APIController {
     final String apiUrl = '$baseUrl/subtask';
 
     // Necesitamos convertir el objeto a JSON pero sin su id
-    Map<String, dynamic> mapBody = {
-      'title': subtask.title,
-      'description': subtask.description,
-      'image': subtask.image,
-      'pictogram': subtask.pictogram,
-      'audio': subtask.audio,
-      'video': subtask.video
-    };
-
-    // Convertimos a string (formato JSON)
-    String jsonBody = json.encode(mapBody);
+    String jsonBody = subtask.toJsonWithoutId();
 
     try {
       final response = await http.post(
@@ -84,8 +74,6 @@ class APIController {
         },
         body: jsonBody,
       );
-
-      print(jsonBody);
 
       if (response.statusCode == 201) {
         // La solicitud POST fue exitosa.
@@ -104,7 +92,7 @@ class APIController {
   }
 
   // subtask put operation (private)
-  Future<bool> _updateSubtask(String subtaskId, String jsonString) async {
+  Future<bool> _putSubtask(String subtaskId, String jsonString) async {
     final String apiUrl = '$baseUrl/subtask/id/$subtaskId';
 
     try {
@@ -118,43 +106,24 @@ class APIController {
       if (response.statusCode == 200) {
         return true; // Devuelve true para indicar que la actualización se realizó con éxito.
       } else {
-        throw Exception(
-            'Error al actualizar la subtarea: ${response.reasonPhrase}');
+        print('Error al actualizar la subtarea: ${response.reasonPhrase}');
+        return false;
       }
     } catch (e) {
-      throw Exception('Error de red: $e');
+      print('Error de red: $e');
+      return false;
     }
   }
 
-  // change title
-  Future<dynamic> changeSubtaskTitle(String subtaskId, String title) async {
-    // Crea el JSON con el cuerpo de la petición.
-    Map<String, dynamic> requestJson = {
-      "title": title,
-    };
+  // change or update operation on subtask
+  Future<bool> updateSubtask(Subtask subtask) async {
+    // Crea el JSON con las tareas actualizadas.
+    var requestJson = subtask.toJsonWithoutId();
 
     // Realiza la operacion de actualizacion en la BD
-    var result = await _updateSubtask(subtaskId, json.encode(requestJson));
-
+    var result = await _putSubtask(subtask.id, requestJson);
     return result;
   }
-
-  // change description
-  Future<dynamic> changeSubtaskDescription(
-      String subtaskId, String description) async {
-    // Crea el JSON con el cuerpo de la petición.
-    Map<String, dynamic> requestJson = {
-      "description": description,
-    };
-
-    // Realiza la operacion de actualizacion en la BD
-    var result = await _updateSubtask(subtaskId, json.encode(requestJson));
-
-    return result;
-  }
-
-  // change other fields... (image, pictogram, audio, video)
-  // ...
 
   // subtask delete operation
   Future<bool> deleteSubtask(String subtaskId) async {
@@ -221,6 +190,39 @@ class APIController {
   }
 
   // create task
+  Future<bool> createTask(Task task) async {
+    final String apiUrl = '$baseUrl/task';
+
+    // Necesitamos convertir el objeto a JSON pero sin su id
+    String jsonBody = task.toJsonWithoutId();
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      print(jsonBody);
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos de la tarea recién creada,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        task.id = body['id'];
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
   // get subtasks from task list (taskId)
   Future<List<Subtask>> getSubtasksFromTaskList(String taskId) async {
@@ -248,7 +250,7 @@ class APIController {
   }
 
   // task put operation (private)
-  Future<bool> _updateTask(String taskId, String jsonString) async {
+  Future<bool> _putTask(String taskId, String jsonString) async {
     final String apiUrl = '$baseUrl/task/id/$taskId';
 
     try {
@@ -262,47 +264,74 @@ class APIController {
       if (response.statusCode == 200) {
         return true; // Devuelve true para indicar que la actualización se realizó con éxito.
       } else {
-        throw Exception(
-            'Error al actualizar la tarea: ${response.reasonPhrase}');
+        return false;
       }
     } catch (e) {
-      throw Exception('Error de red: $e');
+      print('Error de red: $e');
+      return false;
     }
   }
 
   // add subtask to task list
+  Future<bool> addSubtaskToTaskList(String taskId, String subtaskId) async {
+    // Obtiene la tarea
+    Task task = await getTask(taskId);
+
+    // Comprueba que la subtarea existe
+    // Implementar
+
+    if (!task.subtasks.contains(subtaskId)) {
+      // Modifica el array de subtasks añadiendo la nueva
+      task.subtasks.add(subtaskId);
+      // Crea el JSON con las tareas actualizadas.
+      Map<String, dynamic> requestJson = {
+        "subtasks": task.subtasks,
+      };
+
+      // Realiza la operacion de actualizacion en la BD
+      var result = await _putTask(taskId, json.encode(requestJson));
+
+      return result;
+    } else {
+      return false;
+    }
+  }
 
   // remove subtask from task list
+  Future<bool> removeSubtaskFromTaskList(
+      String taskId, String subtaskId) async {
+    // Obtiene la tarea
+    Task task = await getTask(taskId);
 
-  // change task title (taskId)
-  Future<dynamic> changeTaskTitle(String taskId, String title) async {
-    // Crea el JSON con el cuerpo de la petición.
-    Map<String, dynamic> requestJson = {
-      "title": title,
-    };
+    // Comprueba que la subtarea existe
+    // Implementar
 
-    // Realiza la operacion de actualizacion en la BD
-    var result = await _updateTask(taskId, json.encode(requestJson));
+    if (task.subtasks.contains(subtaskId)) {
+      // Modifica elimina la subtarea del array.
+      task.subtasks.remove(subtaskId);
+      // Crea el JSON con las tareas actualizadas.
+      Map<String, dynamic> requestJson = {
+        "subtasks": task.subtasks,
+      };
 
-    return result;
+      // Realiza la operacion de actualizacion en la BD
+      var result = await _putTask(taskId, json.encode(requestJson));
+
+      return result;
+    } else {
+      return false;
+    }
   }
 
-  // change task description (taskId)
-  Future<dynamic> changeTaskDescription(
-      String taskId, String description) async {
-    // Crea el JSON con el cuerpo de la petición.
-    Map<String, dynamic> requestJson = {
-      "description": description,
-    };
+  // change / update full task
+  Future<bool> updateTask(Task task) async {
+    // Crea el JSON con las tareas actualizadas.
+    String requestJson = task.toJsonWithoutId();
 
     // Realiza la operacion de actualizacion en la BD
-    var result = await _updateTask(taskId, json.encode(requestJson));
-
+    var result = await _putTask(task.id, requestJson);
     return result;
   }
-
-  // change other fields/media (taskId)
-  // ...
 
   // delete task operation
   Future<bool> deleteTask(String taskId) async {
@@ -420,7 +449,7 @@ class APIController {
   }
 
   // student put operation (private)
-  Future<bool> _updateStudent(String studentId, String jsonString) async {
+  Future<bool> _putStudent(String studentId, String jsonString) async {
     final String apiUrl = '$baseUrl/student/id/$studentId';
 
     try {
@@ -434,11 +463,12 @@ class APIController {
       if (response.statusCode == 200) {
         return true; // Devuelve true para indicar que la actualización se realizó con éxito.
       } else {
-        throw Exception(
-            'Error al actualizar el estudiante: ${response.reasonPhrase}');
+        print('Error al actualizar el estudiante: ${response.reasonPhrase}');
+        return false;
       }
     } catch (e) {
-      throw Exception('Error de red: $e');
+      print('Error de red: $e');
+      return false;
     }
   }
 
@@ -461,7 +491,7 @@ class APIController {
     };
 
     // Realiza la operacion de actualizacion en la BD
-    var result = await _updateStudent(studentId, json.encode(requestJson));
+    var result = await _putStudent(studentId, json.encode(requestJson));
 
     return result;
   }
@@ -471,15 +501,7 @@ class APIController {
     // Obtiene el estudiante.
     Student student = await getStudent(studentId);
 
-    if (student == null) {
-      throw Exception('Student not found');
-    }
-
-    // Verifica si la tarea existe.
-    Task task = await getTask(taskId);
-    if (task == null) {
-      throw Exception('Task not found');
-    }
+    // Comprobar si existen tarea y alumno (?)
 
     // Verifica si la tarea ya está en las tareas pendientes del estudiante.
     if (!student.pendingTasks.contains(taskId)) {
@@ -492,7 +514,7 @@ class APIController {
       };
 
       // Realiza la operación de actualización en la BD
-      var result = await _updateStudent(studentId, json.encode(requestJson));
+      var result = await _putStudent(studentId, json.encode(requestJson));
 
       return result;
     } else {
@@ -500,23 +522,33 @@ class APIController {
     }
   }
 
-  // student delete operation (not implemented yet)
+  // modify any field from student
+  Future<bool> updateStudent(Student student) async {
+    // Crea el JSON con las tareas actualizadas.
+    var jsonBody = student.toJsonWithoutId();
+
+    // Realiza la operacion de actualizacion en la BD
+    var result = await _putStudent(student.id, jsonBody);
+    return result;
+  }
+
+  // student delete operation
   Future<bool> deleteStudent(String studentId) async {
     final String apiUrl = '$baseUrl/student/id/$studentId';
 
-    return true;
-    // try {
-    //   final response = await http.delete(Uri.parse(apiUrl));
+    try {
+      final response = await http.delete(Uri.parse(apiUrl));
 
-    //   if (response.statusCode == 204) {
-    //     return true; // Devuelve true para indicar que la eliminación fue exitosa.
-    //   } else {
-    //     throw Exception(
-    //         'Error al eliminar el estudiante: ${response.reasonPhrase}');
-    //   }
-    // } catch (e) {
-    //   throw Exception('Error de red: $e');
-    // }
+      if (response.statusCode == 204) {
+        return true; // Devuelve true para indicar que la eliminación fue exitosa.
+      } else {
+        print('Error al eliminar el estudiante: ${response.reasonPhrase}');
+        return false;
+      }
+    } catch (e) {
+      print('Error de red: $e');
+      return false;
+    }
   }
 
   //-----------------------------------------------------------------------//
@@ -573,7 +605,7 @@ class APIController {
   // create teacher
 
   // teacher put operation (private)
-  Future<bool> _updateTeacher(String teacherId, String jsonString) async {
+  Future<bool> _putTeacher(String teacherId, String jsonString) async {
     final String apiUrl = '$baseUrl/teacher/id/$teacherId';
 
     try {
@@ -587,18 +619,56 @@ class APIController {
       if (response.statusCode == 200) {
         return true; // Devuelve true para indicar que la actualización se realizó con éxito.
       } else {
-        throw Exception(
-            'Error al actualizar el profesor: ${response.reasonPhrase}');
+        print('Error al actualizar el profesor: ${response.reasonPhrase}');
+        return false;
       }
     } catch (e) {
-      throw Exception('Error de red: $e');
+      print('Error de red: $e');
+      return false;
     }
   }
 
   // teacher modify operations
+  Future<bool> updateTeacher(Teacher teacher) async {
+    // Crea el JSON con las tareas actualizadas.
+    String requestJson = teacher.toJsonWithoutId();
+
+    // Realiza la operacion de actualizacion en la BD
+    var result = await _putTeacher(teacher.id, requestJson);
+    return result;
+  }
+
   //  - add student to teacher's list
+  Future<bool> addStudentToTeacherList(
+      String teacherId, String studentId) async {
+    // Obtiene al profesor
+    Teacher teacher = await getTeacher(teacherId);
+
+    // Si no tiene ya al alumno, lo añade
+    if (!teacher.students.contains(studentId)) {
+      teacher.students.add(studentId);
+      var result = updateTeacher(teacher);
+      return result;
+    } else {
+      return false;
+    }
+  }
+
   //  - remove student from teacher's list
-  //  - change profilePicture
+  Future<bool> removeStudentFromTeacherList(
+      String teacherId, String studentId) async {
+    // Obtiene al profesor
+    Teacher teacher = await getTeacher(teacherId);
+
+    // Si tiene al alumno, lo elimina
+    if (teacher.students.contains(studentId)) {
+      teacher.students.remove(studentId);
+      var result = updateTeacher(teacher);
+      return result;
+    } else {
+      return false;
+    }
+  }
 
   //-----------------------------------------------------------------------//
   /// Other operations
