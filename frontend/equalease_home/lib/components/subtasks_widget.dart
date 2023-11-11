@@ -25,9 +25,27 @@ class SubtaskWidget extends StatelessWidget {
         )),
         // Image of the subtask
         Expanded(
-          child: Image.network(
-            "https://api.arasaac.org/v1/pictograms/11299?download=false",
-            fit: BoxFit.cover,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              subtask.image != ''
+                  ? Center(
+                      child: Image.network(
+                        subtask.image,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Container(),
+              SizedBox(width: 40),
+              subtask.pictogram != ''
+                  ? Center(
+                      child: Image.network(
+                        subtask.pictogram,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
         ),
         // Add buttons or gestures to play audio and video if they are available

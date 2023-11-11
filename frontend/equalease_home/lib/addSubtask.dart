@@ -1,4 +1,8 @@
+import 'package:equalease_home/components/select_pictogram.dart';
+import 'package:equalease_home/components/upload_image_button.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'controllers/controller_images.dart';
 import 'models/subtask.dart';
 //import 'controllers/controllerSubstask.dart';
 import 'controllers/controller_api.dart';
@@ -19,6 +23,9 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
   String? _titleErrorText;
   String? _descriptionErrorText;
   final controller = APIController();
+  final imageController = ImagesController();
+  String imageURL = '';
+  String pictogramURL = '';
 
   @override
   void dispose() {
@@ -33,13 +40,18 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
         _titleErrorText = 'ESTE CAMPO NO PUEDE ESTAR VACIO';
       });
     } else {
+      imageURL =
+          await imageController.uploadImage('subtasks', _titleController.text);
       Subtask nuevaSubtarea = Subtask(
         id: 'subid', // Proporciona un ID adecuado para la subtarea
-        title: _titleController
-            .text.toUpperCase(), // Utiliza el título del campo de texto para el título de la subtarea
-        description: _descriptionController.text, image: '', pictogram: '',
+        title: _titleController.text
+            .toUpperCase(), // Utiliza el título del campo de texto para el título de la subtarea
+        description: _descriptionController.text, image: imageURL,
+        pictogram: pictogramURL,
         audio: '', video: '',
       );
+
+      print("El link de la imagen de la nueva subtarea es " + imageURL);
 
       controller.createSubtask(nuevaSubtarea).then((value) {
         nuevaSubtarea.id = value;
@@ -125,21 +137,19 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
                 onPrimary: Colors.white,
               ),
             ),
+            ImageUploader(
+                source: ImageSource.camera, controller: imageController),
             ElevatedButton(
-              onPressed: () {
-                //pickImage();
-              },
-              child: Text(
-                'SELECCIONAR IMAGEN',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 161, 182, 236),
-                onPrimary: Colors.white,
-              ),
-            ),
+                onPressed: () {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PictogramSelect()))
+                      .then((value) {
+                    pictogramURL = value;
+                  });
+                },
+                child: Text('Seleccionar Pictograma'))
           ],
         ),
       ),
