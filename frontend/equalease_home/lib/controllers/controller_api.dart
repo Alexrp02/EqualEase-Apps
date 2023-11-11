@@ -292,7 +292,6 @@ class APIController {
       // Realiza la operacion de actualizacion en la BD
       var result = await _putTask(taskId, json.encode(requestJson));
 
-
       return result;
     } else {
       return false;
@@ -527,7 +526,6 @@ class APIController {
 
   // modify any field from student
   Future<bool> updateStudent(Student student) async {
-
     // Crea el JSON con las tareas actualizadas.
     var jsonBody = student.toJsonWithoutId();
 
