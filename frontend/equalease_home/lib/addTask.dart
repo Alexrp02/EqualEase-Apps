@@ -1,33 +1,76 @@
 import 'package:flutter/material.dart';
 import 'addSubtask.dart';
+import 'models/task.dart'; // Importar la clase Task
+import 'models/subtask.dart';
+//import 'controllers/controllerTask.dart'; // Importar el controlador
+import 'controllers/controller_api.dart';
 
-class AgregarTareaPage extends StatefulWidget {
+class AgregarTaskPage extends StatefulWidget {
+  final Function(Task) onTaskSaved; // Ajusta el tipo de parámetro
+
+  AgregarTaskPage({required this.onTaskSaved});
+
   @override
-  _AgregarTareaPageState createState() => _AgregarTareaPageState();
+  _AgregarTaskPageState createState() => _AgregarTaskPageState();
 }
 
-class _AgregarTareaPageState extends State<AgregarTareaPage> {
+class _AgregarTaskPageState extends State<AgregarTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _descripcionController = TextEditingController();
-  final _subtareasController = TextEditingController();
-  final _tipoController = TextEditingController();
-  // File? _image;
+  List<Subtask> _editedSubtasks = [];
+  List<String> subTasks = [];
+  int contador = 1;
+  String? _tipoSeleccionado;
+  final List<String> _opcionesTipo = ['FIJA', 'DEMANDA']; // Opciones de tipo
+  final controller = APIController();
 
   @override
   void dispose() {
     _tituloController.dispose();
     _descripcionController.dispose();
-    _subtareasController.dispose();
-    _tipoController.dispose();
     super.dispose();
+  }
+
+  void _addSubTask(String subTask) {
+    // setState(() {
+    //   Subtask nuevaSubtarea = Subtask(
+    //       id: contador.toString(),
+    //       title: 'SUBTAREA $contador',
+    //       description: "PRUEBA",
+    //       image: '',
+    //       pictogram: '',
+    //       audio: ' ',
+    //       video: ' ');
+    //   subTasks.add(nuevaSubtarea);
+    //   contador++;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Agregar Tarea'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'NUEVA TAREA',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 70.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,90 +81,231 @@ class _AgregarTareaPageState extends State<AgregarTareaPage> {
               TextFormField(
                 controller: _tituloController,
                 decoration: InputDecoration(
-                  labelText: 'Título',
+                  labelText: 'TITULO',
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese un título';
+                    return 'POR FAVOR INGRESE UN TITULO';
                   }
                   return null;
                 },
               ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               TextFormField(
                 controller: _descripcionController,
                 decoration: InputDecoration(
-                  labelText: 'Descripción',
+                  labelText: 'DESCRIPCION',
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese una descripción';
+                    return 'POR FAVOR INGRESE UNA DESCRIPCION';
                   }
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _subtareasController,
-                decoration: InputDecoration(
-                  labelText: 'Subtareas',
-                ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
+              SizedBox(height: 30),
+              Text('SUBTAREAS:',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              Column(
+                children: _editedSubtasks.map(
+                  (subtask) {
+                    return Column(
+                      children: [
+                        Text('SUBTAREA ${_editedSubtasks.indexOf(subtask) + 1}',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black)),
+                        TextFormField(
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          initialValue: subtask.title.toUpperCase(),
+                          onChanged: (value) {
+                            setState(() {
+                              subtask.title = value.toUpperCase();
+                            });
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'TITULO SUBTAREA',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                          initialValue: subtask.description,
+                          onChanged: (value) {
+                            setState(() {
+                              subtask.description = value;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'DESCRIPCION SUBTAREA',
+                            labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                      ],
+                    );
+                  },
+                ).toList(),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CrearSubtareaForm(),
+                      builder: (context) => CrearSubtaskForm(
+                          //onSubtaskSaved: _addSubTask,
+                          ),
                     ),
-                  ).then((subtarea) {
-                    if (subtarea != null) {
-                      // Aquí puedes manejar la lógica para agregar la subtarea a la tarea principal
-                      print('Subtarea guardada: $subtarea');
-                      // Agrega lógica para guardar la subtarea en la tarea principal
-                    }
+                  ).then((value) {
+                    subTasks.add(value.id);
+                    setState(() {
+                      _editedSubtasks.add(value);
+                    });
+                    print(subTasks);
                   });
                 },
-                child: Text('Añadir Subtarea'),
-              ),
-              TextFormField(
-                controller: _tipoController,
-                decoration: InputDecoration(
-                  labelText: 'Tipo',
+                child: Text(
+                  'AÑADIR SUBTAREA',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 161, 182, 236),
+                  onPrimary: Colors.white,
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  //pickImage();
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
+              DropdownButtonFormField<String>(
+                value: _tipoSeleccionado,
+                decoration: InputDecoration(
+                  labelText: 'TIPO',
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                items: _opcionesTipo.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _tipoSeleccionado = newValue;
+                  });
                 },
-                child: Text('Seleccionar Imagen'),
+                validator: (value) {
+                  if (value == null || value.isEmpty || value == 'TIPO') {
+                    return 'POR FAVOR SELECCIONE UN TIPO';
+                  }
+                  return null;
+                },
               ),
-              // _image != null
-              //     ? Image.file(_image!)
-              //     : SizedBox(
-              //         height: 100,
-              //       ),
+              SizedBox(
+                  height: 30), // Agrega un espacio adicional entre los campos
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Add functionality for saving task
-                    // AÑADIR AQUI EL INGRESO DE DATOS A LA BASE DE DATOS
-                    Navigator.pop(context);
+                    var _tipo = 'FixedType';
+                    if (_tipoSeleccionado == 'DEMANDA') {
+                      _tipo = 'RequestType';
+                    }
+                    Task nuevaTask = Task(
+                        id: 'a',
+                        title: _tituloController.text.toUpperCase(),
+                        description: _descripcionController.text,
+                        subtasks: subTasks,
+                        type: _tipo,
+                        image: "",
+                        pictogram: '');
+
+                    controller.createTask(
+                        nuevaTask); // Llamar a la función onTaskSaved con la nueva Task
+                    Navigator.pop(context, nuevaTask);
                   }
                 },
-                child: Text('Guardar Tarea'),
+                child: Text(
+                  'GUARDAR TAREA',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 161, 182, 236),
+                  onPrimary: Colors.white,
+                ),
               ),
+              /*ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    //NOTHING
+                    var _tipo = 'FixedType';
+                    if (_tipoSeleccionado! == 'DEMANDA') {
+                      _tipo = 'RequestType';
+                    }
+
+                    Task nuevaTask = Task(
+                      id: 'a',
+                      title: _tituloController.text,
+                      description: _descripcionController.text,
+                      subtasks: subTasks,
+                      type: _tipo,
+                      image: '',
+                      pictogram: '',
+                    );
+
+                    print(nuevaTask.toJson());
+                  }
+                },
+                child: Text('MOSTRAR TAREA'),
+              ),*/
+              //SizedBox(
+                //  height: 30), // Agrega un espacio adicional entre los campos
             ],
           ),
         ),
       ),
     );
   }
-
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 }

@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
 import 'tasks.dart';
-import 'adminPage.dart';
-import 'controllers/controller_api.dart';
 
-void main() {
-  runApp(const MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class AdminPage extends StatelessWidget {
+  const AdminPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.lightBlue),
-      home: OrientationBuilder(
+    return 
+      OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('EqualEase Home'),
+              title: const Text('Página de administrador'),
             ),
             body: Center(
               child: _buildLandscapeLayout(context),
             ),
           );
         },
-      ),
-    );
+      );
   }
+
+
 
   Widget _buildLandscapeLayout(BuildContext context) {
     return Row(
@@ -47,10 +41,10 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminPage()),
+                  MaterialPageRoute(builder: (context) => TasksPage()),
                 );
               },
-              child: const Text('ADMINISTRADOR'),
+              child: const Text('TAREAS'),
             ),
           ),
         ),
@@ -66,7 +60,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 // Add functionality for Button 2
               },
-              child: const Text('ESTUDIANTE'),
+              child: const Text('ESTUDIANTES'),
             ),
           ),
         ),
