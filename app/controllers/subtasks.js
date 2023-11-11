@@ -35,18 +35,6 @@ async function createSubtask(req, res) {
         if (!snapshot.empty) {
             res.status(400).json({ error: `Subtask with title ${subtaskData.title} already exists.` });
         } else {
-            if(req.file && req.file.mimetype.startsWith("image/")){
-                 // Upload the image to Firebase Storage
-                const storageRef = ref(storage, `subtask/${subtaskData.title}.jpg`);
-                const metadata = {
-                    contentType: req.image.mimetype
-                }
-                const snapshot = await uploadBytesResumable(storageRef, req.image.buffer, metadata);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                console.log("File available at", downloadURL) ;
-
-                subtaskData.image = downloadURL;
-            }
             const docRef = await addDoc(collection(db, collectionName), subtaskData.toJSON());
                    
             console.log(`Created new subtask (title: ${subtaskData.title}).`);

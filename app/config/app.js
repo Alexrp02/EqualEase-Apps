@@ -14,12 +14,14 @@ const subtask_routes = require("../routes/subtasks.js");
 const student_routes = require("../routes/students.js");
 const teacher_routes = require("../routes/teachers.js");
 const task_routes = require("../routes/tasks.js");
+const images_routes = require("../routes/images.js");
 
 // Rutas base
-app.use("/api", upload.single("image"), subtask_routes);
+app.use("/api", subtask_routes);
 app.use("/api", student_routes);
 app.use("/api", teacher_routes);
 app.use("/api", task_routes);
+app.use("/api", upload.single("image"), images_routes);
 
 
 

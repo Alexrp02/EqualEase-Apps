@@ -4,3 +4,4 @@ app/node_modules/
 app/redoc-static.html
 app/redoc-static.html
 app/config/config.json
+package-log.json
