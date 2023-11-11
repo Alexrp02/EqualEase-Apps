@@ -24,15 +24,12 @@ class SubtaskWidget extends StatelessWidget {
           style: TextStyle(fontSize: 40),
         )),
         // Image of the subtask
-        Center(
-            child: Container(
-          height: 400,
-          width: 400,
+        Expanded(
           child: Image.network(
             "https://api.arasaac.org/v1/pictograms/11299?download=false",
             fit: BoxFit.cover,
           ),
-        )),
+        ),
         // Add buttons or gestures to play audio and video if they are available
       ],
     );
