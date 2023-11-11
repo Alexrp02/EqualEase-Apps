@@ -41,7 +41,6 @@ class _TasksPageState extends State<TasksPage> {
   void initState() {
     super.initState();
 
-  
     controller.getTasks().then((value) {
       setState(() {
         _TasksAgregadas = value;
@@ -56,7 +55,7 @@ class _TasksPageState extends State<TasksPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor:  Color.fromARGB(255, 161, 182, 236),
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -93,8 +92,10 @@ class _TasksPageState extends State<TasksPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                DetallesTaskPage(task: TaskAgregada),
+                            builder: (context) => DetallesTaskPage(
+                              task: TaskAgregada,
+                              controller: controller,
+                            ),
                           ),
                         );
                       },
@@ -131,7 +132,11 @@ class _TasksPageState extends State<TasksPage> {
                                           builder: (context) =>
                                               EditTaskPage(task: TaskAgregada),
                                         ),
-                                      );
+                                      ).then((value) {
+                                        setState(() {
+                                          TaskAgregada.title = value;
+                                        });
+                                      });
                                     },
                                   ),
                                   IconButton(
@@ -167,15 +172,16 @@ class _TasksPageState extends State<TasksPage> {
             context,
             MaterialPageRoute(
               builder: (context) => AgregarTaskPage(
-                onTaskSaved: (Task) {
+                onTaskSaved: (task) {
                   // Ajusta el parámetro para que sea de tipo Task
-                  setState(() {
-                    _TasksAgregadas.add(Task);
-                  });
                 },
               ),
             ),
-          );
+          ).then((value) {
+            setState(() {
+              _TasksAgregadas.add(value);
+            });
+          });
         },
         child: Icon(Icons.add),
       ),
@@ -232,8 +238,13 @@ class _TasksPageState extends State<TasksPage> {
                 ),
               ),
               onPressed: () {
+                for (var i = 0; i < task.subtasks.length; i++) {
+                  controller.deleteSubtask(task.subtasks[i]);
+                }
+                controller.deleteTask(task.id);
                 setState(() {
                   _TasksAgregadas.remove(task);
+
                   // Llamar al controlador de eliminación
                 });
                 Navigator.of(context).pop();
@@ -252,8 +263,9 @@ class _TasksPageState extends State<TasksPage> {
 
 class DetallesTaskPage extends StatelessWidget {
   final Task task;
+  final APIController controller;
 
-  DetallesTaskPage({required this.task});
+  DetallesTaskPage({required this.task, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -280,44 +292,80 @@ class DetallesTaskPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('TITULO: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.title}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
-            SizedBox(height: 16),
-            Text('DESCRIPCION: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.description}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
-            SizedBox(height: 16),
-            Text('SUBTAREAS: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.subtasks.toString()}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
-            SizedBox(height: 16),
-            Text('TIPO: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
-            Text('${task.type}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                )), // Ajusta el tamaño y el estilo del texto
-          ],
-        ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('TITULO: ',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                Text('${task.title}',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.black,
+                    )),
+                SizedBox(height: 30),
+                Text('DESCRIPCION: ',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                Text('${task.description}',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.black,
+                    )),
+                SizedBox(height: 30),
+                Text('SUBTAREAS: ',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                FutureBuilder<List<Subtask>>(
+                  future: controller.getSubtasksFromTaskList(task.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(snapshot.data!.length, (index) {
+                          final subtask = snapshot.data![index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('SUBTAREA ${index + 1}:',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
+                              Text('TITULO: ${subtask.title}',
+                                  style: TextStyle(fontSize: 22)),
+                              Text('DESCRIPCION: ${subtask.description}',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.black)),
+                              SizedBox(height: 30),
+                            ],
+                          );
+                        }),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error al cargar las subtareas');
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
+                SizedBox(height: 30),
+                Text('TIPO: ',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                Text(
+                  '${task.type == "RequestType" ? "DEMANDA" : "FIJA"}',
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

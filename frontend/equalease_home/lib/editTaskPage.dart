@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models/task.dart';
 import 'models/subtask.dart';
 import 'controllers/controller_api.dart';
+import 'addSubtask.dart';
 
 class EditTaskPage extends StatefulWidget {
   final Task task;
@@ -24,14 +25,36 @@ class _EditTaskPageState extends State<EditTaskPage> {
     super.initState();
     _editedTitle = widget.task.title;
     _editedDescription = widget.task.description;
+    _editedSubtasks = [];
 
-    setState(() {
-      controller.getSubtasksFromTaskList(widget.task.id).then((value) {
+    controller.getSubtasksFromTaskList(widget.task.id).then((value) {
+      setState(() {
         _editedSubtasks = value;
       });
     });
-  
+
     _editedType = widget.task.type;
+  }
+
+  void _addSubtask(String subTask) {
+    /*final newSubtask = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CrearSubtaskForm(onSubtaskSaved: _id),
+      ),
+    );
+    if (newSubtask != null) {
+      setState(() {
+        _editedSubtasks.add(newSubtask);
+      });
+    }*/
+  }
+
+  void _deleteSubtask(Subtask subtask) {
+    setState(() {
+      _editedSubtasks.remove(subtask);
+      controller.removeSubtaskFromTaskList(widget.task.id, subtask.id);
+    });
   }
 
   @override
@@ -68,10 +91,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
             children: [
               TextFormField(
                 style: TextStyle(color: Colors.black, fontSize: 18),
-                initialValue: _editedTitle,
+                initialValue: _editedTitle.toUpperCase(),
                 onChanged: (value) {
                   setState(() {
-                    _editedTitle = value;
+                    _editedTitle = value.toUpperCase();
                   });
                 },
                 decoration: InputDecoration(
@@ -108,21 +131,35 @@ class _EditTaskPageState extends State<EditTaskPage> {
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
               Column(
-                children: _editedSubtasks.asMap().entries.map(
-                  (entry) {
-                    int index = entry.key;
-                    Subtask subtask = entry.value;
+                children: _editedSubtasks.map(
+                  (subtask) {
                     return Column(
                       children: [
-                        Text('SUBTAREA ${subtaskCount++}',
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black)),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text('SUBTAREA ${subtaskCount++}',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black)),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              iconSize: 50.0,
+                              onPressed: () {
+                                _deleteSubtask(subtask);
+                                widget.task.subtasks.remove(subtask.id);
+
+                                controller.deleteSubtask(subtask.id);
+                              },
+                            ),
+                          ],
+                        ),
                         TextFormField(
                           style: TextStyle(color: Colors.black, fontSize: 18),
                           initialValue: subtask.title,
                           onChanged: (value) {
                             setState(() {
-                              _editedSubtasks[index].title = value;
+                              subtask.title = value;
                             });
                           },
                           decoration: InputDecoration(
@@ -140,7 +177,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           initialValue: subtask.description,
                           onChanged: (value) {
                             setState(() {
-                              _editedSubtasks[index].description = value;
+                              subtask.description = value;
                             });
                           },
                           decoration: InputDecoration(
@@ -159,33 +196,78 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 ).toList(),
               ),
               SizedBox(height: 30),
-              TextFormField(
-                style: TextStyle(color: Colors.black, fontSize: 18),
-                initialValue: _editedType,
-                onChanged: (value) {
-                  setState(() {
-                    _editedType = value;
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CrearSubtaskForm(
+                          //onSubtaskSaved: _addSubTask,
+                          ),
+                    ),
+                  ).then((value) {
+                    //_editedSubtasks.add(value);
+                    //controller.addSubtaskToTaskList(widget.task.id, value);
+                    widget.task.subtasks.add(value.id);
+                    setState(() {
+                      _editedSubtasks.add(value); //print(subTasks);
+                    });
                   });
                 },
+                child: Text('AÑADIR SUBTAREA',
+                    style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 161, 182, 236),
+                  onPrimary: Colors.white,
+                ),
+              ),
+              SizedBox(height: 30),
+              DropdownButtonFormField<String>(
+                value: _editedType,
                 decoration: InputDecoration(
                   labelText: 'TIPO',
                   labelStyle: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                   border: OutlineInputBorder(),
                 ),
+                items: ['FixedType', 'RequestType'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value == 'RequestType' ? 'DEMANDA' : 'FIJA',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _editedType = newValue ??
+                        ''; // Asegúrate de manejar el caso en el que newValue sea nulo
+                  });
+                },
               ),
               SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // Lógica para guardar los cambios realizados
                   widget.task.title = _editedTitle;
                   widget.task.description = _editedDescription;
-                  //widget.task.subtasks = _editedSubtasks; LLAMAR AQUI AL METODO PARA ACTUALIZAR SUBTAREA
+                  // Actualizar las subtareas aquí
+                  for (int i = 0; i < _editedSubtasks.length; i++) {
+                    await controller.updateSubtask(_editedSubtasks[i]);
+                  }
                   widget.task.type = _editedType;
-                  // Aquí se pueden llamar a los controladores para guardar los cambios
-                  Navigator.pop(context);
+                  // Llamar al controlador para guardar los cambios de la tarea
+                  controller.updateTask(widget.task).then((value) {
+                    //widget.task.title = value;
+                    Navigator.pop(context, widget.task.title);
+                  });
                 },
                 child: Text('GUARDAR CAMBIOS',
                     style: TextStyle(color: Colors.white)),
