@@ -8,14 +8,23 @@ import 'package:equalease_home/models/teacher.dart';
 import 'package:equalease_home/models/subtask.dart';
 import 'package:equalease_home/models/task.dart';
 
-// class containing all operations with API
+/// class containing all operations with API
 class APIController {
-  //String baseUrl = 'http://localhost:3000/api';
+  ///String baseUrl = 'http://localhost:3000/api';
   String baseUrl = "http://10.0.2.2:3000/api";
+  
   //-----------------------------------------------------------------------//
-  /// Subtask operations
+ //Subtask operations
 
-  // get subtask by id
+  /// Get subtask by identifier from the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[id]: subtask identifier
+  /// 
+  /// Returns: subtask 
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<Subtask> getSubtask(String id) async {
     final String apiUrl = '$baseUrl/subtask/id/$id';
 
@@ -35,7 +44,11 @@ class APIController {
     }
   }
 
-  // get all subtasks
+  /// Get all subtasks from the database 
+  /// 
+  /// Returns: List of subtasks
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Subtask>> getSubtasks() async {
     final String apiUrl = '$baseUrl/subtask';
 
@@ -59,7 +72,15 @@ class APIController {
     }
   }
 
-  // create subtask
+  /// Create subtask and save it in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[subtask]: Object of type Subtask that is going to be saved
+  /// 
+  /// Returns: String with the subtask identifier if the action was done
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<String> createSubtask(Subtask subtask) async {
     final String apiUrl = '$baseUrl/subtask';
 
@@ -91,7 +112,21 @@ class APIController {
     }
   }
 
-  // subtask put operation (private)
+  /// Private method for updating a subtask 
+  /// 
+  /// Params:
+  /// 
+  ///   -[subtaskId]: subtask identifier
+  /// 
+  ///   -[jsonString]: subtask in json format
+  /// 
+  /// Returns: Boolean 
+  /// 
+  ///   - true if the action has been done
+  /// 
+  ///   - false if the action failed
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> _putSubtask(String subtaskId, String jsonString) async {
     final String apiUrl = '$baseUrl/subtask/id/$subtaskId';
 
@@ -115,7 +150,14 @@ class APIController {
     }
   }
 
-  // change or update operation on subtask
+  /// Public method for updating a subtask in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[subtask]: Object of type subtask
+  /// 
+  /// Returns: Boolean depending of the result of the _putSubtask action
+  
   Future<bool> updateSubtask(Subtask subtask) async {
     // Crea el JSON con las tareas actualizadas.
     var requestJson = subtask.toJsonWithoutId();
@@ -125,7 +167,16 @@ class APIController {
     return result;
   }
 
-  // subtask delete operation
+  /// Delete subtask from the database 
+  /// 
+  /// Params:
+  /// 
+  ///   -[subtaskId]: Subtask identifier
+  /// 
+  /// Returns: Boolean depending of the result of the _putSubtask action
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
+  
   Future<bool> deleteSubtask(String subtaskId) async {
     final String apiUrl = '$baseUrl/subtask/id/$subtaskId';
 
@@ -144,9 +195,17 @@ class APIController {
   }
 
   //-----------------------------------------------------------------------//
-  /// Task operations
+  // Task operations
 
-  // get task by id
+  /// Get task by identifier from the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[id]: Task identifier
+  /// 
+  /// Returns: Task
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<Task> getTask(String id) async {
     final String apiUrl = '$baseUrl/task/id/$id';
 
@@ -166,7 +225,15 @@ class APIController {
     }
   }
 
-  // get all tasks
+  /// Get task by identifier from the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[id]: Task identifier
+  /// 
+  /// Returns: Task
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Task>> getTasks() async {
     final String apiUrl = '$baseUrl/task';
 
@@ -190,7 +257,19 @@ class APIController {
     }
   }
 
-  // create task
+  /// Create task in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[task]: Task Object we want to save 
+  /// 
+  /// Returns: boolean
+  /// 
+  ///   -true if the operation has been done
+  /// 
+  ///   -false if the operation has failed
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> createTask(Task task) async {
     final String apiUrl = '$baseUrl/task';
 
@@ -225,7 +304,15 @@ class APIController {
     }
   }
 
-  // get subtasks from task list (taskId)
+  /// Get subtask from a task 
+  /// 
+  /// Params:
+  /// 
+  ///   -[taskId]: Task identifier
+  /// 
+  /// Returns: List of subtasks
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Subtask>> getSubtasksFromTaskList(String taskId) async {
     try {
       // Obtener task
@@ -250,7 +337,21 @@ class APIController {
     }
   }
 
-  // task put operation (private)
+  /// private method for updating a task in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[taskId]: Task identifier
+  /// 
+  ///   -[jsonString]: Task in json format
+  /// 
+  /// Returns: Boolean
+  /// 
+  ///   -true if the operation has been done
+  /// 
+  ///   -false if the operation has failed 
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> _putTask(String taskId, String jsonString) async {
     final String apiUrl = '$baseUrl/task/id/$taskId';
 
@@ -273,7 +374,22 @@ class APIController {
     }
   }
 
-  // add subtask to task list
+  /// add subtask to a task 
+  /// 
+  /// Params:
+  /// 
+  ///   -[taskId]: Task identifier
+  /// 
+  ///   -[subtaskId]: Subtask identifier
+  /// 
+  /// 
+  /// Returns: boolean
+  /// 
+  ///   -true if the operation has been done
+  /// 
+  ///   -false if the operation has failed
+  
+  
   Future<bool> addSubtaskToTaskList(String taskId, String subtaskId) async {
     // Obtiene la tarea
     Task task = await getTask(taskId);
@@ -298,7 +414,20 @@ class APIController {
     }
   }
 
-  // remove subtask from task list
+  /// Remove a subtask 
+  /// 
+  /// Params:
+  /// 
+  ///   -[taskId]: Task identifier
+  /// 
+  ///   -[subtaskId]: Subtask identifier
+  /// 
+  /// Returns: boolean
+  /// 
+  ///   - true if the operation has been done
+  /// 
+  ///   - false if the operation has failed
+  
   Future<bool> removeSubtaskFromTaskList(
       String taskId, String subtaskId) async {
     // Obtiene la tarea
@@ -324,7 +453,14 @@ class APIController {
     }
   }
 
-  // change / update full task
+  /// Update task in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[task]: Object task that is going to be updated
+  /// 
+  /// Returns: boolean dependeing on the result of the _putTask operation
+ 
   Future<bool> updateTask(Task task) async {
     // Crea el JSON con las tareas actualizadas.
     String requestJson = task.toJsonWithoutId();
@@ -334,7 +470,19 @@ class APIController {
     return result;
   }
 
-  // delete task operation
+  /// Delete tasks from the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[taskId]: Task identifier
+  /// 
+  /// Returns: Boolean
+  ///   
+  ///   -true if the operation has been done
+  /// 
+  ///   -false if the operation has failed
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> deleteTask(String taskId) async {
     final String apiUrl = '$baseUrl/task/id/$taskId';
 
@@ -353,9 +501,17 @@ class APIController {
   }
 
   //-----------------------------------------------------------------------//
-  /// Student operations
+  // Student operations
 
-  // get student by id
+  /// Get a student from the database using the identifier
+  /// 
+  /// Params:
+  /// 
+  ///   -[id]: student identifier
+  /// 
+  /// Returns: Student
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<Student> getStudent(String id) async {
     final String apiUrl =
         '$baseUrl/student/id/$id'; // Construye la URL específica para obtener un estudiante por ID.
@@ -377,9 +533,13 @@ class APIController {
     }
   }
 
-  // get student(s) by name
+  
 
-  // get students
+  /// Get all the students from the database 
+  ///  
+  /// Returns: List of students 
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Student>> getStudents() async {
     final String apiUrl =
         '$baseUrl/student'; // Construye la URL específica para obtener un estudiante por ID.
@@ -400,7 +560,16 @@ class APIController {
     return students;
   }
 
-  // get pending tasks from student (studentId)
+  
+  /// Get all the pending tasks of a student from the data base
+  /// 
+  /// Params:
+  /// 
+  ///   -[studentId]: student identifier
+  /// 
+  /// Returns: List of tasks 
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Task>> getPendingTasksFromStudent(String studentId) async {
     try {
       // Obtener student
@@ -425,7 +594,15 @@ class APIController {
     }
   }
 
-  // get done tasks from student (studentId)
+  /// Get all the done tasks of a student from the data base 
+  /// 
+  /// Params:
+  /// 
+  ///   -[studentId]: student identifier
+  /// 
+  /// Returns: List of tasks 
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Task>> getDoneTasksFromStudent(String studentId) async {
     try {
       // Obtener student
@@ -450,7 +627,22 @@ class APIController {
     }
   }
 
-  // student put operation (private)
+  
+  /// Private method to update a student in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[studentId]: student identifier
+  /// 
+  ///   -[jsonString]: student in json format
+  /// 
+  /// Returns: boolean
+  /// 
+  ///   -true: if the operation has been done
+  /// 
+  ///   -flase: if the operation failed
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> _putStudent(String studentId, String jsonString) async {
     final String apiUrl = '$baseUrl/student/id/$studentId';
 
@@ -474,8 +666,16 @@ class APIController {
     }
   }
 
-  // student modify operations (they all generate a json, and then call _updateStudent. if the operation is succesfull, then return the new student updated, else return false)
-  //  mark a pending task as completed
+  /// Mark as done a student task
+  /// 
+  /// Params:
+  /// 
+  ///   -[studentId]: student identifier
+  /// 
+  ///   -[taskId]: task identifier
+  /// 
+  /// Returns: boolean with the result after doing _putStudent operation
+
   Future<dynamic> markTaskAsCompleted(String studentId, String taskId) async {
     // Obtiene el estudiante.
     Student student = await getStudent(studentId);
@@ -498,7 +698,16 @@ class APIController {
     return result;
   }
 
-  // assigning a task to a student (studentId, taskId)
+  
+  /// Assing a task to a student
+  /// 
+  /// Params:
+  /// 
+  ///   -[studentId]: student identifier
+  /// 
+  ///   -[taskId]: task identifier
+  /// 
+  /// Returns: Boolean with the result after doing _putStudent operation
   Future<dynamic> assignTaskToStudent(String studentId, String taskId) async {
     // Obtiene el estudiante.
     Student student = await getStudent(studentId);
@@ -524,7 +733,14 @@ class APIController {
     }
   }
 
-  // modify any field from student
+  /// Update the student information in the data base
+  /// 
+  /// Params:
+  /// 
+  ///   -[student]: Object of type student
+  /// 
+  /// Returns: Boolean with the result after doing _putStudent operation
+  
   Future<bool> updateStudent(Student student) async {
     // Crea el JSON con las tareas actualizadas.
     var jsonBody = student.toJsonWithoutId();
@@ -534,7 +750,19 @@ class APIController {
     return result;
   }
 
-  // student delete operation
+  /// Delete a student from the data base
+  /// 
+  /// Params:
+  /// 
+  ///   -[id]: student identifier
+  /// 
+  /// Returns: boolean
+  /// 
+  ///   -true if the student has been deleted 
+  /// 
+  ///   -false if the setudent hasn't been deleted
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> deleteStudent(String studentId) async {
     final String apiUrl = '$baseUrl/student/id/$studentId';
 
@@ -554,9 +782,18 @@ class APIController {
   }
 
   //-----------------------------------------------------------------------//
-  /// Teacher operations
+  // Teacher operations
 
-  // get teacher by id
+  /// Get teacher by identifier from the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[id]: Teacher identifier
+  /// 
+  /// Returns: Teaches
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
+  
   Future<Teacher> getTeacher(String id) async {
     final String apiUrl =
         '$baseUrl/teacher/id/$id'; // Construye la URL específica para obtener un estudiante por ID.
@@ -578,7 +815,15 @@ class APIController {
     }
   }
 
-  // get students from teacher's list (teacherId)
+  /// Get students associated to a teacher
+  /// 
+  /// Params:
+  /// 
+  ///   -[teacherId]: Teacher identifier
+  /// 
+  /// Returns: List of students
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<List<Student>> getStudentsFromTeacherList(String teacherId) async {
     try {
       // Obtener el profesor
@@ -606,7 +851,21 @@ class APIController {
 
   // create teacher
 
-  // teacher put operation (private)
+  /// Private method to update a teacher in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[teacherId]: Teacher identifier
+  /// 
+  ///   -[jsonString]: Teacher in json format
+  /// 
+  /// Returns: boolean
+  ///   
+  ///   -true if the operation has been done
+  /// 
+  ///   -false if the operation has failed
+  /// 
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
   Future<bool> _putTeacher(String teacherId, String jsonString) async {
     final String apiUrl = '$baseUrl/teacher/id/$teacherId';
 
@@ -630,7 +889,14 @@ class APIController {
     }
   }
 
-  // teacher modify operations
+  /// Update a teacher in the database
+  /// 
+  /// Params:
+  /// 
+  ///   -[teacher]: teacher object that is going to be updated
+  /// 
+  /// Returns: boolean depending on the result of the _putTeacher operation
+  
   Future<bool> updateTeacher(Teacher teacher) async {
     // Crea el JSON con las tareas actualizadas.
     String requestJson = teacher.toJsonWithoutId();
@@ -640,7 +906,19 @@ class APIController {
     return result;
   }
 
-  //  - add student to teacher's list
+  /// Assing a student to a teacher 
+  /// 
+  /// Params:
+  /// 
+  ///   -[teacherId]: Teacher identifier
+  /// 
+  ///   -[studentId]: Student identifier
+  /// 
+  /// Returns: Boolean
+  ///   
+  ///   -true if the operation has been done
+  ///   
+  ///   -false if the operation has failed
   Future<bool> addStudentToTeacherList(
       String teacherId, String studentId) async {
     // Obtiene al profesor
@@ -656,7 +934,21 @@ class APIController {
     }
   }
 
-  //  - remove student from teacher's list
+  /// Unassign student from a teacher 
+  /// 
+  /// Params:
+  /// 
+  ///   -[teacherId]: Teacher identifier
+  /// 
+  ///   -[studentId]: Student identifier
+  /// 
+  /// Returns: boolean
+  /// 
+  ///   -true if the operation has been done
+  /// 
+  ///   -false if the operation has failed
+ 
+  
   Future<bool> removeStudentFromTeacherList(
       String teacherId, String studentId) async {
     // Obtiene al profesor
