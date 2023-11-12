@@ -97,55 +97,56 @@ class _StudentPageState extends State<StudentPage> {
         child: Center(
           heightFactor: 1.0,
           child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Color.fromARGB(255, 170, 172, 174), // Color del borde
-                width: 3.0, // Ancho del borde
-              ),
-            ), // Color de fondo para mostrar el espacio del SingleChildScrollView
-            width: MediaQuery.of(context).size.width * 0.8,
-            // height: MediaQuery.of(context).size.height,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  for (int i = 0; i < pendingTasks.length; i++)
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return SubtasksCarousel(
-                            taskId: pendingTasks[i].id,
-                          );
-                        }));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(16),
-                        // height: 80,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 170, 172, 174),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(0),
+              width: MediaQuery.of(context).size.width * 0.8,
+              // height: MediaQuery.of(context).size.height,
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                    childCount: pendingTasks.length,
+                    (context, i) => Container(
+                      padding: EdgeInsets.all(16),
+                      // height: 80,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 170, 172, 174),
+                          width: 2.0,
                         ),
-                        child: Row(
-                          children: [
-                            Transform.scale(
-                              scale: 1.5,
-                              child: Checkbox(
-                                value:
-                                    false, // Replace with your boolean variable
-                                onChanged: (bool? value) {
-                                  // Handle change
-                                },
-                              ),
+                        borderRadius: BorderRadius.circular(0),
+                      ),
+                      child: Row(
+                        children: [
+                          Transform.scale(
+                            scale: 1.5,
+                            child: Checkbox(
+                              value:
+                                  false, // Replace with your boolean variable
+                              onChanged: (bool? value) {
+                                if (value == true) {
+                                  setState(() {
+                                    controller.markTaskAsCompleted(
+                                        student.id, pendingTasks[i].id);
+                                    doneTasks.add(pendingTasks[i]);
+                                    pendingTasks.removeAt(i);
+                                  });
+                                }
+                              },
                             ),
-                            SizedBox(
-                                width:
-                                    20.0), // Espacio entre el checkbox y el texto (tarea
-                            Column(
+                          ),
+                          SizedBox(
+                              width:
+                                  20.0), // Espacio entre el checkbox y el texto (tarea
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return SubtasksCarousel(
+                                  taskId: pendingTasks[i].id,
+                                );
+                              }));
+                            },
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
@@ -162,78 +163,72 @@ class _StudentPageState extends State<StudentPage> {
                                 ),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  for (int i = 0; i < doneTasks.length; i++)
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return SubtasksCarousel(
-                            taskId: doneTasks[i].id,
-                          );
-                        }));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(16),
-                        // height: 80,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 170, 172, 174),
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.circular(0),
-                        ),
-                        child: Row(
-                          children: [
-                            Transform.scale(
-                              scale: 1.5,
-                              child: Checkbox(
-                                value:
-                                    true, // Replace with your boolean variable
-                                onChanged: (bool? value) {
-                                  if (value == true) {
-                                    setState(() {
-                                      controller.markTaskAsCompleted(
-                                          student.id, pendingTasks[i].id);
-                                      doneTasks.removeAt(i);
-                                      pendingTasks.add(doneTasks[i]);
-                                    });
-                                  }
+                  )),
+                  SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                          childCount: doneTasks.length,
+                          (context, i) => InkWell(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return SubtasksCarousel(
+                                      taskId: doneTasks[i].id,
+                                    );
+                                  }));
                                 },
-                              ),
-                            ),
-                            SizedBox(
-                                width:
-                                    20.0), // Espacio entre el checkbox y el texto (tarea
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  '${doneTasks[i].title}',
-                                  style: TextStyle(
-                                    fontSize: 40.0,
+                                child: Container(
+                                  padding: EdgeInsets.all(16),
+                                  // height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    border: Border.all(
+                                      color: const Color.fromARGB(
+                                          255, 170, 172, 174),
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(0),
                                   ),
-                                ), // Primera parte
-                                Text(
-                                  pendingTasks[i].description,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
+                                  child: Row(
+                                    children: [
+                                      Transform.scale(
+                                        scale: 1.5,
+                                        child: Checkbox(
+                                          value:
+                                              true, // Replace with your boolean variable
+                                          onChanged: (bool? value) {},
+                                        ),
+                                      ),
+                                      SizedBox(
+                                          width:
+                                              20.0), // Espacio entre el checkbox y el texto (tarea
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            '${doneTasks[i].title}',
+                                            style: TextStyle(
+                                              fontSize: 40.0,
+                                            ),
+                                          ), // Primera parte
+                                          Text(
+                                            doneTasks[i].description,
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                              )))
                 ],
-              ),
-            ),
-          ),
+              )),
         ),
       ),
     );
