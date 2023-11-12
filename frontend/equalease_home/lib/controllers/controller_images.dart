@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ImagesController {
-  late XFile? _imageFile;
+  late XFile? _imageFile = null;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage(ImageSource source) async {
