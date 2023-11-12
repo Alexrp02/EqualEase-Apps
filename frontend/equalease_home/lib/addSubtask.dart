@@ -87,69 +87,73 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            TextFormField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'TITULO',
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    labelText: 'TITULO',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    errorText: _titleErrorText,
+                  ),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                  ),
                 ),
-                errorText: _titleErrorText,
-              ),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 30),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                labelText: 'DESCRIPCION',
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                SizedBox(height: 30),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'DESCRIPCION',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    errorText: _descriptionErrorText,
+                  ),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                  ),
                 ),
-                errorText: _descriptionErrorText,
-              ),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: _saveSubtask,
-              child: Text(
-                'GUARDAR SUBTAREA',
-                style: TextStyle(
-                  color: Colors.white,
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: _saveSubtask,
+                  child: Text(
+                    'GUARDAR SUBTAREA',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(255, 161, 182, 236),
+                    onPrimary: Colors.white,
+                  ),
                 ),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 161, 182, 236),
-                onPrimary: Colors.white,
-              ),
-            ),
-            ImageUploader(
-                source: ImageSource.camera, controller: imageController),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PictogramSelect()))
-                      .then((value) {
-                    pictogramURL = value;
-                  });
-                },
-                child: Text('Seleccionar Pictograma'))
+                ImageUploader(
+                    source: ImageSource.camera, controller: imageController),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PictogramSelect()))
+                          .then((value) {
+                        pictogramURL = value;
+                      });
+                    },
+                    child: Text('Seleccionar Pictograma'))
+              ],
+            )
           ],
         ),
       ),

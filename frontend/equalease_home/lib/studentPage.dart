@@ -195,7 +195,14 @@ class _StudentPageState extends State<StudentPage> {
                                 value:
                                     true, // Replace with your boolean variable
                                 onChanged: (bool? value) {
-                                  // Handle change
+                                  if (value == true) {
+                                    setState(() {
+                                      controller.markTaskAsCompleted(
+                                          student.id, pendingTasks[i].id);
+                                      doneTasks.removeAt(i);
+                                      pendingTasks.add(doneTasks[i]);
+                                    });
+                                  }
                                 },
                               ),
                             ),
