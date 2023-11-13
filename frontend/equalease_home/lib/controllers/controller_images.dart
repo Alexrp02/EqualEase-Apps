@@ -7,11 +7,26 @@ class ImagesController {
   late XFile? _imageFile = null;
   final ImagePicker _picker = ImagePicker();
 
+  /// Pick an image from the given source and temporally store it in the controller
+  ///
+  /// Params:
+  ///
+  ///   -[source]: Source of the image, it can be the camera or the gallery (ImageSource).
+  ///
+  /// Returns: void
   Future<void> pickImage(ImageSource source) async {
     final XFile? selectedImage = await _picker.pickImage(source: source);
     _imageFile = selectedImage;
   }
 
+  /// Upload the previously selected image to the server
+  ///
+  /// Params:
+  ///
+  ///   -[folder]: Folder where the image will be stored in the server (String).
+  ///   -[filename]: Name of the image file (String).
+  ///
+  /// Returns: String
   Future<String> uploadImage(String folder, String filename) async {
     if (_imageFile == null) return "";
 
