@@ -1,3 +1,10 @@
 ./prueba_api/build
 ./frontend/equalease_home/doc
 ./frontend/equalease_home/.vscode/*
+app/node_modules/
+app/package-lock.json
+app/node_modules/
+app/redoc-static.html
+app/redoc-static.html
+app/config/config.json
+package-log.json
