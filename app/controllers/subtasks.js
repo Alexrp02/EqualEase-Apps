@@ -1,5 +1,6 @@
 const { addDoc, collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc } = require("firebase/firestore");
-const { db } = require("../config/database.js");
+const { storageRef, ref, uploadBytesResumable, getDownloadURL } = require("firebase/storage");
+const { db, storage } = require("../config/database.js");
 const Subtask = require("../models/subtasks.js");
 
 const collectionName = "subtasks";
@@ -34,10 +35,10 @@ async function createSubtask(req, res) {
         if (!snapshot.empty) {
             res.status(400).json({ error: `Subtask with title ${subtaskData.title} already exists.` });
         } else {
-            const ref = await addDoc(collection(db, collectionName), subtaskData.toJSON());
+            const docRef = await addDoc(collection(db, collectionName), subtaskData.toJSON());
                    
             console.log(`Created new subtask (title: ${subtaskData.title}).`);
-            res.status(201).json({id: ref.id, ...subtaskData });
+            res.status(201).json({id: docRef.id, ...subtaskData });
         }
 
     } catch (error) {

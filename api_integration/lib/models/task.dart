@@ -1,44 +1,43 @@
 import 'dart:convert';
 
-class Subtask {
+class Task {
   String id;
   String title;
   String description;
+  List<String> subtasks;
   String image;
   String pictogram;
-  String audio;
-  String video;
+  String type; // "FixedType" || "RequestType"
 
-  Subtask({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.image,
-    required this.pictogram,
-    required this.audio,
-    required this.video,
-  });
+  Task(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.subtasks,
+      required this.image,
+      required this.pictogram,
+      required this.type});
 
-  factory Subtask.fromMap(Map<String, dynamic> json) => Subtask(
+  factory Task.fromMap(Map<String, dynamic> json) => Task(
       id: json['id'],
       title: json['title'],
       description: json['description'],
+      subtasks: List<String>.from(json['subtasks']),
       image: json['image'],
       pictogram: json['pictogram'],
-      audio: json['audio'],
-      video: json['video']);
+      type: json['type']);
 
-  factory Subtask.fromJson(String str) => Subtask.fromMap(json.decode(str));
+  factory Task.fromJson(String str) => Task.fromMap(json.decode(str));
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'description': description,
+      'subtasks': subtasks,
       'image': image,
       'pictogram': pictogram,
-      'audio': audio,
-      'video': video
+      'type': type
     };
   }
 
@@ -48,10 +47,10 @@ class Subtask {
     Map<String, dynamic> data = {
       'title': title,
       'description': description,
+      'subtasks': subtasks,
       'image': image,
       'pictogram': pictogram,
-      'audio': audio,
-      'video': video
+      'type': type
     };
     return json.encode(data);
   }
