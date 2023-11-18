@@ -12,4 +12,8 @@ api.get("/request/student/:id", RequestController.getRequestsFromStudent);
 
 api.post("/request", RequestController.createRequest);
 
+api.put("/request/:id", RequestController.updateRequest);
+api.delete("/request/:id", RequestController.deleteRequest);
+
 module.exports = api;
+  

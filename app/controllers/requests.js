@@ -86,7 +86,6 @@ async function getRequestsFromStudent(req, res) {
     }
 }
 
-
 // create new request
 async function createRequest(req, res) {
     const data = new Request(req.body);
@@ -96,6 +95,27 @@ async function createRequest(req, res) {
         if (!data.assignedStudent) {
             res.status(400).json({ error: "Request's assigned Student cannot be empty." });
             return;
+        }
+
+        // Recorrer el array de items y comprobar si existen todos ellos
+        if (updatedData.items  && updatedData.items.length > 0) {
+            const errors = [];
+
+            await Promise.all(updatedData.items.map(async (itemId) => {
+                const itemRef = doc(db, "items", itemId);
+                const itemSnapshot = await getDoc(itemRef);
+
+                // Check if the item exists
+                if (!itemSnapshot.exists()) {
+                    errors.push(`Item with ID=${itemId} does not exist.`);
+                }
+            }));
+
+            if (errors.length > 0) {
+                // Si hay errores, enviar una respuesta con el array de errores
+                res.status(400).json({ errors });
+                return;
+            }
         }
 
         // Comprobar si existe el alumno
@@ -118,6 +138,71 @@ async function createRequest(req, res) {
     }
 }
 
+// update request
+async function updateRequest(req, res) {
+    const id = req.params.id;
+    const updatedData = req.body;
+
+    try {
+        // Comprobar si el documento existe
+        const ref = doc(db, collectionName, id);
+        const snapshot = await getDoc(ref);
+
+        if (snapshot.exists()) {
+            // El documento existe, proceder a la actualización
+
+            // Si se desea cambiar el estudiante asignado, se comprueba si el nuevo existe
+            if (updatedData.assignedStudent) {
+                const studentRef = doc(db, "students", updatedData.assignedStudent);
+                const studentSnapshot = await getDoc(studentRef);
+                
+                // Error, no existe el estudiante
+                if(!studentSnapshot.exists()) {
+                    res.status(400).json({ error: `Request's assigned Student (studentId=${updatedData.assignedStudent}) does not exist.` });
+                    return;
+                }
+
+            }
+
+            // Comprobar si los items existen
+            if (updatedData.items  && updatedData.items.length > 0) {
+                const errors = [];
+
+                await Promise.all(updatedData.items.map(async (itemId) => {
+                    const itemRef = doc(db, "items", itemId);
+                    const itemSnapshot = await getDoc(itemRef);
+
+                    // Check if the item exists
+                    if (!itemSnapshot.exists()) {
+                        errors.push(`Item with ID ${itemId} does not exist.`);
+                    }
+                }));
+
+                if (errors.length > 0) {
+                    // Si hay errores, enviar una respuesta con el array de errores
+                    res.status(400).json({ errors });
+                    return;
+                }
+            }
+
+            // Si ha llegado hasta aquí, los datos son correctos, procede a actualizarlos
+            await updateDoc(ref, updatedData);
+            res.status(200).json({ message: `Request with id=${id} updated successfully` });
+        } else {
+            // El documento no existe
+            res.status(404).json({ error: `Request with id=${id} does not exist.`});
+        }
+    } catch (error) {
+        console.error("Error updating request from Firestore:", error);
+        res.status(500).send("Server error.");
+    }
+}
+
+// delete request
+async function deleteRequest(req, res) {
+    // Eliminar todos los items que están en el array de items de la request a eliminar
+    print("calling deleteItem!!");
+}
 
 // Exportamos las funciones
 module.exports = {
@@ -125,4 +210,6 @@ module.exports = {
     getRequests,
     getRequestsFromStudent,
     createRequest,
+    updateRequest,
+    deleteRequest
 }
