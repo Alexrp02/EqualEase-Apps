@@ -15,6 +15,8 @@ const student_routes = require("../routes/students.js");
 const teacher_routes = require("../routes/teachers.js");
 const task_routes = require("../routes/tasks.js");
 const images_routes = require("../routes/images.js");
+const item_routes = require("../routes/items.js");
+const request_routes = require("../routes/requests.js");
 
 // Rutas base
 app.use("/api", subtask_routes);
@@ -22,7 +24,8 @@ app.use("/api", student_routes);
 app.use("/api", teacher_routes);
 app.use("/api", task_routes);
 app.use("/api", upload.single("image"), images_routes);
-
+app.use("/api", item_routes);
+app.use("/api", request_routes);
 
 
 module.exports = {
