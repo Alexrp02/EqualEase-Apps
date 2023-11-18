@@ -1,7 +1,7 @@
 class Request {
 
     constructor (request) {
-        this.assignedStudent = request.assignedStudent || "";
+        this.assignedStudent = request.assignedStudent;
         this.items = request.items || [];
     }
 

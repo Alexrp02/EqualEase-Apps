@@ -29,7 +29,35 @@ async function getItem(req, res) {
     }
 }
 
+// create new item
+async function createItem(req, res) {
+    const data = new Item(req.body);
+
+    try {
+        // Verificar campos vacíos y restricciones
+        if (!data.name) {
+            res.status(400).json({ error: "Item's name cannot be empty." });
+            return;
+        }
+
+        // El nombre debe estar en mayusculas
+        const uppercaseName = data.name.toUpperCase();
+        data.name = uppercaseName;
+
+        const ref = await addDoc(collection(db, collectionName), data.toJSON());
+
+        console.log(`Inserted new item (name: ${data.name}).`);
+        res.status(201).json({id: ref.id, ...data });
+
+    } catch (error) {
+        console.error("Error creating item in Firestore:", error);
+        res.status(500).send("Server error.");        
+    }
+}
+
+
 // Exportamos las funciones
 module.exports = {
     getItem,
+    createItem
 }

@@ -87,9 +87,42 @@ async function getRequestsFromStudent(req, res) {
 }
 
 
+// create new request
+async function createRequest(req, res) {
+    const data = new Request(req.body);
+
+    try {
+        // Verificar campos vacíos y restricciones
+        if (!data.assignedStudent) {
+            res.status(400).json({ error: "Request's assigned Student cannot be empty." });
+            return;
+        }
+
+        // Comprobar si existe el alumno
+        const studentRef = doc(db, "students", data.assignedStudent);
+        const snapshot = await getDoc(studentRef);
+        if (snapshot.exists()) {
+            // Insertar nuevo request
+            const ref = await addDoc(collection(db, collectionName), data.toJSON());
+
+            console.log(`Inserted new request to student ${data.assignedStudent}).`);
+            res.status(201).json({id: ref.id, ...data });
+        } else {
+            // Error, no existe el estudiante
+            res.status(400).json({ error: `Request's assigned Student (studentId=${data.assignedStudent}) does not exist.` });
+            return;
+        }
+    } catch (error) {
+        console.error("Error creating item in Firestore:", error);
+        res.status(500).send("Server error.");        
+    }
+}
+
+
 // Exportamos las funciones
 module.exports = {
     getRequest,
     getRequests,
     getRequestsFromStudent,
+    createRequest,
 }
