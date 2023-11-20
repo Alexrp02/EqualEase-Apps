@@ -98,10 +98,10 @@ async function createRequest(req, res) {
         }
 
         // Recorrer el array de items y comprobar si existen todos ellos
-        if (updatedData.items  && updatedData.items.length > 0) {
+        if (data.items.length > 0) {
             const errors = [];
 
-            await Promise.all(updatedData.items.map(async (itemId) => {
+            await Promise.all(data.items.map(async (itemId) => {
                 const itemRef = doc(db, "items", itemId);
                 const itemSnapshot = await getDoc(itemRef);
 
@@ -124,8 +124,12 @@ async function createRequest(req, res) {
         if (snapshot.exists()) {
             // Insertar nuevo request
             const ref = await addDoc(collection(db, collectionName), data.toJSON());
-
             console.log(`Inserted new request to student ${data.assignedStudent}).`);
+
+            // Actualizar el flag de estudiante
+            await updateStudentHasRequest(data.assignedStudent);
+
+            // Devolver respuesta
             res.status(201).json({id: ref.id, ...data });
         } else {
             // Error, no existe el estudiante
@@ -150,6 +154,7 @@ async function updateRequest(req, res) {
 
         if (snapshot.exists()) {
             // El documento existe, proceder a la actualización
+            const previousStudent = snapshot.data().assignedStudent;
 
             // Si se desea cambiar el estudiante asignado, se comprueba si el nuevo existe
             if (updatedData.assignedStudent) {
@@ -187,6 +192,12 @@ async function updateRequest(req, res) {
 
             // Si ha llegado hasta aquí, los datos son correctos, procede a actualizarlos
             await updateDoc(ref, updatedData);
+
+            if(updatedData.assignedStudent) {
+                await updateStudentHasRequest(previousStudent);
+                await updateStudentHasRequest(updatedData.assignedStudent);
+            }
+
             res.status(200).json({ message: `Request with id=${id} updated successfully` });
         } else {
             // El documento no existe
@@ -200,9 +211,32 @@ async function updateRequest(req, res) {
 
 // delete request
 async function deleteRequest(req, res) {
-    // Eliminar todos los items que están en el array de items de la request a eliminar
+    // Eliminar todos los items que están en el array de items de la request a eliminar ??
     print("calling deleteItem!!");
 }
+
+// actualiza el flag de estudiante 'hasRequest'
+// Para ello realiza una consulta en la colección requests y si encuentra algún
+// registro cuyo assignedStudent==studentId entonces hasRequest = true
+// en caso contrario lo establece a falso
+// pre: el estudiante existe (studentId es válido)
+async function updateStudentHasRequest(studentId) {
+
+    try {
+        const studentQuery = query(collection(db, collectionName), where("assignedStudent", "==", studentId));
+        const snapshot = await getDocs(studentQuery);
+                
+        // Obtiene la referencia del estudiante y la modifica
+        const ref = doc(db, "students", studentId);
+        const hasRequest = !snapshot.empty;
+
+        await updateDoc(ref, { hasRequest: hasRequest });
+        console.log(`Modified student(id=${studentId}).hasRequest=${hasRequest}`);
+    } catch (error) {
+        console.error("Error updating student.hasRequest:", error);
+    }
+}
+
 
 // Exportamos las funciones
 module.exports = {
