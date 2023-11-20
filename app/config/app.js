@@ -17,6 +17,8 @@ const task_routes = require("../routes/tasks.js");
 const images_routes = require("../routes/images.js");
 const item_routes = require("../routes/items.js");
 const request_routes = require("../routes/requests.js");
+const menu_routes = require("../routes/menu.js");
+const kitchen_order_routes = require("../routes/kitchen_orders.js");
 
 // Rutas base
 app.use("/api", subtask_routes);
@@ -26,7 +28,8 @@ app.use("/api", task_routes);
 app.use("/api", upload.single("image"), images_routes);
 app.use("/api", item_routes);
 app.use("/api", request_routes);
-
+app.use("/api", menu_routes);
+app.use("/api", kitchen_order_routes);
 
 module.exports = {
     app,
