@@ -7,6 +7,8 @@ import 'package:api_integration/models/student.dart';
 import 'package:api_integration/models/teacher.dart';
 import 'package:api_integration/models/subtask.dart';
 import 'package:api_integration/models/task.dart';
+import 'package:api_integration/models/item.dart';
+import 'package:api_integration/models/request.dart';
 
 /// class containing all operations with API
 class APIController {
@@ -957,8 +959,232 @@ class APIController {
     }
   }
 
-  //-----------------------------------------------------------------------//
-  /// Other operations
+  /// 2a iteracion
 
-  // ...
+  // devuelve una lista de request del estudiante
+  Future<List<Request>> getRequestsFromStudent(String studentId) async {
+    final String apiUrl = '$baseUrl/request/student/$studentId';
+
+    try {
+      List<Request> list = [];
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // Analizar la respuesta JSON
+        final List<dynamic> requestsJson = json.decode(response.body);
+        for (var requestJson in requestsJson) {
+          list.add(Request.fromMap(requestJson));
+        }
+      } else {
+        throw Exception(
+            'Error al obtener los request del estudiante(id=$studentId): ${response.statusCode}');
+      }
+
+      return list;
+    } catch (e) {
+      print('Error al obtener todos los request: $e');
+      throw Exception('No se pudo obtener la lista de request del usuario');
+    }
+  }
+
+  // devuelve el objeto de tipo request con ese id
+  Future<Request> getRequest(String id) async {
+    final String apiUrl = '$baseUrl/request/id/$id';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Request req = Request.fromJson(response.body);
+        return req;
+      } else {
+        throw Exception(
+            'Error al obtener el peticion: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
+
+  // devuelve el objeto de tipo request con ese id
+  Future<Item> getItem(String id) async {
+    final String apiUrl = '$baseUrl/item/$id';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Item obj = Item.fromJson(response.body);
+        return obj;
+      } else {
+        throw Exception('Error al obtener item: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
+
+  Future<List<Item>> getItemsFromRequest(String requestId) async {
+    try {
+      // Obtiene el request
+      Request req = await getRequest(requestId);
+
+      List<Item> list = [];
+
+      // Va recorriendo el array de items y añadiendolos al array
+      for (String itemId in req.items) {
+        try {
+          Item item = await getItem(itemId);
+          list.add(item);
+        } catch (e) {
+          print('Error al obtener el item $itemId: $e');
+        }
+      }
+
+      // Devolver el array de items
+      return list;
+    } catch (e) {
+      print('Error al obtener el request con id $requestId: $e');
+      throw Exception(
+          'No se pudo obtener la lista de items para la peticion de material con id=$requestId');
+    }
+  }
+
+  Future<bool> updateItem(Item item) async {
+    // Crea el JSON con las tareas actualizadas.
+    var requestJson = item.toJsonWithoutId();
+
+    // Realiza la operacion de actualizacion en la BD
+    var result = await _putItem(item.id, requestJson);
+    return result;
+  }
+
+  Future<bool> _putItem(String id, String jsonString) async {
+    final String apiUrl = '$baseUrl/item/$id';
+
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body:
+            jsonString, // El JSON en formato de cadena se envía directamente en el cuerpo de la solicitud.
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Devuelve true para indicar que la actualización se realizó con éxito.
+      } else {
+        print('Error al actualizar la item: ${response.reasonPhrase}');
+        return false;
+      }
+    } catch (e) {
+      print('Error de red: $e');
+      return false;
+    }
+  }
+
+  Future<bool> createItem(Item item) async {
+    final String apiUrl = '$baseUrl/item';
+
+    // Necesitamos convertir el objeto a JSON pero sin su id
+    String jsonBody = item.toJsonWithoutId();
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      print(jsonBody);
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos de la tarea recién creada,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        item.id = body['id'];
+
+        // Se debe cambiar también el nombre, puesto que se pasó a mayúsculas en la BD
+        item.name = body['name'];
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> createRequest(Request req) async {
+    final String apiUrl = '$baseUrl/request';
+
+    // Necesitamos convertir el objeto a JSON pero sin su id
+    String jsonBody = req.toJsonWithoutId();
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      print(jsonBody);
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos de la tarea recién creada,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        req.id = body['id'];
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> updateRequest(Request req) async {
+    // Crea el JSON con las tareas actualizadas.
+    var requestJson = req.toJsonWithoutId();
+
+    // Realiza la operacion de actualizacion en la BD
+    var result = await _putRequest(req.id, requestJson);
+    return result;
+  }
+
+  Future<bool> _putRequest(String id, String jsonString) async {
+    final String apiUrl = '$baseUrl/request/$id';
+
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body:
+            jsonString, // El JSON en formato de cadena se envía directamente en el cuerpo de la solicitud.
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Devuelve true para indicar que la actualización se realizó con éxito.
+      } else {
+        print('Error al actualizar la request: ${response.reasonPhrase}');
+        return false;
+      }
+    } catch (e) {
+      print('Error de red: $e');
+      return false;
+    }
+  }
+
+  // Add item to request??
 }
