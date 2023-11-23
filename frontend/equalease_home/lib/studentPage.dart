@@ -20,7 +20,9 @@ class _StudentPageState extends State<StudentPage> {
       surname: "",
       pendingTasks: [],
       doneTasks: [],
-      profilePicture: "");
+      profilePicture: "",
+      hasRequest: false,
+      hasKitchenOrder: false);
   List<Task> doneTasks = [];
   List<Task> pendingTasks = [
     // Task(
@@ -40,7 +42,7 @@ class _StudentPageState extends State<StudentPage> {
   @override
   void initState() {
     super.initState();
-    controller.getStudent("BzeOSKjQKDhh2Da3JHYC").then((value) {
+    controller.getStudent("6gsy3HsO0GQLwVcPvySA").then((value) {
       setState(() {
         student = value;
       });
