@@ -6,11 +6,8 @@ const api = express.Router();
 api.post("/kitchen-order", KitchenOrderController.createKitchenOrder);
 
 api.get("/kitchen-order", KitchenOrderController.getKitchenOrders);
-api.get("/kitchen-order/id/:id", KitchenOrderController.getKitchenOrder);
-api.get("/kitchen-order/student/:id", KitchenOrderController.getKitchenOrdersFromStudent);
+api.get("/kitchen-order/:id", KitchenOrderController.getKitchenOrder);
 
 api.put("/kitchen-order/:id", KitchenOrderController.updateKitchenOrder);
-
-api.delete("/kitchen-order/:id", KitchenOrderController.deleteKitchenOrder);
 
 module.exports = api;

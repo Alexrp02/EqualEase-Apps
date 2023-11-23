@@ -1,13 +1,15 @@
 class KitchenOrder {
 
     constructor (kitchenOrder) {
-        this.assignedStudent = kitchenOrder.assignedStudent;
+        this.classroom = kitchenOrder.classroom;
+        this.revised = kitchenOrder.revised || false;
         this.orders = kitchenOrder.orders || [];
     }
 
     toJSON() {
         return {
-            assignedStudent: this.assignedStudent,
+            classroom: this.classroom,
+            revised: this.revised,
             orders: this.orders
         };
     }

@@ -10,6 +10,4 @@ api.get("/menu/:id", MenuController.getMenu);
 
 api.put("/menu/:id", MenuController.updateMenu);
 
-api.delete("/menu/:id", MenuController.deleteMenu);
-
 module.exports = api;

@@ -19,6 +19,12 @@ async function createMenu(req, res) {
         const uppercaseName = data.name.toUpperCase();
         data.name = uppercaseName;
 
+        // Comprobar que si hay tipo sea el correcto
+        if (data.type && (data.type != "Menu" && data.type != "Dessert")) {
+            res.status(400).json({ error: "Error creating menu: Invalid type. It must be 'Menu' or 'Dessert'." });
+            return;
+        }
+
         const ref = await addDoc(collection(db, collectionName), data.toJSON());
 
         console.log(`Inserted new menu (name: ${data.name}).`);
@@ -101,6 +107,12 @@ async function updateMenu(req, res) {
                 updatedData.name = uppercase;
             }
 
+            // Comprobar que si hay tipo sea el correcto
+            if (updatedData.type && (updatedData.type != "Menu" && updatedData.type != "Dessert")) {
+                res.status(400).json({ error: "Error updating menu: Invalid type. It must be 'Menu' or 'Dessert'." });
+                return;
+            }
+
             await updateDoc(ref, updatedData);
             res.status(200).json({ message: `Menu with id=${id} updated successfully` });
         } else {
@@ -113,66 +125,10 @@ async function updateMenu(req, res) {
     }
 }
 
-// delete menu
-async function deleteMenu(req, res) {
-    const id = req.params.id;
-    try {
-        const ref = doc(db, collectionName, id);
-        const snapshot = await getDoc(ref);
-    
-        if (snapshot.exists()) {
-            // Eliminar referencia de los pedidos de cocina donde aparezca
-
-            const kitchenOrderCollection = collection(db, "kitchen_orders");
-            const kitchenOrderQuery = query(kitchenOrderCollection);
-    
-            const kitchenOrderSnapshot = await getDocs(kitchenOrderQuery);
-    
-            kitchenOrderSnapshot.forEach(async (kitchenOrderDoc) => {
-                const kitchenOrderData = kitchenOrderDoc.data();
-
-                // Comprobar si el menú está en orders.menuId
-                const indexToRemove = kitchenOrderData.orders.findIndex(order => order.menuId === id);
-
-                if (indexToRemove !== -1) {
-                    // El menuId está presente en algún objeto de la propiedad orders
-                    // Eliminar la fila del array orders
-                    const updatedOrders = [...kitchenOrderData.orders];
-                    updatedOrders.splice(indexToRemove, 1);
-
-                    // Actualizar el documento con el nuevo array orders
-                    await updateDoc(kitchenOrderDoc.ref, { orders: updatedOrders });
-
-                    console.log(`Menu with ID ${id} found in kitchen order with ID ${kitchenOrderDoc.id}. Removed menu order.`);
-                }
-    
-            });
-    
-            // Tras las comprobaciones, eliminar el menu
-            await deleteDoc(ref);
-            console.log(`Deleted Menu with ID ${id}`);
-            res.status(200).json({ message: `Safefully deleted menu with id=${id}.` });
-        } else {
-            // El documento no existe
-            res.status(404).json({ error: `Menu with id=${id} does not exist.` });
-        }
-    } catch (error) {
-        console.error("Error deleting menu from Firestore:", error);
-        res.status(500).send("Server error.");
-    }
-
-    // Eliminar referencia de los pedidos de cocina donde aparezca
-
-    
-    // Recorre los kitchenOrder.orders y si menuId.exists lo elimina
-    
-}
-
 // Exportamos las funciones
 module.exports = {
     createMenu,
     getMenu,
     getMenus,
     updateMenu,
-    deleteMenu,
 }
