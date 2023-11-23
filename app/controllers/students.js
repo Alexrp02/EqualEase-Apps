@@ -127,6 +127,55 @@ async function updateStudent(req, res) {
     }
 }
 
+// Get pending tasks of today from student id
+async function getPendingTasksToday(req, res) {
+    const id = req.params.id;
+
+    if (!id) {
+        res.status(400).json({ error: "Student's id cannot be empty." });
+        return;
+    }
+
+    try {
+        // Obtener una referencia al documento de subtarea por su ID
+        const ref = doc(db, collectionName, id);
+
+        // Obtener el documento
+        const snapshot = await getDoc(ref);
+
+        // Comprobar si el documento de subtarea existe
+        if (snapshot.exists()) {
+            const studentData = snapshot.data();
+            const student = new Student(studentData);
+            const pendingTasksToday = student.pendingTasks.filter(task => {
+                const currentDate = new Date();
+                const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] ;
+                const startDate = new Date(task.startDate);
+                const endDate = new Date(task.endDate);
+
+                // Check if the current date is within the interval if there is one
+                if (task.startDate && task.endDate && task.daysOfWeek) {
+                    return (currentDate >= startDate && currentDate <= endDate) && task.daysOfWeek.includes(weekDays[currentDate.getDay()]) ;
+                }else if (task.startDate && task.endDate){
+                    return (currentDate >= startDate && currentDate <= endDate);
+                }else if(task.daysOfWeek){
+                    // Check if the current day of the week is in the days of the week array
+                    return task.daysOfWeek.includes(weekDays[currentDate.getDay()]);
+                }
+                return false;
+            });
+            const pendingTasksIds = pendingTasksToday.map(task => task.id);
+
+            res.status(200).json(pendingTasksIds);
+        } else {
+            res.status(404).json({ error: `Student with id=${id} does not exist.`});
+        }
+    } catch (error) {
+        console.error("Error getting student from Firestore:", error);
+        res.status(500).send("Server error.");   
+    }
+}
+
 // Cuando se implemente la operación de eliminar estudiante,
 // tener en cuenta las dependencias y eliminarlo de los arrays teacher.students[].
 // Para ver como se implementa, ver el ejemplo deleteTask
@@ -138,4 +187,5 @@ module.exports = {
     getStudentById,
     getStudentByName,
     updateStudent,
+    getPendingTasksToday,
 }
