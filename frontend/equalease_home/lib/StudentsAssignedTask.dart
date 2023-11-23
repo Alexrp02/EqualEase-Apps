@@ -88,8 +88,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                 children: <Widget>[
                   Text(
                     _student!.name,
-                    style: TextStyle(
-                        fontSize: 40, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   Expanded(
                     child: Container(
@@ -104,15 +103,16 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            for (String taskId in _student!.pendingTasks)
+                            for (Map<String, dynamic> taskId
+                                in _student!.pendingTasks)
                               Container(
                                 padding: EdgeInsets.all(0),
                                 height: 80,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 255, 255, 255),
                                   border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 170, 172, 174),
+                                    color: const Color.fromARGB(
+                                        255, 170, 172, 174),
                                     width: 2.0,
                                   ),
                                   borderRadius: BorderRadius.circular(0),
@@ -123,7 +123,8 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                   children: <Widget>[
                                     Text(
                                       totalTasks
-                                          .firstWhere((task) => task.id == taskId)
+                                          .firstWhere(
+                                              (task) => task.id == taskId['id'])
                                           .title,
                                     ),
                                     Container(
@@ -132,8 +133,11 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           setState(() {
-                                            _student!.pendingTasks.remove(taskId);
-                                            _controller.updateStudent(_student!);
+                                            _student!.pendingTasks.removeWhere(
+                                                (task) =>
+                                                    taskId['id'] == task['id']);
+                                            _controller
+                                                .updateStudent(_student!);
                                           });
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -174,9 +178,9 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
 }
 
 class CustomDialog extends StatefulWidget {
-  final List<String> pendingTasks;
+  final List<Map<String, dynamic>> pendingTasks;
   final List<Task> totalTasks;
-  final Function(List<String>) onTasksUpdated;
+  final Function(List<Map<String, dynamic>>) onTasksUpdated;
   final Student? student;
 
   CustomDialog({
@@ -204,12 +208,13 @@ class _CustomDialogState extends State<CustomDialog> {
             for (Task task in widget.totalTasks)
               CheckboxListTile(
                 title: Text(task.title),
-                value: widget.student!.pendingTasks.contains(task.id),
+                value: widget.student!.pendingTasks
+                    .any((arrayTask) => task.id == arrayTask['id']),
                 onChanged: (bool? value) {
                   setState(() {
                     if (value != null) {
                       if (value) {
-                        widget.student!.pendingTasks.add(task.id);
+                        widget.student!.pendingTasks.add({'id': task.id});
                       } else {
                         widget.student!.pendingTasks.remove(task.id);
                       }
@@ -233,4 +238,3 @@ class _CustomDialogState extends State<CustomDialog> {
     );
   }
 }
-

@@ -3,17 +3,17 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // Project models
-import 'package:api_integration/models/student.dart';
-import 'package:api_integration/models/teacher.dart';
-import 'package:api_integration/models/subtask.dart';
-import 'package:api_integration/models/task.dart';
-import 'package:api_integration/models/item.dart';
-import 'package:api_integration/models/request.dart';
+import '../models/student.dart';
+import '../models/teacher.dart';
+import '../models/subtask.dart';
+import '../models/task.dart';
+import '../models/item.dart';
+import '../models/request.dart';
 
 /// class containing all operations with API
 class APIController {
-  String baseUrl = 'http://localhost:3000/api';
-  //String baseUrl = "http://10.0.2.2:3000/api";
+  // String baseUrl = 'http://localhost:3000/api';
+  String baseUrl = "http://10.0.2.2:3000/api";
 
   //-----------------------------------------------------------------------//
   //Subtask operations
@@ -575,12 +575,12 @@ class APIController {
 
       List<Task> list = [];
 
-      for (String taskId in student.pendingTasks) {
+      for (Map<String, dynamic> taskID in student.pendingTasks) {
         try {
-          Task task = await getTask(taskId);
+          Task task = await getTask(taskID['id']);
           list.add(task);
         } catch (e) {
-          print('Error al obtener la tarea $taskId: $e');
+          print('Error al obtener la tarea ${taskID["id"]}: $e');
         }
       }
 
@@ -589,6 +589,36 @@ class APIController {
       print('Error al obtener el estudiante con id $studentId: $e');
       throw Exception(
           'No se pudo obtener la lista de tareas pendientes del estudiante con id $studentId.');
+    }
+  }
+
+  Future<List<Task>> getPendingTasksTodayFromStudent(String studentId) async {
+    final String apiUrl =
+        '$baseUrl/student/tasks/$studentId'; // Construye la URL específica para obtener un estudiante por ID.
+
+    try {
+      final response = await http.get(Uri.parse(
+          apiUrl)); // Realiza una solicitud HTTP GET para obtener el estudiante.
+
+      if (response.statusCode == 200) {
+        List<Task> pendingTasks = [];
+        List<String> taskIds = List<String>.from(json.decode(response.body));
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        for (String taskId in taskIds) {
+          try {
+            Task task = await getTask(taskId);
+            pendingTasks.add(task);
+          } catch (e) {
+            print('Error al obtener la tarea $taskId: $e');
+          }
+        }
+        return pendingTasks;
+      } else {
+        throw Exception(
+            'Error al obtener el estudiante: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
     }
   }
 
@@ -678,7 +708,7 @@ class APIController {
     Student student = await getStudent(studentId);
 
     // Modifica el array de pending tasks -> elimina la tarea con id = taskId.
-    student.pendingTasks.remove(taskId);
+    student.pendingTasks.removeWhere((task) => taskId == task['id']);
 
     // Modifica el array de done tasks -> inserta el id de la tarea taskId.
     student.doneTasks.add(taskId);
@@ -712,8 +742,11 @@ class APIController {
 
     // Verifica si la tarea ya está en las tareas pendientes del estudiante.
     if (!student.pendingTasks.contains(taskId)) {
+      Map<String, dynamic> task = {
+        "id": taskId,
+      };
       // Agrega la tarea solo si no está en la lista.
-      student.pendingTasks.add(taskId);
+      student.pendingTasks.add(task);
 
       // Crea el JSON con las tareas actualizadas.
       Map<String, dynamic> requestJson = {

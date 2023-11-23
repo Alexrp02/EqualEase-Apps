@@ -4,7 +4,7 @@ class Student {
   String id;
   String name;
   String surname;
-  List<String> pendingTasks;
+  List<Map<String, dynamic>> pendingTasks;
   List<String> doneTasks;
   String profilePicture; // Agregar la propiedad para la imagen de perfil.
   bool hasRequest;
@@ -25,13 +25,25 @@ class Student {
       id: json['id'],
       name: json['name'],
       surname: json['surname'],
-      pendingTasks: List<String>.from(json['pendingTasks']),
+      pendingTasks: _parsePendingTasks(json['pendingTasks']),
       doneTasks: List<String>.from(json['doneTasks']),
       profilePicture: json['profilePicture'],
       hasRequest: json['hasRequest'],
       hasKitchenOrder: json['hasKitchenOrder']);
 
   factory Student.fromJson(String str) => Student.fromMap(json.decode(str));
+
+  static List<Map<String, dynamic>> _parsePendingTasks(dynamic tasksJson) {
+    if (tasksJson is List) {
+      return tasksJson.cast<Map<String, dynamic>>();
+    } else if (tasksJson is Map<String, dynamic>) {
+      // Handle the case where 'pendingTasks' is a single task, convert it to a list
+      return [tasksJson];
+    } else {
+      // Handle other cases or return an empty list
+      return [];
+    }
+  }
 
   Map<String, dynamic> toMap() {
     return {
