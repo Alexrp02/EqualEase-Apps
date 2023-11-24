@@ -108,6 +108,7 @@ async function getStudentByName(req, res) {
 async function updateStudent(req, res) {
     const id = req.params.id;
     const updatedData = req.body;
+    console.log(updatedData);
 
     try {
         const ref = doc(db, collectionName, id);
@@ -149,7 +150,7 @@ async function getPendingTasksToday(req, res) {
             const student = new Student(studentData);
             const pendingTasksToday = student.pendingTasks.filter(task => {
                 const currentDate = new Date();
-                const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] ;
+                const weekDays = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado"] ;
                 const startDate = new Date(task.startDate);
                 const endDate = new Date(task.endDate);
 
@@ -161,6 +162,8 @@ async function getPendingTasksToday(req, res) {
                 }else if(task.daysOfWeek){
                     // Check if the current day of the week is in the days of the week array
                     return task.daysOfWeek.includes(weekDays[currentDate.getDay()]);
+                }else if(!task.startDate && !task.endDate && !task.daysOfWeek){
+                    return true;
                 }
                 return false;
             });
