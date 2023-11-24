@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';
@@ -210,11 +212,31 @@ class _CustomDialogState extends State<CustomDialog> {
                 title: Text(task.title),
                 value: widget.student!.pendingTasks
                     .any((arrayTask) => task.id == arrayTask['id']),
-                onChanged: (bool? value) {
+                onChanged: (bool? value) async {
+                  DateTimeRange? dateRange = await showDateRangePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                      helpText: "Seleccione el intervalo de tiempo",
+                      fieldStartHintText: "Fecha de inicio",
+                      fieldEndHintText: "Fecha de fin",
+                      saveText: "Aceptar",
+                      cancelText: "Cancelar",
+                      fieldStartLabelText: "Inicio",
+                      fieldEndLabelText: "Fin");
+
                   setState(() {
                     if (value != null) {
                       if (value) {
-                        widget.student!.pendingTasks.add({'id': task.id});
+                        widget.student!.pendingTasks.add({
+                          'id': task.id,
+                          'startDate': dateRange != null
+                              ? "${dateRange.start.year}-${dateRange.start.month}-${dateRange.start.day}"
+                              : "",
+                          'endDate': dateRange != null
+                              ? "${dateRange.end.year}-${dateRange.end.month}-${dateRange.end.day}"
+                              : ""
+                        });
                       } else {
                         widget.student!.pendingTasks.remove(task.id);
                       }
