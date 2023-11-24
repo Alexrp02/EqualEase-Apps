@@ -153,16 +153,19 @@ async function getPendingTasksToday(req, res) {
                 const weekDays = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado"] ;
                 const startDate = new Date(task.startDate);
                 const endDate = new Date(task.endDate);
-
                 // Check if the current date is within the interval if there is one
-                if (task.startDate && task.endDate && task.daysOfWeek) {
-                    return (currentDate >= startDate && currentDate <= endDate) && task.daysOfWeek.includes(weekDays[currentDate.getDay()]) ;
+                if (task.startDate && task.endDate && task.daysOfTheWeek) {
+                    console.log("Task " + task.id + " has all the fields") ;
+                    return (currentDate >= startDate && currentDate <= endDate) && task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]) ;
                 }else if (task.startDate && task.endDate){
+                    console.log("Task " + task.id + " has start and end date") ;
                     return (currentDate >= startDate && currentDate <= endDate);
-                }else if(task.daysOfWeek){
+                }else if(task.daysOfTheWeek){
+                    console.log("Task " + task.id + " has days of week") ;
                     // Check if the current day of the week is in the days of the week array
-                    return task.daysOfWeek.includes(weekDays[currentDate.getDay()]);
-                }else if(!task.startDate && !task.endDate && !task.daysOfWeek){
+                    return task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]);
+                }else if(!task.startDate && !task.endDate && !task.daysOfTheWeek){
+                    console.log("Task " + task.id + " has no fields") ;
                     return true;
                 }
                 return false;
