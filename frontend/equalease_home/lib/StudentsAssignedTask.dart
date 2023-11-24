@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equalease_home/components/days_Selector.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';
@@ -199,10 +200,62 @@ class CustomDialog extends StatefulWidget {
 }
 
 class _CustomDialogState extends State<CustomDialog> {
+  List<String> selectedDays = [];
+
+  Future<void> _selectDays(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Days'),
+          content: Column(
+            children: [
+              for (String day in [
+                'Lunes',
+                'Martes',
+                'Miercoles',
+                'Jueves',
+                'Viernes',
+                'Sábado',
+                'Domingo'
+              ])
+                Row(
+                  children: [
+                    Checkbox(
+                        value: selectedDays.contains(day),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != null) {
+                              if (value) {
+                                selectedDays.add(day);
+                              } else {
+                                selectedDays.remove(day);
+                              }
+                            }
+                          });
+                        }),
+                    Text(day),
+                  ],
+                ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Seleccionar Tareas"),
+      title: const Text("Seleccionar Tareas"),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -213,37 +266,48 @@ class _CustomDialogState extends State<CustomDialog> {
                 value: widget.student!.pendingTasks
                     .any((arrayTask) => task.id == arrayTask['id']),
                 onChanged: (bool? value) async {
-                  DateTimeRange? dateRange = await showDateRangePicker(
-                      context: context,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2101),
-                      helpText: "Seleccione el intervalo de tiempo",
-                      fieldStartHintText: "Fecha de inicio",
-                      fieldEndHintText: "Fecha de fin",
-                      saveText: "Aceptar",
-                      cancelText: "Cancelar",
-                      fieldStartLabelText: "Inicio",
-                      fieldEndLabelText: "Fin");
+                  if (value == true) {
+                    DateTimeRange? dateRange = await showDateRangePicker(
+                        context: context,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2101),
+                        helpText: "Seleccione el intervalo de tiempo",
+                        fieldStartHintText: "Fecha de inicio",
+                        fieldEndHintText: "Fecha de fin",
+                        saveText: "Aceptar",
+                        cancelText: "Cancelar",
+                        fieldStartLabelText: "Inicio",
+                        fieldEndLabelText: "Fin");
 
-                  setState(() {
-                    if (value != null) {
-                      if (value) {
-                        widget.student!.pendingTasks.add({
-                          'id': task.id,
-                          'startDate': dateRange != null
-                              ? "${dateRange.start.year}-${dateRange.start.month}-${dateRange.start.day}"
-                              : "",
-                          'endDate': dateRange != null
-                              ? "${dateRange.end.year}-${dateRange.end.month}-${dateRange.end.day}"
-                              : ""
-                        });
-                      } else {
-                        widget.student!.pendingTasks.remove(task.id);
-                      }
+                    if (mounted) {
+                      selectedDays = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DaysSelector();
+                          });
                     }
 
-                    widget.onTasksUpdated(widget.student!.pendingTasks);
-                  });
+                    setState(() {
+                      if (value != null) {
+                        if (value) {
+                          widget.student!.pendingTasks.add({
+                            'id': task.id,
+                            'startDate': dateRange != null
+                                ? "${dateRange.start.year}-${dateRange.start.month}-${dateRange.start.day}"
+                                : "",
+                            'endDate': dateRange != null
+                                ? "${dateRange.end.year}-${dateRange.end.month}-${dateRange.end.day}"
+                                : "",
+                            'daysOfTheWeek': selectedDays
+                          });
+                        } else {
+                          widget.student!.pendingTasks.remove(task.id);
+                        }
+                      }
+
+                      widget.onTasksUpdated(widget.student!.pendingTasks);
+                    });
+                  }
                 },
               ),
           ],
