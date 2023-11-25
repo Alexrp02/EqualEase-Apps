@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:equalease_home/components/days_Selector.dart';
+import 'package:equalease_home/components/days_selector.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';

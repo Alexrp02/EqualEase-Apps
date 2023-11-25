@@ -46,7 +46,7 @@ class _StudentPageState extends State<StudentPage> {
       setState(() {
         student = value;
       });
-      controller.getPendingTasksFromStudent(student.id).then((value) {
+      controller.getPendingTasksTodayFromStudent(student.id).then((value) {
         setState(() {
           pendingTasks = value;
         });
