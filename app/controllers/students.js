@@ -156,14 +156,14 @@ async function getPendingTasksToday(req, res) {
                 // Check if the current date is within the interval if there is one
                 if (task.startDate && task.endDate && task.daysOfTheWeek) {
                     console.log("Task " + task.id + " has all the fields") ;
-                    return (currentDate >= startDate && currentDate <= endDate) && task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]) ;
+                    return (currentDate >= startDate && currentDate <= endDate) && (task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]) || task.daysOfTheWeek.length == 0) ;
                 }else if (task.startDate && task.endDate){
                     console.log("Task " + task.id + " has start and end date") ;
                     return (currentDate >= startDate && currentDate <= endDate);
                 }else if(task.daysOfTheWeek){
                     console.log("Task " + task.id + " has days of week") ;
                     // Check if the current day of the week is in the days of the week array
-                    return task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]);
+                    return task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]) || task.daysOfTheWeek.length == 0;
                 }else if(!task.startDate && !task.endDate && !task.daysOfTheWeek){
                     console.log("Task " + task.id + " has no fields") ;
                     return true;
