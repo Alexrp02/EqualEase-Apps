@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:equalease_home/models/kitchen_order.dart';
-
 class Kitchen {
   final String assignedStudent;
-  final List<KitchenOrder> orders;
+  final List<String> orders;
   final String date;
 
   Kitchen(
@@ -14,8 +12,7 @@ class Kitchen {
 
   factory Kitchen.fromMap(Map<String, dynamic> json) => Kitchen(
         assignedStudent: json['assignedStudent'],
-        orders: List<KitchenOrder>.from(
-            json['orders'].map((x) => KitchenOrder.fromMap(x))),
+        orders: List<String>.from(json['orders']),
         date: json['date'],
       );
 
@@ -23,7 +20,7 @@ class Kitchen {
 
   Map<String, dynamic> toMap() => {
         'assignedStudent': assignedStudent,
-        'orders': List<dynamic>.from(orders.map((x) => x.toMap())),
+        'orders': orders,
         'date': date,
       };
 
