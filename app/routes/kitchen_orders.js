@@ -7,6 +7,7 @@ api.post("/kitchen-order", KitchenOrderController.createKitchenOrder);
 
 api.get("/kitchen-order", KitchenOrderController.getKitchenOrders);
 api.get("/kitchen-order/:id", KitchenOrderController.getKitchenOrder);
+api.get("/kitchen-order/classroom/:classroomID", KitchenOrderController.getOrdersFromClass) ;
 
 api.put("/kitchen-order/:id", KitchenOrderController.updateKitchenOrder);
 

@@ -182,10 +182,56 @@ async function updateKitchenOrder(req, res) {
     }
 }
 
+
+async function getOrdersFromClass(req, res) {
+    try {
+        const currentDate = new Date();
+        const currentDateString = currentDate.toISOString().split("T")[0];
+        const kitchenQuery = query(collection(db, "kitchen_orders"), where("date", "==", currentDateString), where("classroom", "==", req.params.classroomID));
+        const snapshot = await getDocs(kitchenQuery);
+                
+        if(snapshot.empty) {
+            // Si no existe orden para la clase, lo creamos
+            let request = new KitchenOrder({
+                classroom: req.params.classroomID,
+                orders: [],
+                revised: false,
+                date: currentDateString
+            });
+
+            // Obtenemos los menus y los añadimos a la orden con cantidad 0
+            const menusQuery = query(collection(db, "menus"));
+            const menusSnapshot = await getDocs(menusQuery);
+            menusSnapshot.forEach((doc) => {
+                request.orders.push({
+                    menu: doc.id,
+                    quantity: 0
+                });
+            });
+
+            const ref = await addDoc(collection(db, "kitchen_orders"), request.toJSON());
+
+            console.log(`Inserted new kitchen order for classroom ${req.params.classroom}).`);
+            // Devolvemos la orden creada
+            res.status(201).json({id: ref.id, ...request });
+            return ;
+        }
+        
+        // Si el snapshot no está vacío, creamos el objeto KitchenOrder y lo devolvemos
+        const data = snapshot.docs[0].data();
+        const request = new KitchenOrder(data);
+        res.status(200).json({id: snapshot.docs[0].id, ...request });
+    } catch (error) {
+        console.error("Error getting kitchen from Firestore:", error);
+        res.status(500).send("Server error.");   
+    }
+}
+
 // Exportamos las funciones
 module.exports = {
     createKitchenOrder,
     getKitchenOrders,
     getKitchenOrder,
     updateKitchenOrder,
+    getOrdersFromClass
 }

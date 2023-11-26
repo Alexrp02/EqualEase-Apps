@@ -1,6 +1,7 @@
-const { addDoc, collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc } = require("firebase/firestore");
+const { addDoc, collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc, and } = require("firebase/firestore");
 const { db } = require("../config/database.js");
 const Kitchen = require("../models/kitchen.js");
+const KitchenOrder = require("../models/kitchen_orders.js");
 
 const collectionName = "kitchen";
 
