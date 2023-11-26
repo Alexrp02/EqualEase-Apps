@@ -1,3 +1,4 @@
+import 'package:equalease_home/menuAdmin.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
 import 'tasks.dart';
@@ -87,10 +88,10 @@ class AdminPage extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                /*Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentsPage()),
-                );*/
+                  MaterialPageRoute(builder: (context) => MenuPage()),
+                );
               },
               child: const Text('MENUS'),
             ),
