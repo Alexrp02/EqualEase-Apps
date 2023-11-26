@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // Project models
+import '../models/kitchen_order.dart';
+import '../models/menu.dart';
 import '../models/student.dart';
 import '../models/teacher.dart';
 import '../models/subtask.dart';
@@ -1220,4 +1222,49 @@ class APIController {
   }
 
   // Add item to request??
+
+  // Get every menu from the database and return a list of Menu
+  Future<List<Menu>> getMenus() async {
+    final String apiUrl = '$baseUrl/api/menu';
+
+    try {
+      List<Menu> list = [];
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // Analizar la respuesta JSON
+        final List<dynamic> menusJson = json.decode(response.body);
+        for (var menuJson in menusJson) {
+          list.add(Menu.fromMap(menuJson));
+        }
+      } else {
+        throw Exception('Error al obtener los menus: ${response.statusCode}');
+      }
+
+      return list;
+    } catch (e) {
+      print('Error al obtener todos los menus: $e');
+      throw Exception('No se pudo obtener la lista de menus del sistema');
+    }
+  }
+
+  // Get the KitchenOrder from a class id
+  Future<KitchenOrder> getKitchenOrder(String classId) async {
+    final String apiUrl = '$baseUrl/kitchen-order/classroom/$classId';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        KitchenOrder kitchenOrder = KitchenOrder.fromJson(response.body);
+        return kitchenOrder;
+      } else {
+        print(response.statusCode);
+        throw Exception(
+            'Error al obtener el KitchenOrder: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
 }
