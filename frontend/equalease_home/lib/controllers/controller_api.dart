@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 // Project models
+import '../models/classroom.dart';
 import '../models/kitchen_order.dart';
 import '../models/menu.dart';
 import '../models/student.dart';
@@ -1265,6 +1266,30 @@ class APIController {
       }
     } catch (e) {
       throw Exception('Error de red: $e');
+    }
+  }
+
+  // Get all the classrooms from the database
+  Future<List<Classroom>> getClassrooms() async {
+    final String apiUrl = '$baseUrl/classroom';
+
+    try {
+      List<Classroom> list = [];
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // Analizar la respuesta JSON
+        final List<dynamic> classroomsJson = json.decode(response.body);
+        for (var classroomJson in classroomsJson) {
+          list.add(Classroom.fromMap(classroomJson));
+        }
+      } else {
+        throw Exception('Error al obtener las aulas: ${response.statusCode}');
+      }
+
+      return list;
+    } catch (e) {
+      print('Error al obtener todas las aulas: $e');
+      throw Exception('No se pudo obtener la lista de aulas del sistema');
     }
   }
 }
