@@ -19,6 +19,14 @@ class ImagesController {
     _imageFile = selectedImage;
   }
 
+  void setImageToNull() {
+    _imageFile = null;
+  }
+
+  bool hasImage() {
+    return _imageFile == null;
+  }
+
   /// Upload the previously selected image to the server
   ///
   /// Params:
