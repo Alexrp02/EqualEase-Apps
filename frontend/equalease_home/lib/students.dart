@@ -130,6 +130,7 @@ class _StudentsPageState extends State<StudentsPage> {
                           onPressed: () {
 
                             if(_StudentsAdded[i].hasRequest == false){
+                              resetRequests();
                               _StudentsAdded[i].hasRequest = true;
                               Navigator.push(
                                 context,
@@ -161,6 +162,7 @@ class _StudentsPageState extends State<StudentsPage> {
                           onPressed: () {
 
                             if(_StudentsAdded[i].hasKitchenOrder == false){
+                              resetKitchenOrders();
                               _StudentsAdded[i].hasKitchenOrder = true;
 
                               //LLAMAR AQUI A VUESTRA PAGINA DE PEDIDO DE COCINA
@@ -200,4 +202,24 @@ class _StudentsPageState extends State<StudentsPage> {
       ),
     );
   }
+
+  void resetRequests(){
+    for(int i = 0; i < _StudentsAdded.length; i++){
+      if(_StudentsAdded[i].hasRequest == true){
+        _StudentsAdded[i].hasRequest = false;
+        _controller.updateStudent(_StudentsAdded[i]);
+      }
+    }
+  }
+
+  void resetKitchenOrders(){
+    for(int i = 0; i < _StudentsAdded.length; i++){
+      if(_StudentsAdded[i].hasKitchenOrder == true){
+        _StudentsAdded[i].hasKitchenOrder = false;
+        _controller.updateStudent(_StudentsAdded[i]);
+      }
+    }
+  }
 }
+
+
