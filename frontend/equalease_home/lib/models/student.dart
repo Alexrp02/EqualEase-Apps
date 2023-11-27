@@ -28,8 +28,8 @@ class Student {
       pendingTasks: _parsePendingTasks(json['pendingTasks']),
       doneTasks: List<String>.from(json['doneTasks']),
       profilePicture: json['profilePicture'],
-      hasRequest: json['hasRequest'],
-      hasKitchenOrder: json['hasKitchenOrder']);
+      hasRequest: json['hasRequest'] || false,
+      hasKitchenOrder: json['hasKitchenOrder'] || false);
 
   factory Student.fromJson(String str) => Student.fromMap(json.decode(str));
 
