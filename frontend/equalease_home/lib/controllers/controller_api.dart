@@ -1248,6 +1248,40 @@ class APIController {
     }
   }
 
+  Future<bool> createMenu(Menu menu) async {
+    final String apiUrl = '$baseUrl/menu';
+
+    // Necesitamos convertir el objeto a JSON pero sin su id
+    String jsonBody = menu.toJsonWithoutId();
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      print(jsonBody);
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos de la tarea recién creada,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        menu.id = body['id'];
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // Get the KitchenOrder from a class id
   Future<KitchenOrder> getKitchenOrder(String classId) async {
     final String apiUrl = '$baseUrl/kitchen-order/classroom/$classId';
