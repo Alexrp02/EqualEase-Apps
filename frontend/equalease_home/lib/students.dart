@@ -13,6 +13,7 @@ class StudentsPage extends StatefulWidget {
 class _StudentsPageState extends State<StudentsPage> {
   final APIController _controller = APIController();
   List<Student> _StudentsAdded = [];
+  int estilo = 0;
 
   @override
   void initState() {
@@ -127,15 +128,27 @@ class _StudentsPageState extends State<StudentsPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
-                              ),
-                            );
+
+                            if(_StudentsAdded[i].hasRequest == false){
+                              _StudentsAdded[i].hasRequest = true;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
+                                ),
+                              );
+                            }
+                            else{
+                              _StudentsAdded[i].hasRequest = false;
+                            }
+
+                            setState(() {
+                              _controller.updateStudent(_StudentsAdded[i]);
+                            });
+                            
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: _StudentsAdded[i].hasRequest ? Colors.blue : Colors.white,
                             padding: EdgeInsets.all(0),
                             shape: RoundedRectangleBorder(
                               side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
@@ -146,11 +159,29 @@ class _StudentsPageState extends State<StudentsPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // Acción al presionar el botón "C"
-                            // Puedes agregar tu lógica aquí
+
+                            if(_StudentsAdded[i].hasKitchenOrder == false){
+                              _StudentsAdded[i].hasKitchenOrder = true;
+
+                              //LLAMAR AQUI A VUESTRA PAGINA DE PEDIDO DE COCINA
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
+                              //   ),
+                              // );
+                            }
+                            else{
+                              _StudentsAdded[i].hasKitchenOrder = false;
+                            }
+
+                            setState(() {
+                              _controller.updateStudent(_StudentsAdded[i]);
+                            });
+                            
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
+                            backgroundColor: _StudentsAdded[i].hasKitchenOrder ? Colors.blue : Colors.white,
                             padding: EdgeInsets.all(0),
                             shape: RoundedRectangleBorder(
                               side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
