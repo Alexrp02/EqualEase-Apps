@@ -70,11 +70,15 @@ class _AddMenuFormState extends State<AddMenuForm> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     // Si el formulario es válido, puedes procesar los datos aquí
                     // por ejemplo, enviarlos a una base de datos o realizar otra acción.
                     // Puedes acceder a los valores ingresados con _nombreController.text y _tipoValue
+                    if (imageController.hasImage()) {
+                      pictogramURL = await imageController.uploadImage(
+                          "menus", _nombreController.text);
+                    }
                   }
                 },
                 child: Text('Guardar'),
@@ -90,6 +94,7 @@ class _AddMenuFormState extends State<AddMenuForm> {
                     MaterialPageRoute(builder: (context) => PictogramSelect()),
                   ).then((value) {
                     pictogramURL = value;
+                    imageController.setImageToNull();
                   });
                 },
                 child: Text('Seleccionar Pictograma'),
