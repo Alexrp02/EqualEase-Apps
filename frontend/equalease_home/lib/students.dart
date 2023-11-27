@@ -3,7 +3,7 @@ import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
-import 'createOrder.dart';
+import 'createRequest.dart';
 
 class StudentsPage extends StatefulWidget {
   @override
@@ -130,7 +130,7 @@ class _StudentsPageState extends State<StudentsPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => createOrderPage(_StudentsAdded[i].id),
+                                builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
                               ),
                             );
                           },
