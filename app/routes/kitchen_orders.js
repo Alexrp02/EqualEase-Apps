@@ -6,9 +6,10 @@ const api = express.Router();
 api.post("/kitchen-order", KitchenOrderController.createKitchenOrder);
 
 api.get("/kitchen-order", KitchenOrderController.getKitchenOrders);
-api.get("/kitchen-order/:id", KitchenOrderController.getKitchenOrder);
+api.get("/kitchen-order/id/:id", KitchenOrderController.getKitchenOrder);
 api.get("/kitchen-order/classroom/:classroomID", KitchenOrderController.getOrdersFromClass) ;
+api.get("/kitchen-order/quantities", KitchenOrderController.getQuantities);
 
-api.put("/kitchen-order/:id", KitchenOrderController.updateKitchenOrder);
+api.put("/kitchen-order/id/:id", KitchenOrderController.updateKitchenOrder);
 
 module.exports = api;

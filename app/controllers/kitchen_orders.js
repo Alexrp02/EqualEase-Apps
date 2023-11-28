@@ -227,11 +227,60 @@ async function getOrdersFromClass(req, res) {
     }
 }
 
+// Get the total quantity of each menu in the kitchen orders
+async function getQuantities(req, res) {
+    try {
+        const currentDate = new Date();
+        const currentDateString = currentDate.toISOString().split("T")[0];
+        const kitchenQuery = query(collection(db, "kitchen_orders"), where("date", "==", currentDateString));
+        const snapshot = await getDocs(kitchenQuery);
+                
+        if(snapshot.empty) {
+            // Return am object with every menu on the database and quantity 0
+            const menusQuery = query(collection(db, "menus"));
+            const menusSnapshot = await getDocs(menusQuery);
+            const quantities = {};
+            menusSnapshot.forEach((doc) => {
+                quantities[doc.id] = 0;
+            });
+            res.status(200).json( quantities );
+            return ;
+        }
+
+        // Mapea los documentos a objetos estructurados Task (pero incluyendo id)
+        const requests = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+                id: doc.id, 
+                ...data
+            };
+        });
+
+        // Creamos un objeto con la cantidad total de cada menu
+        const quantities = {};
+        requests.forEach((request) => {
+            request.orders.forEach((order) => {
+                if (order.menu in quantities) {
+                    quantities[order.menu] += order.quantity;
+                } else {
+                    quantities[order.menu] = order.quantity;
+                }
+            });
+        });
+
+        res.status(200).json( quantities );
+    } catch (error) {
+        console.error("Error getting kitchen orders from Firestore:", error);
+        res.status(500).send("Server error.");  
+    }
+}
+
 // Exportamos las funciones
 module.exports = {
     createKitchenOrder,
     getKitchenOrders,
     getKitchenOrder,
     updateKitchenOrder,
-    getOrdersFromClass
+    getOrdersFromClass,
+    getQuantities,
 }
