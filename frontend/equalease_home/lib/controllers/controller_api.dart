@@ -1236,7 +1236,7 @@ class APIController {
         Menu menu = Menu.fromJson(response.body);
         return menu;
       } else {
-        throw Exception('Error al obtener el menu: ${response.reasonPhrase}');
+        throw Exception('Error al obtener el menu con id ${id}: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Error de red: $e');
@@ -1256,9 +1256,7 @@ class APIController {
         for (var menuJson in menusJson) {
           list.add(Menu.fromMap(menuJson));
         }
-      } else {
-        throw Exception('Error al obtener los menus: ${response.statusCode}');
-      }
+      } 
 
       return list;
     } catch (e) {
@@ -1358,7 +1356,7 @@ class APIController {
             'Error al obtener el KitchenOrder: ${response.reasonPhrase}');
       }
     } catch (e) {
-      throw Exception('Error de red: $e');
+     throw Exception('Error de red: $e');
     }
   }
 
