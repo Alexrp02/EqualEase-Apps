@@ -1,5 +1,6 @@
 import 'package:equalease_home/menuAdmin.dart';
 import 'package:equalease_home/studentCommandPage.dart';
+import 'package:equalease_home/studentPage.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
 import 'tasks.dart';
@@ -116,7 +117,7 @@ class StudentLandingPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentsPage()),
+                  MaterialPageRoute(builder: (context) => StudentPage()),
                 );
               },
               child: const Text('TAREAS'),

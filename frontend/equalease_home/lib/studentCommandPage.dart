@@ -1,129 +1,191 @@
-import 'package:equalease_home/menuAdmin.dart';
+import 'package:equalease_home/StudentsAssignedTask.dart';
+import 'package:equalease_home/components/menu_widget.dart';
+import 'package:equalease_home/controllers/controller_api.dart';
+import 'package:equalease_home/models/classroom.dart';
+import 'package:equalease_home/models/teacher.dart';
+import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
-import 'students.dart';
-import 'tasks.dart';
+//import 'createRequest.dart';
 
-class StudentCommandPage extends StatelessWidget {
-  const StudentCommandPage({super.key});
+class StudentCommandPage extends StatefulWidget {
+  @override
+  _StudentCommandPageState createState() => _StudentCommandPageState();
+}
+
+class _StudentCommandPageState extends State<StudentCommandPage> {
+  final APIController _controller = APIController();
+  List<Classroom> _classrooms = [];
+  List<Teacher> _teachers = [];
+  int estilo = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.getClassrooms().then((classrooms) {
+      setState(() {
+        _classrooms = classrooms;
+
+        for(int i = 0; i < _classrooms.length; i++ ){
+          _controller.getTeacher(_classrooms[i].assignedTeacher).then((teacher){
+             setState(() {
+              _teachers.add(teacher);
+             });
+          } );
+        }
+        
+      });
+    });
+
+    
+  }
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100.0),
-            child: AppBar(
-              backgroundColor: Color.fromARGB(255, 161, 182, 236),
-              title: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'COMANDA',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'COMANDAS',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: _teachers.isNotEmpty?
+        Center(
+        heightFactor: 1.0,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color.fromARGB(255, 170, 172, 174),
+              width: 3.0,
+            ),
+          ),
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                for (int i = 0; i < _classrooms.length; i++)
+                  InkWell(
+                    onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return MenuCarousel(
+                                  taskId: "It77MmOXpbCfzzKFn3Sq",
+                                  classroom: _classrooms[i],
+                                );
+                              }));
+                              
+                            },
+                    child:
+                    Container(
+                    padding: EdgeInsets.all(0),
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 170, 172, 174),
+                        width: 2.0,
                       ),
+                      borderRadius: BorderRadius.circular(0),
                     ),
-                  ],
-                ),
-              ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text('${_teachers[i].name}'),
+                        Container(
+                          width: 200,
+                          height: 50,
+                          child: Container(
+                            
+                            padding: EdgeInsets.all(0), // Puedes ajustar esto según tus necesidades
+                            child: Center(
+                              child: Text(
+                                _classrooms[i].letter,
+                                // Puedes ajustar el estilo del texto según tus necesidades
+                                style: TextStyle(
+                                  // Añade aquí las propiedades de estilo del texto
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StudentData(_classrooms[i].assignedTeacher),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('Completado'),
+                          ),
+                        ),
+                        Container(
+                          width: 200,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StudentData(_classrooms[i].assignedTeacher),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('Abrir'),
+                          ),
+                        ),
+                        
+                      ],
+                    ),
+                  ),
+
+                  )
+              ],
             ),
           ),
-          body: Center(
-            child: _buildLandscapeLayout(context),
-          ),
-        );
-      },
+        ),
+      ):Center(
+        child: Text(
+              'No hay profesores disponibles.',
+              style: TextStyle(fontSize: 18),
+            ),
+        )
     );
-  }
-
-  Widget _buildLandscapeLayout(BuildContext context) {
-    Color buttonColor = Color.fromARGB(255, 161, 182, 236);
-    Color textColor = Colors.white; // Color blanco para el texto
-
-    return Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TasksPage()),
-                );
-              },
-              child: const Text('TAREAS'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenuPage()),
-                );
-              },
-              child: const Text('MENUS'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StudentsPage()),
-                );
-              },
-              child: const Text('ESTUDIANTES'),
-            ),
-          ),
-        ),
-      ],
-    );
-
   }
 }
