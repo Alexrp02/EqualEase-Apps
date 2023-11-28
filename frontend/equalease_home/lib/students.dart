@@ -3,7 +3,7 @@ import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
-//import 'createRequest.dart';
+import 'createRequest.dart';
 
 class StudentsPage extends StatefulWidget {
   @override
@@ -129,7 +129,8 @@ class _StudentsPageState extends State<StudentsPage> {
                         ElevatedButton(
                           onPressed: () {
 
-                           /* if(_StudentsAdded[i].hasRequest == false){
+                            if(_StudentsAdded[i].hasRequest == false){
+                              resetRequests();
                               _StudentsAdded[i].hasRequest = true;
                               Navigator.push(
                                 context,
@@ -144,7 +145,7 @@ class _StudentsPageState extends State<StudentsPage> {
 
                             setState(() {
                               _controller.updateStudent(_StudentsAdded[i]);
-                            });*/
+                            });
                             
                           },
                           style: ElevatedButton.styleFrom(
@@ -161,6 +162,7 @@ class _StudentsPageState extends State<StudentsPage> {
                           onPressed: () {
 
                             if(_StudentsAdded[i].hasKitchenOrder == false){
+                              resetKitchenOrders();
                               _StudentsAdded[i].hasKitchenOrder = true;
 
                               //LLAMAR AQUI A VUESTRA PAGINA DE PEDIDO DE COCINA
@@ -199,5 +201,23 @@ class _StudentsPageState extends State<StudentsPage> {
         ),
       ),
     );
+  }
+
+  void resetRequests(){
+    for(int i = 0; i < _StudentsAdded.length; i++){
+      if(_StudentsAdded[i].hasRequest == true){
+        _StudentsAdded[i].hasRequest = false;
+        _controller.updateStudent(_StudentsAdded[i]);
+      }
+    }
+  }
+
+  void resetKitchenOrders(){
+    for(int i = 0; i < _StudentsAdded.length; i++){
+      if(_StudentsAdded[i].hasKitchenOrder == true){
+        _StudentsAdded[i].hasKitchenOrder = false;
+        _controller.updateStudent(_StudentsAdded[i]);
+      }
+    }
   }
 }

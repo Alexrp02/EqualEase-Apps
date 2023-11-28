@@ -1,9 +1,10 @@
+import 'package:equalease_home/models/kitchen.dart';
+import 'package:equalease_home/models/kitchen_order.dart';
+import 'package:flutter/material.dart';
 import 'package:equalease_home/addMenu.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/menu.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:equalease_home/kitchenOrderMenu.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -11,36 +12,19 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  bool isLoading = true;
+  bool isLoading = false;
   final controller = APIController();
 
-  //duda aqui ve kitchen order o menu?
-  List<Menu> _MenuAgregadas = [
-    // Task(
-    //     id: "prueba",
-    //     title: "Tarea de prueba",
-    //     description: "Esta es una tarea de prueba para probar el carrusel",
-    //     subtasks: [
-    //       Subtask(
-    //           id: "Prueba",
-    //           title: "Coger las sabanas",
-    //           description: "Acercate al armario y coge las sabanas"),
-    //       Subtask(
-    //           id: "afad",
-    //           title: "Extender las sábanas",
-    //           description: "Extiende las sábanas en algún lado plano.")
-    //     ],
-    //     type: "FixedType")
-  ]; // Cambiar la lista a una lista de Tasks
+  List<Menu> _MenuAgregadas = [];
 
   @override
   void initState() {
     super.initState();
 
-    controller.getTasks().then((value) {
+    controller.getMenus().then((value) {
       setState(() {
-        //_MenuAgregadas = value;
-        //isLoading = false;
+        _MenuAgregadas = value;
+        isLoading = false;
       });
     });
   }
@@ -62,7 +46,7 @@ class _MenuPageState extends State<MenuPage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 70.0,
+                    fontSize: 30.0,
                   ),
                 ),
               ],
@@ -77,23 +61,17 @@ class _MenuPageState extends State<MenuPage> {
             )
           : Center(
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.8, // Ancho del 80%
-                child: ListView.builder(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4, childAspectRatio: 1),
                   itemCount: _MenuAgregadas.length,
                   itemBuilder: (context, i) {
-                    final Menu TaskAgregada = _MenuAgregadas[i];
+                    final Menu menuAgregado = _MenuAgregadas[i];
                     int currentIndex = i + 1;
                     return GestureDetector(
                       onTap: () {
-                        /*Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetallesTaskPage(
-                              task: TaskAgregada,
-                              controller: controller,
-                            ),
-                          ),
-                        );*/
+                        // Lógica cuando se toca un menú
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -105,56 +83,67 @@ class _MenuPageState extends State<MenuPage> {
                           borderRadius: BorderRadius.circular(0),
                         ),
                         margin: EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              /*Text(
-                                'TAREA $currentIndex: ${TaskAgregada.title}',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 30.0, // Ajusta el tamaño del texto
-                                ),
-                              ),*/
-                              Row(
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            ListTile(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .center, // Centra los elementos horizontalmente
                                 children: [
-                                  IconButton(
-                                    iconSize: 50.0,
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () {
-                                    /*  Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditTaskPage(task: TaskAgregada),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment
+                                        .center, // Centra los elementos verticalmente
+                                    children: [
+                                      // Mostrar la imagen del menú
+                                      Image.network(
+                                        menuAgregado.image,
+                                        width: 150.0,
+                                        height: 150.0,
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      // Mostrar el título del menú con manejo de desbordamiento
+                                      Container(
+                                        width:
+                                            180.0, // Ancho máximo permitido para el texto
+                                        child: Text(
+                                          menuAgregado.name,
+                                          style: TextStyle(
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                            fontSize: 20.0,
+                                          ),
+                                          overflow: TextOverflow
+                                              .ellipsis, // Evita el desbordamiento con puntos suspensivos
+                                          maxLines:
+                                              2, // Número máximo de líneas permitido
+                                          textAlign: TextAlign
+                                              .center, // Centra el texto dentro del contenedor
                                         ),
-                                      ).then((value) {
-                                        setState(() {
-                                          TaskAgregada.title = value;
-                                        });
-                                      });*/
-                                    },
-                                  ),
-                                  IconButton(
-                                    iconSize: 50.0,
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                    /*  _showDeleteConfirmationDialog(
-                                          TaskAgregada);*/
-                                    },
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          tileColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              color: Color.fromARGB(255, 170, 172, 174),
-                              width: 2.0,
+                              tileColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: Color.fromARGB(255, 170, 172, 174),
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(0),
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(0),
-                          ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 35,
+                              ),
+                              onPressed: () {
+                                // Lógica para eliminar el menú
+                                _eliminarMenu(menuAgregado);
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -162,30 +151,118 @@ class _MenuPageState extends State<MenuPage> {
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-         Navigator.push(
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            width: 90,
+            height: 90,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Lógica para el botón "Añadir"
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AddMenuForm()),
-        );
-         /* Navigator.push(
-            context,
-            MaterialPageRoute(
-                /*builder: (context) => AgregarTaskPage(
-                onTaskSaved: (task) {
-                  // Ajusta el parámetro para que sea de tipo Task
-                },
-              ),*/
-                ),
-          ).then((value) {
-            setState(() {
-              _TasksAgregadas.add(value);
-            });
-          });*/
-        },
-        child: Icon(Icons.add),
+                ).then((value) {
+                  //_MenuAgregadas.add(value);
+                  setState(() {
+                    _MenuAgregadas.add(value);
+                  });
+                });
+              },
+              child: Icon(Icons.add, size:75),
+            ),
+          ),
+          SizedBox(height: 16),
+          Container(
+            width: 90,
+            height: 90,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => KitchenOrderPage()),
+                );
+              },
+              child: Icon(Icons.restaurant_menu, size: 75),
+              heroTag:
+                  null, // Agrega esta línea para evitar conflictos en los hero tags
+              mini: true, // Hace que el botón sea más pequeño
+              // Ajusta el tamaño según sea necesario
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  void _eliminarMenu(Menu menu) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "ELIMINAR MENU",
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Text(
+                  "¿ESTÁ SEGURO?",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                "CANCELAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                "ACEPTAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                if (menu.id != null) {
+                  controller.deleteMenu(menu.id!);
+                  setState(() {
+                    _MenuAgregadas.remove(menu);
+                    // Llamar al controlador de eliminación
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+        );
+      },
     );
   }
 }
