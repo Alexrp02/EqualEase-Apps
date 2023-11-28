@@ -213,7 +213,7 @@ async function getOrdersFromClass(req, res) {
 
             console.log(`Inserted new kitchen order for classroom ${req.params.classroom}).`);
             // Devolvemos la orden creada
-            res.status(201).json({id: ref.id, ...request });
+            res.status(200).json({id: ref.id, ...request });
             return ;
         }
         
