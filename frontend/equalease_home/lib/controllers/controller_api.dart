@@ -1256,7 +1256,9 @@ class APIController {
         for (var menuJson in menusJson) {
           list.add(Menu.fromMap(menuJson));
         }
-      } 
+      } else {
+        throw Exception('Error al obtener los menus: ${response.statusCode}');
+      }
 
       return list;
     } catch (e) {
