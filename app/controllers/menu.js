@@ -20,8 +20,8 @@ async function createMenu(req, res) {
         data.name = uppercaseName;
 
         // Comprobar que si hay tipo sea el correcto
-        if (data.type && (data.type != "Menu" && data.type != "Dessert")) {
-            res.status(400).json({ error: "Error creating menu: Invalid type. It must be 'Menu' or 'Dessert'." });
+        if (data.type && (data.type != "Menu" && data.type != "Postre")) {
+            res.status(400).json({ error: "Error creating menu: Invalid type. It must be 'Menu' or 'Postre'." });
             return;
         }
 
