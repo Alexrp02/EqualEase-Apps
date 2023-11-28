@@ -141,7 +141,7 @@ async function deleteMenu(req, res) {
         if (snapshot.exists()) {
             // El documento existe, proceder a la eliminación
             await deleteDoc(ref);
-            res.status(200).json({ message: `Menu with id=${id} deleted successfully` });
+            res.status(204).json({ message: `Menu with id=${id} deleted successfully` });
         } else {
             // El documento no existe
             res.status(404).json({ error: `Menu with id=${id} does not exist.`});
