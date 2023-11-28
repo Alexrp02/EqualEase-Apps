@@ -1010,10 +1010,11 @@ class APIController {
         for (var requestJson in requestsJson) {
           list.add(Request.fromMap(requestJson));
         }
-      } else {
-        throw Exception(
-            'Error al obtener los request del estudiante(id=$studentId): ${response.statusCode}');
       }
+      // else {
+      //   throw Exception(
+      //       'Error al obtener los request del estudiante(id=$studentId): ${response.statusCode}');
+      // }
 
       return list;
     } catch (e) {

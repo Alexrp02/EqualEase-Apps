@@ -41,34 +41,29 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
       });
     });
     
+    _request = Request(
+          id: '',
+          items: [],
+          assignedStudent: widget.studentId,
+    );
 
     _controller.getRequestsFromStudent(widget.studentId).then((reqList) {
+      //print("Tamaño de la peticion: ${reqList.length}");
+
       if (reqList.isNotEmpty) {
         setState(() {
           _request = reqList[0];
         });
       } else {
-        _request = Request(
-          id: '',
-          items: [],
-          assignedStudent: widget.studentId,
-        );
-
+        
+        //print("La lista de ${_student.name} está vacía");
         _controller.createRequest(_request).then((request) {
           setState(() {
             _request.id = request;
           });
         });
       }
-      });
-
-
-
-    
-    
-    
-
-
+    });
     
   }
 
