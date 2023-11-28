@@ -1236,7 +1236,8 @@ class APIController {
         Menu menu = Menu.fromJson(response.body);
         return menu;
       } else {
-        throw Exception('Error al obtener el menu con id ${id}: ${response.reasonPhrase}');
+        throw Exception(
+            'Error al obtener el menu con id ${id}: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Error de red: $e');
@@ -1358,8 +1359,30 @@ class APIController {
             'Error al obtener el KitchenOrder: ${response.reasonPhrase}');
       }
     } catch (e) {
-     throw Exception('Error de red: $e');
+      throw Exception('Error de red: $e');
     }
+  }
+
+  Future<bool> updateKitchenOrder(KitchenOrder kitchenOrder) async {
+    final String apiUrl = '$baseUrl/kitchen-order/id/${kitchenOrder.id}';
+
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: kitchenOrder.toJsonWithoutId(),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Devuelve true para indicar que la actualización se realizó con éxito.
+      } else {
+        print("Error al actualizar el KitchenOrder: ${response.reasonPhrase}");
+        return false;
+      }
+    } catch (e) {
+      print("Error al actualizar el KitchenOrder: $e");
+    }
+    return false;
   }
 
   Future<Map<String, dynamic>> getKitchenOrdersQuantities() async {
