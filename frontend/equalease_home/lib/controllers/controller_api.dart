@@ -1023,6 +1023,32 @@ class APIController {
     }
   }
 
+  Future<List<Item>> getItemsFromStudentRequest(String studentId) async {
+    try {
+      // Obtiene el request
+      List<Request> requests = await getRequestsFromStudent(studentId);
+
+      List<Item> list = [];
+
+      // Va recorriendo el array de items y añadiendolos al array
+      for (Request req in requests) {
+        try {
+          List<Item> items = await getItemsFromRequest(req.id);
+          list.addAll(items);
+        } catch (e) {
+          print('Error al obtener los items del request ${req.id}: $e');
+        }
+      }
+
+      // Devolver el array de items
+      return list;
+    } catch (e) {
+      print('Error al obtener el request con id $studentId: $e');
+      throw Exception(
+          'No se pudo obtener la lista de items para la peticion de material con id=$studentId');
+    }
+  }
+
   // devuelve el objeto de tipo request con ese id
   Future<Request> getRequest(String id) async {
     final String apiUrl = '$baseUrl/request/id/$id';
