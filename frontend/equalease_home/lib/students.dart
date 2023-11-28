@@ -3,7 +3,7 @@ import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
-//import 'createRequest.dart';
+import 'createRequest.dart';
 
 class StudentsPage extends StatefulWidget {
   @override
@@ -104,92 +104,31 @@ class _StudentsPageState extends State<StudentsPage> {
                           ),
                         ),
                         Container(
-                          width: 200,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StudentData(_StudentsAdded[i].id),
+                            width: 200,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          StudentData(_StudentsAdded[i].id)),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                padding: EdgeInsets.all(0),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: const Color.fromARGB(
+                                          255, 100, 100, 101),
+                                      width: 2.0), // Borde
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Borde cuadrado
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding: EdgeInsets.all(0),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
-                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ),
-                            child: Text('Datos'),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-
-                           /* if(_StudentsAdded[i].hasRequest == false){
-                              _StudentsAdded[i].hasRequest = true;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
-                                ),
-                              );
-                            }
-                            else{
-                              _StudentsAdded[i].hasRequest = false;
-                            }
-
-                            setState(() {
-                              _controller.updateStudent(_StudentsAdded[i]);
-                            });*/
-                            
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _StudentsAdded[i].hasRequest ? Colors.blue : Colors.white,
-                            padding: EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text('P'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-
-                            if(_StudentsAdded[i].hasKitchenOrder == false){
-                              _StudentsAdded[i].hasKitchenOrder = true;
-
-                              //LLAMAR AQUI A VUESTRA PAGINA DE PEDIDO DE COCINA
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
-                              //   ),
-                              // );
-                            }
-                            else{
-                              _StudentsAdded[i].hasKitchenOrder = false;
-                            }
-
-                            setState(() {
-                              _controller.updateStudent(_StudentsAdded[i]);
-                            });
-                            
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _StudentsAdded[i].hasKitchenOrder ? Colors.blue : Colors.white,
-                            padding: EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text('C'),
-                        ),
+                              child: Text('Datos'), // Tercera parte
+                            )),
                       ],
                     ),
                   ),
