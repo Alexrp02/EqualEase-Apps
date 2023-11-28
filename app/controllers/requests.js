@@ -86,6 +86,29 @@ async function getRequestsFromStudent(req, res) {
     }
 }
 
+async function getRequestItemsFromStudent (req, res) {
+    const id = req.params.id;
+
+    try {
+
+        const studentQuery = query(collection(db, collectionName), where("assignedStudent", "==", id));
+        const snapshot = await getDocs(studentQuery);
+                
+        if(snapshot.empty) {
+            res.status(400).json({ error: `${collectionName}: student with id ${id} either does not exist or does not have requests assigned` });
+            return;
+        }
+
+        // Get the items ids from the first request of the student 
+        const arrayOfItemIds = snapshot.docs[0].data().items;
+
+        res.status(200).json( arrayOfItemIds );
+    } catch (error) {
+        console.error("Error getting requests from Firestore:", error);
+        res.status(500).send("Server error.");  
+    }
+}
+
 // create new request
 async function createRequest(req, res) {
     const data = new Request(req.body);
@@ -245,5 +268,6 @@ module.exports = {
     getRequestsFromStudent,
     createRequest,
     updateRequest,
-    deleteRequest
+    deleteRequest,
+    getRequestItemsFromStudent
 }

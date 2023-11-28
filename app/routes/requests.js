@@ -9,6 +9,7 @@ api.get("/request", RequestController.getRequests);
 
 // Devuelve los requests que tienen assignedStudent == id
 api.get("/request/student/:id", RequestController.getRequestsFromStudent);
+api.get("/request/studentAll/:id", RequestController.getRequestItemsFromStudent);
 
 api.post("/request", RequestController.createRequest);
 
