@@ -109,7 +109,7 @@ async function updateMenu(req, res) {
 
             // Comprobar que si hay tipo sea el correcto
             if (updatedData.type && (updatedData.type != "Menu" && updatedData.type != "Postre")) {
-                res.status(400).json({ error: "Error updating menu: Invalid type. It must be 'Menu' or 'Dessert'." });
+                res.status(400).json({ error: "Error updating menu: Invalid type. It must be 'Menu' or 'Postre'." });
                 return;
             }
 
