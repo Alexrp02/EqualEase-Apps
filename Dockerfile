@@ -17,4 +17,4 @@ RUN npm install -g nodemon
 EXPOSE 3000
 
 # Start the application
-CMD ["nodemon", "./app/index.js"]
+CMD ["nodemon", "--legacy-watch", "./app/index.js"]
