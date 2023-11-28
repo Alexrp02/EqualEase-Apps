@@ -85,7 +85,6 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return MenuCarousel(
-                                  taskId: "It77MmOXpbCfzzKFn3Sq",
                                   classroom: _classrooms[i],
                                 );
                               }));
@@ -127,24 +126,18 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                         Container(
                           width: 200,
                           height: 50,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StudentData(_classrooms[i].assignedTeacher),
+                          child: Container(
+                            
+                            padding: EdgeInsets.all(0), // Puedes ajustar esto según tus necesidades
+                            child: Center(
+                              child: Text(
+                                "Aquí va la foto del prof",
+                                // Puedes ajustar el estilo del texto según tus necesidades
+                                style: TextStyle(
+                                  // Añade aquí las propiedades de estilo del texto
                                 ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding: EdgeInsets.all(0),
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
-                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            child: Text('Completado'),
                           ),
                         ),
                         Container(
@@ -167,9 +160,10 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            child: Text('Abrir'),
+                            child: Text('Completado'),
                           ),
                         ),
+                        
                         
                       ],
                     ),
