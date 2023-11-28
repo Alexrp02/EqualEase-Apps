@@ -1282,6 +1282,24 @@ class APIController {
     }
   }
 
+  Future<bool> deleteMenu(String menuId) async {
+    final String apiUrl = '$baseUrl/menu/$menuId';
+
+    try {
+      final response = await http.delete(Uri.parse(apiUrl));
+
+      if (response.statusCode == 204) {
+        return true; // Devuelve true para indicar que la eliminación fue exitosa.
+      } else {
+        print('Error al eliminar el menu: ${response.reasonPhrase}');
+        return false;
+      }
+    } catch (e) {
+      print('Error de red: $e');
+      return false;
+    }
+  }
+
   // Get the KitchenOrder from a class id
   Future<KitchenOrder> getKitchenOrder(String classId) async {
     final String apiUrl = '$baseUrl/kitchen-order/classroom/$classId';
