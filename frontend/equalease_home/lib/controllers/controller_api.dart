@@ -1224,6 +1224,24 @@ class APIController {
 
   // Add item to request??
 
+  Future<Menu> getMenu(String id) async {
+    final String apiUrl = '$baseUrl/menu/$id';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Menu menu = Menu.fromJson(response.body);
+        return menu;
+      } else {
+        throw Exception('Error al obtener el menu: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
+
   // Get every menu from the database and return a list of Menu
   Future<List<Menu>> getMenus() async {
     final String apiUrl = '$baseUrl/menu';
@@ -1315,6 +1333,26 @@ class APIController {
         print(response.statusCode);
         throw Exception(
             'Error al obtener el KitchenOrder: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
+
+  Future<Map<String,dynamic>> getKitchenOrdersQuantities () async {
+    final String apiUrl = '$baseUrl/kitchen-order/quantities';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Map<String,dynamic> quantities = json.decode(response.body);
+        return quantities;
+      } else {
+        print(response.statusCode);
+        throw Exception(
+            'Error al obtener las cantidades de KitchenOrders: ${response.reasonPhrase}');
       }
     } catch (e) {
       throw Exception('Error de red: $e');
