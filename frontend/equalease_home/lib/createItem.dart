@@ -94,7 +94,7 @@ class _MyFormState extends State<CreateItemPage> {
                     child: Text('Seleccionar Pictograma'))
               ,
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async{
                   if (_formKey.currentState!.validate()) {
                     Item newItem = Item(
                         id: 'a',
@@ -103,7 +103,7 @@ class _MyFormState extends State<CreateItemPage> {
                         size: _sizeController.text,
                         pictogram: pictogramURL);
 
-                    controller.createItem( newItem); // Llamar a la función onItemSaved con la nueva Task
+                    newItem.id = await controller.createItem( newItem); // Llamar a la función onItemSaved con la nueva Task
                     Navigator.pop(context, newItem);
                   }
                 },

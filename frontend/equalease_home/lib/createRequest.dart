@@ -3,6 +3,7 @@ import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/item.dart';
 import 'package:equalease_home/createItem.dart';
+import 'package:equalease_home/models/request.dart';
 
 
 class CreateRequestPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class CreateRequestPage extends StatefulWidget {
 class _CreateRequestPageState extends State<CreateRequestPage> {
   final APIController _controller = APIController();
   late Student _student;
-  List<Item> items = [];
+  late Request _request;
 
   @override
   void initState() {
@@ -39,6 +40,36 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
         _student = student;
       });
     });
+    
+
+    _controller.getRequestsFromStudent(widget.studentId).then((reqList) {
+      if (reqList.isNotEmpty) {
+        setState(() {
+          _request = reqList[0];
+        });
+      } else {
+        _request = Request(
+          id: '',
+          items: [],
+          assignedStudent: widget.studentId,
+        );
+
+        _controller.createRequest(_request).then((request) {
+          setState(() {
+            _request.id = request;
+          });
+        });
+      }
+      });
+
+
+
+    
+    
+    
+
+
+    
   }
 
   @override
@@ -47,13 +78,29 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
       appBar: AppBar(
         title: Text('Creación de pedido para ${_student.name}'), // Reemplaza con el nombre del estudiante
       ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(items[index].name),
-            // Otros detalles del item
-          );
+      body: FutureBuilder(
+        future: Future.wait(_request.items.map((itemId) => _controller.getItem(itemId))),
+        builder: (context, AsyncSnapshot<List<Item>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Item item = snapshot.data![index];
+                return ListTile(
+                  title: Text(item.name),
+                  subtitle: Text('Cantidad: ${item.quantity}, Tamaño: ${item.size}'),
+                  // Otros detalles del item
+                );
+              },
+            );
+
+          } else {
+            return Text('No hay datos');
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -65,7 +112,9 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
           );
           if (newItem != null) {
             setState(() {
-              items.add(newItem);
+              _request.items.add(newItem.id);
+              //print(_request.items) ;
+              _controller.updateRequest(_request);
             });
           }
         },

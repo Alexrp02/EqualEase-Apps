@@ -1119,7 +1119,7 @@ class APIController {
     }
   }
 
-  Future<bool> createItem(Item item) async {
+  Future<String> createItem(Item item) async {
     final String apiUrl = '$baseUrl/item';
 
     // Necesitamos convertir el objeto a JSON pero sin su id
@@ -1146,17 +1146,17 @@ class APIController {
 
         // Se debe cambiar también el nombre, puesto que se pasó a mayúsculas en la BD
         item.name = body['name'];
-        return true;
+        return body['id'];
       } else {
-        return false;
+        return "";
       }
     } catch (e) {
       print(e);
-      return false;
+      return "";
     }
   }
 
-  Future<bool> createRequest(Request req) async {
+  Future<String> createRequest(Request req) async {
     final String apiUrl = '$baseUrl/request';
 
     // Necesitamos convertir el objeto a JSON pero sin su id
@@ -1180,13 +1180,13 @@ class APIController {
         // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
         final body = json.decode(response.body);
         req.id = body['id'];
-        return true;
+        return body['id'];
       } else {
-        return false;
+        return "";
       }
     } catch (e) {
       print(e);
-      return false;
+      return "";
     }
   }
 
