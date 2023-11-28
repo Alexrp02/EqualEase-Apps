@@ -110,7 +110,7 @@ class _KitchenOrderPageState extends State<KitchenOrderPage> {
                         SizedBox(width: 16.0),
                         // Mostrar la cantidad de KitchenOrders en el listado
                         Text(
-                          "Cantidad: ${_kitchenOrdersQuantities[MenuAgregado.id!] ?? 0}",
+                          "CANTIDAD: ${_kitchenOrdersQuantities[MenuAgregado.id!] ?? 0}",
                           style: TextStyle(
                             color: Color.fromARGB(255, 0, 0, 0),
                             fontSize: 24.0,
