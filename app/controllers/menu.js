@@ -125,10 +125,38 @@ async function updateMenu(req, res) {
     }
 }
 
+async function deleteMenu(req, res) {
+    const id = req.params.id;
+
+    if (!id) {
+        res.status(400).json({ error: "Menu's id is required." });
+        return;
+    }
+
+    try {
+        // Comprobar si el documento existe
+        const ref = doc(db, collectionName, id);
+        const snapshot = await getDoc(ref);
+
+        if (snapshot.exists()) {
+            // El documento existe, proceder a la eliminación
+            await deleteDoc(ref);
+            res.status(200).json({ message: `Menu with id=${id} deleted successfully` });
+        } else {
+            // El documento no existe
+            res.status(404).json({ error: `Menu with id=${id} does not exist.`});
+        }
+    } catch (error) {
+        console.error("Error deleting menu from Firestore:", error);
+        res.status(500).send("Server error.");
+    }
+}
+
 // Exportamos las funciones
 module.exports = {
     createMenu,
     getMenu,
     getMenus,
     updateMenu,
+    deleteMenu,
 }
