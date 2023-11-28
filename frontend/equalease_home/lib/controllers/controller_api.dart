@@ -1226,7 +1226,7 @@ class APIController {
 
   // Get every menu from the database and return a list of Menu
   Future<List<Menu>> getMenus() async {
-    final String apiUrl = '$baseUrl/api/menu';
+    final String apiUrl = '$baseUrl/menu';
 
     try {
       List<Menu> list = [];
