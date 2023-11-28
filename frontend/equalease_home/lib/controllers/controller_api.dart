@@ -1301,6 +1301,28 @@ class APIController {
     }
   }
 
+  Future<bool> updateMenu(Menu menu) async {
+    final String apiUrl = '$baseUrl/menu/id/${menu.id}';
+
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: menu.toJsonWithoutId(),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // Devuelve true para indicar que la actualización se realizó con éxito.
+      } else {
+        print("Error al actualizar el menu: ${response.reasonPhrase}");
+        return false;
+      }
+    } catch (e) {
+      print("Error al actualizar el menu: $e");
+    }
+    return false;
+  }
+
   Future<bool> deleteMenu(String menuId) async {
     final String apiUrl = '$baseUrl/menu/$menuId';
 
@@ -1340,7 +1362,7 @@ class APIController {
     }
   }
 
-  Future<Map<String,dynamic>> getKitchenOrdersQuantities () async {
+  Future<Map<String, dynamic>> getKitchenOrdersQuantities() async {
     final String apiUrl = '$baseUrl/kitchen-order/quantities';
 
     try {
@@ -1348,7 +1370,7 @@ class APIController {
 
       if (response.statusCode == 200) {
         // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
-        Map<String,dynamic> quantities = json.decode(response.body);
+        Map<String, dynamic> quantities = json.decode(response.body);
         return quantities;
       } else {
         print(response.statusCode);
