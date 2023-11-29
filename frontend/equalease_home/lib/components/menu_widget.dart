@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 
 import '../models/subtask.dart';
 import '../controllers/controller_api.dart';
+bool _changed = false;
 
 class MenuWidget extends StatefulWidget {
   final Map<String, dynamic> order;
   final Menu menu;
+  bool quantityChanged;
 
-  const MenuWidget({Key? key, required this.menu, required this.order}) : super(key: key);
+  MenuWidget({Key? key, required this.menu, required this.order, required this.quantityChanged}) :
+   super(key: key);
 
   @override
   _MenuWidgetState createState() => _MenuWidgetState();
@@ -52,7 +55,9 @@ class _MenuWidgetState extends State<MenuWidget> {
             InkWell(
               onTap: () {
                 if (widget.order['quantity'] > 0) {
+                    _changed = true;
                   setState(() {
+                    
                     widget.order['quantity'] = widget.order['quantity'] - 1;
                   });
                 }
@@ -80,7 +85,9 @@ class _MenuWidgetState extends State<MenuWidget> {
             SizedBox(width: 16),
             InkWell(
               onTap: () {
+                _changed = true;
                 setState(() {
+                  
                   widget.order['quantity'] = widget.order['quantity'] + 1;
                 });
               },
@@ -113,6 +120,7 @@ class _MenuWidgetState extends State<MenuWidget> {
 class MenuCarousel extends StatefulWidget {
  
   final Classroom classroom;
+  bool quantityChanged = false;
 
   MenuCarousel({Key? key,required this.classroom}) : super(key: key);
 
@@ -221,7 +229,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                       controller: pageController,
                       itemCount: menus.length,
                       itemBuilder: (context, index) {
-                        return MenuWidget(order: orders[index], menu: menus[index]);
+                        return MenuWidget(order: orders[index], menu: menus[index], quantityChanged: widget.quantityChanged);
                       },
                     ),
                   ),
@@ -233,7 +241,10 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_back),
                               iconSize: 120,
                               onPressed: () {
-                                controller.updateKitchenOrder(kitchenOrder);
+                                if(_changed){
+                                  _changed = false;
+                                  controller.updateKitchenOrder(kitchenOrder);
+                                }
                                 if (pageController.page! > 0) {
                                   pageController.previousPage(
                                     duration: Duration(milliseconds: 300),
@@ -248,11 +259,11 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_forward),
                               iconSize: 120,
                               onPressed: () {
-
-                                print(kitchenOrder.id);
-                                print(kitchenOrder.orders[page]['quantity']);
-                                print(kitchenOrder.orders[page]['menu']);
-                                controller.updateKitchenOrder(kitchenOrder);
+                        
+                                if(_changed){
+                                  controller.updateKitchenOrder(kitchenOrder);
+                                  _changed=false;
+                                }
                                 if (pageController.page! < menus.length - 1) {
                                   pageController.nextPage(
                                     duration: Duration(milliseconds: 300),
@@ -265,7 +276,10 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.check),
                               iconSize: 120,
                               onPressed: () {
-                                controller.updateKitchenOrder(kitchenOrder);
+                                if(_changed){
+                                  _changed = false;
+                                  controller.updateKitchenOrder(kitchenOrder);
+                                }
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
