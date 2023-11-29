@@ -143,6 +143,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
           children: [
             Expanded(
               child: PageView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: pageController,
                 itemCount: items.length,
                 itemBuilder: (context, index) {

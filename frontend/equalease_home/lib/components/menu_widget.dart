@@ -11,7 +11,8 @@ class MenuWidget extends StatefulWidget {
   final Map<String, dynamic> order;
   final Menu menu;
 
-  const MenuWidget({Key? key, required this.menu, required this.order}) : super(key: key);
+  const MenuWidget({Key? key, required this.menu, required this.order})
+      : super(key: key);
 
   @override
   _MenuWidgetState createState() => _MenuWidgetState();
@@ -62,7 +63,8 @@ class _MenuWidgetState extends State<MenuWidget> {
                 height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color.fromARGB(255, 161, 182, 236), // Puedes cambiar el color según tus preferencias
+                  color: const Color.fromARGB(255, 161, 182,
+                      236), // Puedes cambiar el color según tus preferencias
                 ),
                 child: Center(
                   child: Icon(
@@ -89,7 +91,8 @@ class _MenuWidgetState extends State<MenuWidget> {
                 height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color.fromARGB(255, 161, 182, 236), // Puedes cambiar el color según tus preferencias
+                  color: const Color.fromARGB(255, 161, 182,
+                      236), // Puedes cambiar el color según tus preferencias
                 ),
                 child: Center(
                   child: Icon(
@@ -106,19 +109,15 @@ class _MenuWidgetState extends State<MenuWidget> {
   }
 }
 
-
-
-
 // Main carousel widget
 class MenuCarousel extends StatefulWidget {
- 
   final Classroom classroom;
 
-  MenuCarousel({Key? key,required this.classroom}) : super(key: key);
+  MenuCarousel({Key? key, required this.classroom}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _MenuCarouselState( classroom: classroom);
+    return _MenuCarouselState(classroom: classroom);
   }
 }
 
@@ -128,12 +127,9 @@ class _MenuCarouselState extends State<MenuCarousel> {
   List<Subtask> subtasks = [];
   List<Map<String, dynamic>> orders = [];
   List<Menu> menus = [];
-  KitchenOrder kitchenOrder = KitchenOrder(
-    classroom: "", 
-    revised: false, 
-    orders: [], 
-    date: "");
-  
+  KitchenOrder kitchenOrder =
+      KitchenOrder(classroom: "", revised: false, orders: [], date: "");
+
   final PageController pageController = PageController();
   APIController controller = APIController();
 
@@ -147,26 +143,21 @@ class _MenuCarouselState extends State<MenuCarousel> {
         page = pageController.page!.round();
       });
     });
-   
 
-    controller.getKitchenOrder(classroom.id!).then((value){
-      setState((){
+    controller.getKitchenOrder(classroom.id!).then((value) {
+      setState(() {
         kitchenOrder = value;
         orders = kitchenOrder.orders;
 
-        for(int i = 0; i < orders.length; i++){
-          controller.getMenu(orders[i]['menu']).then((value){
-            setState((){
+        for (int i = 0; i < orders.length; i++) {
+          controller.getMenu(orders[i]['menu']).then((value) {
+            setState(() {
               menus.add(value);
             });
           });
-       }
+        }
       });
     });
-
-    
-    
-    
   }
 
   @override
@@ -218,10 +209,12 @@ class _MenuCarouselState extends State<MenuCarousel> {
                 children: [
                   Expanded(
                     child: PageView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       controller: pageController,
                       itemCount: menus.length,
                       itemBuilder: (context, index) {
-                        return MenuWidget(order: orders[index], menu: menus[index]);
+                        return MenuWidget(
+                            order: orders[index], menu: menus[index]);
                       },
                     ),
                   ),
@@ -248,7 +241,6 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_forward),
                               iconSize: 120,
                               onPressed: () {
-
                                 print(kitchenOrder.id);
                                 print(kitchenOrder.orders[page]['quantity']);
                                 print(kitchenOrder.orders[page]['menu']);
@@ -271,10 +263,13 @@ class _MenuCarouselState extends State<MenuCarousel> {
                                   builder: (BuildContext context) {
                                     return AlertDialog(
                                       content: Container(
-                                        width: 300.0, // Ajusta el ancho según tus necesidades
-                                        height: 200.0, // Ajusta la altura según tus necesidades
+                                        width:
+                                            300.0, // Ajusta el ancho según tus necesidades
+                                        height:
+                                            200.0, // Ajusta la altura según tus necesidades
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               '¿Deseas terminar la comanda?',
@@ -283,30 +278,37 @@ class _MenuCarouselState extends State<MenuCarousel> {
                                             ),
                                             SizedBox(height: 20.0),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 TextButton(
                                                   onPressed: () {
                                                     //Aqui se actualizaria el campo de finalizado
                                                     // Acciones si se presiona "OK"
-                                                    Navigator.pop(context); // Cierra el diálogo
-                                                    Navigator.pop(context); // Cierra la pantalla actual (MenuCarousel)
+                                                    Navigator.pop(
+                                                        context); // Cierra el diálogo
+                                                    Navigator.pop(
+                                                        context); // Cierra la pantalla actual (MenuCarousel)
                                                   },
-                                                  child: Text(
-                                                    'Terminar',
-                                                    style: TextStyle(fontSize: 25.0, color:Color.fromARGB(255, 0, 0, 0))),
+                                                  child: Text('Terminar',
+                                                      style: TextStyle(
+                                                          fontSize: 25.0,
+                                                          color: Color.fromARGB(
+                                                              255, 0, 0, 0))),
                                                 ),
-                                              
                                                 SizedBox(width: 20.0),
                                                 TextButton(
                                                   onPressed: () {
                                                     // Acciones si se presiona "Cancelar"
 
-                                                    Navigator.pop(context); // Cierra el diálogo
+                                                    Navigator.pop(
+                                                        context); // Cierra el diálogo
                                                   },
-                                                  child: Text(
-                                                    'Cancelar',
-                                                    style: TextStyle(fontSize: 25.0,color:Color.fromARGB(255, 0, 0, 0))),
+                                                  child: Text('Cancelar',
+                                                      style: TextStyle(
+                                                          fontSize: 25.0,
+                                                          color: Color.fromARGB(
+                                                              255, 0, 0, 0))),
                                                 ),
                                               ],
                                             ),
@@ -316,7 +318,6 @@ class _MenuCarouselState extends State<MenuCarousel> {
                                     );
                                   },
                                 );
-
                               },
                             ),
                     ],
@@ -327,8 +328,6 @@ class _MenuCarouselState extends State<MenuCarousel> {
                 child: Text("No hay menú disponible"),
               ),
       ),
-      
     );
   }
 }
-
