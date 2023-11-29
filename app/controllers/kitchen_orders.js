@@ -140,32 +140,32 @@ async function updateKitchenOrder(req, res) {
 
             // Comprobar si los orders son válidos
             // Verificar que existan los id de los menus y que la cantidad sea > 0
-            if (updatedData.orders && updatedData.orders.length > 0) {
-                const errors = [];
+            // if (updatedData.orders && updatedData.orders.length > 0) {
+            //     const errors = [];
 
-                await Promise.all(updatedData.orders.map(async (order) => {
-                    const menuId = order.menuId;
-                    const menuRef = doc(db, "menus", menuId);
-                    const menuSnapshot = await getDoc(menuRef);
+            //     await Promise.all(updatedData.orders.map(async (order) => {
+            //         const menuId = order.menuId;
+            //         const menuRef = doc(db, "menus", menuId);
+            //         const menuSnapshot = await getDoc(menuRef);
 
-                    // Check if the menu exists
-                    if (!menuSnapshot.exists()) {
-                        errors.push(`Menu with ID=${menuId} does not exist.`);
-                    }
+            //         // Check if the menu exists
+            //         if (!menuSnapshot.exists()) {
+            //             errors.push(`Menu with ID=${menuId} does not exist.`);
+            //         }
 
-                    // Check if quantity is >= 0
-                    const quantity = order.quantity;
-                    if(!(quantity>=0)) {
-                        errors.push("Quantity is less than 0");
-                    }
-                }));
+            //         // Check if quantity is >= 0
+            //         const quantity = order.quantity;
+            //         if(!(quantity>=0)) {
+            //             errors.push("Quantity is less than 0");
+            //         }
+            //     }));
 
-                if (errors.length > 0) {
-                    // Si hay errores, enviar una respuesta con el array de errores
-                    res.status(400).json({ errors });
-                    return;
-                }
-            }
+            //     if (errors.length > 0) {
+            //         // Si hay errores, enviar una respuesta con el array de errores
+            //         res.status(400).json({ errors });
+            //         return;
+            //     }
+            // }
 
             // Si ha llegado hasta aquí, los datos son correctos, procede a actualizarlos
             await updateDoc(ref, updatedData);
