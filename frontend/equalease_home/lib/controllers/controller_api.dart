@@ -997,7 +997,6 @@ class APIController {
 
   /// 2a iteracion
 
-  // devuelve una lista de request del estudiante
   Future<List<Request>> getRequestsFromStudent(String studentId) async {
     final String apiUrl = '$baseUrl/request/student/$studentId';
 
