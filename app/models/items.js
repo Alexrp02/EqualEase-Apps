@@ -3,7 +3,7 @@ class Item {
     constructor (item) {
         this.name = item.name;
         this.pictogram = item.pictogram || "";
-        this.quantity = item.quantity || 1;
+        this.quantity = item.quantity || 0;
         this.size = item.size || "";
     }
 
