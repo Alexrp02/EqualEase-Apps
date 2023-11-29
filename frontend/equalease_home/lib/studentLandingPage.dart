@@ -1,3 +1,4 @@
+import 'package:equalease_home/components/item_widget.dart';
 import 'package:equalease_home/menuAdmin.dart';
 import 'package:equalease_home/studentCommandPage.dart';
 import 'package:equalease_home/studentPage.dart';
@@ -56,7 +57,8 @@ class StudentLandingPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -67,7 +69,10 @@ class StudentLandingPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TasksPage()),
+                  MaterialPageRoute(
+                      builder: (context) => (ItemCarousel(
+                            studentId: "6gsy3HsO0GQLwVcPvySA",
+                          ))),
                 );
               },
               child: const Text('PEDIDO'),
@@ -81,7 +86,8 @@ class StudentLandingPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -106,7 +112,8 @@ class StudentLandingPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -126,6 +133,5 @@ class StudentLandingPage extends StatelessWidget {
         ),
       ],
     );
-
   }
 }
