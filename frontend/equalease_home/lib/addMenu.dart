@@ -82,8 +82,36 @@ class _AddMenuFormState extends State<AddMenuForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Añadir Menú'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'AÑADIR MENÚ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

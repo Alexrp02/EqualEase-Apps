@@ -14,12 +14,13 @@ class StudentData extends StatefulWidget {
 class _StudentDataState extends State<StudentData> {
   // Simulando la obtención de datos del estudiante
   Student? _student;
-  APIController _controller = APIController(); // No tengo acceso a este controlador, así que lo he comentado para simular la lógica
+  APIController _controller =
+      APIController(); // No tengo acceso a este controlador, así que lo he comentado para simular la lógica
 
   @override
   void initState() {
     super.initState();
-  
+
     _controller.getStudent(widget._id).then((student) {
       setState(() {
         _student = student;
@@ -33,18 +34,27 @@ class _StudentDataState extends State<StudentData> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'DATOS',
+                  'DATOS DE ${_student!.name.toUpperCase()}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
+                    fontSize: 50.0,
                   ),
                 ),
               ],
