@@ -12,7 +12,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,27 +20,27 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, Orientation orientation) {
           return Scaffold(
             appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
-        child: AppBar(
-          backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          title: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'EQUALEASE HOME',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
+              preferredSize: Size.fromHeight(100.0),
+              child: AppBar(
+                backgroundColor: Color.fromARGB(255, 161, 182, 236),
+                title: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'EQUALEASE HOME',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
             body: Center(
               child: _buildLandscapeLayout(context),
             ),
@@ -64,7 +63,8 @@ class MyApp extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -89,7 +89,8 @@ class MyApp extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -108,7 +109,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-);
-
+    );
   }
 }
