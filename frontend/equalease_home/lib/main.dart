@@ -101,7 +101,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentLandingPage()),
+                  MaterialPageRoute(builder: (context) => StudentLandingPage(idStudent: "6gsy3HsO0GQLwVcPvySA")),
                 );
               },
               child: const Text('ESTUDIANTE'),

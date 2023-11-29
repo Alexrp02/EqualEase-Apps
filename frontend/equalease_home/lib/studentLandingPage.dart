@@ -1,12 +1,42 @@
-import 'package:equalease_home/menuAdmin.dart';
+import 'package:flutter/material.dart';
+import 'package:equalease_home/controllers/controller_api.dart';
+import 'package:equalease_home/models/task.dart';
+import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentCommandPage.dart';
 import 'package:equalease_home/studentPage.dart';
-import 'package:flutter/material.dart';
-import 'students.dart';
-import 'tasks.dart';
+import 'package:equalease_home/tasks.dart';
 
-class StudentLandingPage extends StatelessWidget {
-  const StudentLandingPage({super.key});
+class StudentLandingPage extends StatefulWidget {
+  final String idStudent;
+
+  const StudentLandingPage({Key? key, required this.idStudent}) : super(key: key);
+
+  @override
+  _StudentLandingPageState createState() => _StudentLandingPageState();
+}
+
+class _StudentLandingPageState extends State<StudentLandingPage> {
+  Student student = new Student(
+    id: 'id', 
+    name: 'name',
+    surname: 'surname',
+    pendingTasks: [],
+    doneTasks: [], 
+    profilePicture: 'profilePicture', 
+    hasRequest: false, 
+    hasKitchenOrder: false);
+
+  APIController controller = APIController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.getStudent(widget.idStudent).then((value) {
+      setState(() {
+        student = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,40 +82,43 @@ class StudentLandingPage extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TasksPage()),
-                );
-              },
-              child: const Text('PEDIDO'),
-            ),
+            child: student.hasRequest
+                ? ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(buttonColor),
+                      foregroundColor: MaterialStateProperty.all(textColor),
+                      minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
+                      textStyle: MaterialStateProperty.all(
+                        TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TasksPage()),
+                      );
+                    },
+                    child: const Text('PEDIDO'),
+                  )
+                : Container(),
           ),
         ),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
+            child: student.hasKitchenOrder?
+            ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -96,7 +129,7 @@ class StudentLandingPage extends StatelessWidget {
                 );
               },
               child: const Text('COMANDA'),
-            ),
+            ):Container(),
           ),
         ),
         Expanded(
@@ -106,11 +139,11 @@ class StudentLandingPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -126,6 +159,5 @@ class StudentLandingPage extends StatelessWidget {
         ),
       ],
     );
-
   }
 }

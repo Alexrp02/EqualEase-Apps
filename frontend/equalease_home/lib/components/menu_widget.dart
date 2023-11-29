@@ -1,5 +1,6 @@
 // Example widget for a subtask item
 import 'package:equalease_home/models/classroom.dart';
+import 'package:equalease_home/models/kitchen_order.dart';
 import 'package:equalease_home/models/menu.dart';
 import 'package:flutter/material.dart';
 
@@ -127,6 +128,11 @@ class _MenuCarouselState extends State<MenuCarousel> {
   List<Subtask> subtasks = [];
   List<Map<String, dynamic>> orders = [];
   List<Menu> menus = [];
+  KitchenOrder kitchenOrder = KitchenOrder(
+    classroom: "", 
+    revised: false, 
+    orders: [], 
+    date: "");
   
   final PageController pageController = PageController();
   APIController controller = APIController();
@@ -145,7 +151,8 @@ class _MenuCarouselState extends State<MenuCarousel> {
 
     controller.getKitchenOrder(classroom.id!).then((value){
       setState((){
-        orders = value.orders;
+        kitchenOrder = value;
+        orders = kitchenOrder.orders;
 
         for(int i = 0; i < orders.length; i++){
           controller.getMenu(orders[i]['menu']).then((value){
@@ -206,7 +213,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 32.0),
-        child: orders.isNotEmpty && menus.isNotEmpty
+        child: orders.isNotEmpty && menus.isNotEmpty && kitchenOrder.id != ""
             ? Column(
                 children: [
                   Expanded(
@@ -226,6 +233,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_back),
                               iconSize: 120,
                               onPressed: () {
+                                controller.updateKitchenOrder(kitchenOrder);
                                 if (pageController.page! > 0) {
                                   pageController.previousPage(
                                     duration: Duration(milliseconds: 300),
@@ -240,6 +248,11 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_forward),
                               iconSize: 120,
                               onPressed: () {
+
+                                print(kitchenOrder.id);
+                                print(kitchenOrder.orders[page]['quantity']);
+                                print(kitchenOrder.orders[page]['menu']);
+                                controller.updateKitchenOrder(kitchenOrder);
                                 if (pageController.page! < menus.length - 1) {
                                   pageController.nextPage(
                                     duration: Duration(milliseconds: 300),
@@ -252,6 +265,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.check),
                               iconSize: 120,
                               onPressed: () {
+                                controller.updateKitchenOrder(kitchenOrder);
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -273,6 +287,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                                               children: [
                                                 TextButton(
                                                   onPressed: () {
+                                                    //Aqui se actualizaria el campo de finalizado
                                                     // Acciones si se presiona "OK"
                                                     Navigator.pop(context); // Cierra el diálogo
                                                     Navigator.pop(context); // Cierra la pantalla actual (MenuCarousel)
