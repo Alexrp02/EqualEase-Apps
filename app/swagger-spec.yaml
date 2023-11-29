@@ -513,6 +513,20 @@ paths:
       responses:
         '200':
           description: Requests retrieved successfully
+  /request/studentAll/{id}: 
+    get:
+      tags:
+        - Request
+      summary: Get all items requested from a student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requests retrieved successfully
 
   # Menu
   /menu:
@@ -609,7 +623,7 @@ paths:
         '201':
           description: Kitchen order created successfully
 
-  /kitchen-order/{id}:
+  /kitchen-order/id/{id}:
     get:
       tags:
         - KitchenOrder
@@ -643,6 +657,20 @@ paths:
       responses:
         '200':
           description: Kitchen order updated successfully
+  /kitchen-order/classroom/:classroomID:
+    get:
+      tags:
+        - KitchenOrder
+      summary: Get a kitchen order by classroom ID
+      parameters:
+        - in: path
+          name: classroomID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kitchen order retrieved successfully
 
   # Kitchen
   /kitchen:
