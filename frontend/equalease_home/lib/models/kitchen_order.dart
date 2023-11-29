@@ -33,4 +33,10 @@ class KitchenOrder {
       };
 
   String toJson() => json.encode(toMap());
+
+  String toJsonWithoutId() {
+    Map<String, dynamic> map = toMap();
+    map.remove('id');
+    return json.encode(map);
+  }
 }

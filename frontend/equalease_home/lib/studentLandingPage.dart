@@ -1,10 +1,12 @@
 import 'package:equalease_home/menuAdmin.dart';
+import 'package:equalease_home/studentCommandPage.dart';
+import 'package:equalease_home/studentPage.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
 import 'tasks.dart';
 
-class AdminPage extends StatelessWidget {
-  const AdminPage({super.key});
+class StudentLandingPage extends StatelessWidget {
+  const StudentLandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class AdminPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'PÁGINA DEL ADMINISTRADOR',
+                      'ESTUDIANTE',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -68,57 +70,57 @@ class AdminPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => TasksPage()),
                 );
               },
+              child: const Text('PEDIDO'),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(buttonColor),
+                foregroundColor: MaterialStateProperty.all(textColor),
+                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                textStyle: MaterialStateProperty.all(
+                  TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold, // Texto en negrita
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StudentCommandPage()),
+                );
+              },
+              child: const Text('COMANDA'),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(buttonColor),
+                foregroundColor: MaterialStateProperty.all(textColor),
+                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                textStyle: MaterialStateProperty.all(
+                  TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold, // Texto en negrita
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StudentPage()),
+                );
+              },
               child: const Text('TAREAS'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenuPage()),
-                );
-              },
-              child: const Text('MENUS'),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StudentsPage()),
-                );
-              },
-              child: const Text('ESTUDIANTES'),
             ),
           ),
         ),
