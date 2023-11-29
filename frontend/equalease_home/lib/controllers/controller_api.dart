@@ -997,6 +997,7 @@ class APIController {
 
   /// 2a iteracion
 
+  // devuelve una lista de request del estudiante
   Future<List<Request>> getRequestsFromStudent(String studentId) async {
     final String apiUrl = '$baseUrl/request/student/$studentId';
 
@@ -1021,6 +1022,14 @@ class APIController {
       throw Exception('No se pudo obtener la lista de request del usuario');
     }
   }
+
+  /// Get items from the student request connecting with the database
+  ///
+  /// Params:
+  ///
+  ///   -[studentId]: Student identifier
+  ///
+  /// Returns: List<Item>
 
   Future<List<Item>> getItemsFromStudentRequest(String studentId) async {
     try {
@@ -1049,6 +1058,14 @@ class APIController {
   }
 
   // devuelve el objeto de tipo request con ese id
+
+  /// Get a Request object from the database using the identifier
+  ///
+  /// Params:
+  ///
+  ///   -[id]: request identifier
+  ///
+  /// Returns: Request
   Future<Request> getRequest(String id) async {
     final String apiUrl = '$baseUrl/request/id/$id';
 
@@ -1069,6 +1086,13 @@ class APIController {
   }
 
   // devuelve el objeto de tipo request con ese id
+  /// Get an Item object from the database using the identifier
+  ///
+  /// Params:
+  ///
+  ///   -[id]: item identifier
+  ///
+  /// Returns: Item
   Future<Item> getItem(String id) async {
     final String apiUrl = '$baseUrl/item/$id';
 
@@ -1087,6 +1111,13 @@ class APIController {
     }
   }
 
+  /// Get a the List of Item assigned to the request of the student from the database using the request identifier
+  ///
+  /// Params:
+  ///
+  ///   -[requestId]: request identifier
+  ///
+  /// Returns: List<Item>
   Future<List<Item>> getItemsFromRequest(String requestId) async {
     try {
       // Obtiene el request
@@ -1113,6 +1144,17 @@ class APIController {
     }
   }
 
+  /// Update an Item in the database
+  ///
+  /// Params:
+  ///
+  ///   -[item]: Item object to be updated
+  ///
+  /// Returns: bool
+  ///
+  ///   - true if the operation has been done
+  ///
+  ///   - false if the operation has failed
   Future<bool> updateItem(Item item) async {
     // Crea el JSON con las tareas actualizadas.
     var requestJson = item.toJsonWithoutId();
@@ -1122,6 +1164,19 @@ class APIController {
     return result;
   }
 
+  /// Private method to update
+  ///
+  /// Params:
+  ///
+  ///   -[id]: identifier of the item
+  ///
+  ///   -[jsonString]: JSON with the item information to update
+  ///
+  /// Returns: bool
+  ///
+  ///   - true if the operation has been done
+  ///
+  ///   -false if the operation has failed
   Future<bool> _putItem(String id, String jsonString) async {
     final String apiUrl = '$baseUrl/item/$id';
 
@@ -1145,6 +1200,13 @@ class APIController {
     }
   }
 
+  /// Create an Item on the database
+  ///
+  /// Params:
+  ///
+  ///   -[item]: Item object
+  ///
+  /// Returns: String (created Item identifier)
   Future<String> createItem(Item item) async {
     final String apiUrl = '$baseUrl/item';
 
@@ -1182,6 +1244,13 @@ class APIController {
     }
   }
 
+  /// Create a Request on the database using the identifier
+  ///
+  /// Params:
+  ///
+  ///   -[req]: request Object
+  ///
+  /// Returns: String
   Future<String> createRequest(Request req) async {
     final String apiUrl = '$baseUrl/request';
 
@@ -1216,6 +1285,17 @@ class APIController {
     }
   }
 
+  /// Update a Request on the database
+  ///
+  /// Params:
+  ///
+  ///   -[req]: Request object
+  ///
+  /// Returns: bool
+  ///
+  ///   - true if the operation has been done
+  ///
+  ///   - false if the operation has failed
   Future<bool> updateRequest(Request req) async {
     // Crea el JSON con las tareas actualizadas.
     var requestJson = req.toJsonWithoutId();
@@ -1225,6 +1305,19 @@ class APIController {
     return result;
   }
 
+  /// Private method to update request
+  ///
+  /// Params:
+  ///
+  ///   -[id]: identifier of the request
+  ///
+  ///   -[jsonString]: JSON with the request information to update
+  ///
+  /// Returns: Bool
+  ///
+  ///   -true if the operation has been done
+  ///
+  ///   -false if the operation has failed
   Future<bool> _putRequest(String id, String jsonString) async {
     final String apiUrl = '$baseUrl/request/$id';
 
@@ -1250,6 +1343,13 @@ class APIController {
 
   // Add item to request??
 
+  /// Get a Menu object from the database using the identifier
+  ///
+  /// Params:
+  ///
+  ///   -[id]: menu identifier
+  ///
+  /// Returns: Menu
   Future<Menu> getMenu(String id) async {
     final String apiUrl = '$baseUrl/menu/$id';
 
@@ -1270,6 +1370,9 @@ class APIController {
   }
 
   // Get every menu from the database and return a list of Menu
+  /// Get a List of all the menus from the database
+  ///
+  /// Returns: List<Menu>
   Future<List<Menu>> getMenus() async {
     final String apiUrl = '$baseUrl/menu';
 
@@ -1293,6 +1396,17 @@ class APIController {
     }
   }
 
+  /// Create a new Menu on the database
+  ///
+  /// Params:
+  ///
+  ///   -[menu]: Menu object
+  ///
+  /// Returns: bool
+  ///
+  ///   - true if the operation has been done
+  ///
+  ///   - false if the operation has failed
   Future<bool> createMenu(Menu menu) async {
     final String apiUrl = '$baseUrl/menu';
 
@@ -1327,6 +1441,17 @@ class APIController {
     }
   }
 
+  /// Update the Menu on the database using the identifier
+  ///
+  /// Params:
+  ///
+  ///   -[menu]: menu Object
+  ///
+  /// Returns: bool
+  ///
+  ///   - true if the operation has been done
+  ///
+  ///   - false if the operation has failed
   Future<bool> updateMenu(Menu menu) async {
     final String apiUrl = '$baseUrl/menu/id/${menu.id}';
 
@@ -1349,6 +1474,17 @@ class APIController {
     return false;
   }
 
+  /// Delete the Menu on the database using the identifier
+  ///
+  /// Params:
+  ///
+  ///   -[menuId]: menu identifier
+  ///
+  /// Returns: bool
+  ///
+  ///   - true if the operation has been done
+  ///
+  ///   - false if the operation has failed
   Future<bool> deleteMenu(String menuId) async {
     final String apiUrl = '$baseUrl/menu/$menuId';
 
@@ -1367,7 +1503,17 @@ class APIController {
     }
   }
 
-  // Get the KitchenOrder from a class id
+  /// Get the KitchenOrder from a class id
+  ///
+  /// Params:
+  ///
+  ///   - [classId]: String referring to a Classroom
+  ///
+  /// Returns: kitchenOrder
+  ///
+  ///   - The kitchenOrder assigned to a Clasroom
+  ///
+  ///
   Future<KitchenOrder> getKitchenOrder(String classId) async {
     final String apiUrl = '$baseUrl/kitchen-order/classroom/$classId';
 
@@ -1387,6 +1533,18 @@ class APIController {
       throw Exception('Error de red: $e');
     }
   }
+
+  /// Get the quantities of the menus inside the kitchen orders
+  ///
+  /// Params:
+  ///
+  ///   - [KitchenOrder]: Object of kitchen orders (Array of menus)
+  ///
+  /// Returns: boolean
+  ///
+  ///   - True if everything is correct
+  ///   - False if there is an error
+  ///
 
   Future<bool> updateKitchenOrder(KitchenOrder kitchenOrder) async {
     final String apiUrl = '$baseUrl/kitchen-order/id/${kitchenOrder.id}';
@@ -1410,6 +1568,17 @@ class APIController {
     return false;
   }
 
+  /// Get the quantities of the menus inside the kitchen orders
+  ///
+  /// Params:
+  ///
+  ///   -
+  ///
+  /// Returns: Map
+  ///
+  ///   -Map with the String refered to the Menu and the quantity
+  ///
+  ///
   Future<Map<String, dynamic>> getKitchenOrdersQuantities() async {
     final String apiUrl = '$baseUrl/kitchen-order/quantities';
 
@@ -1430,7 +1599,18 @@ class APIController {
     }
   }
 
-  // Get all the classrooms from the database
+  /// Get all the classrooms from the database
+  ///
+  /// Params:
+  ///
+  ///   -
+  ///
+  /// Returns: list
+  ///
+  ///   -List with all the classrooms
+  ///
+  ///
+
   Future<List<Classroom>> getClassrooms() async {
     final String apiUrl = '$baseUrl/classroom';
 

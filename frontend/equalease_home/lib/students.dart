@@ -31,7 +31,16 @@ class _StudentsPageState extends State<StudentsPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -42,7 +51,7 @@ class _StudentsPageState extends State<StudentsPage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
+                    fontSize: 50.0,
                   ),
                 ),
               ],
@@ -88,7 +97,8 @@ class _StudentsPageState extends State<StudentsPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => StudentsAssignedTask(_StudentsAdded[i].id),
+                                  builder: (context) => StudentsAssignedTask(
+                                      _StudentsAdded[i].id),
                                 ),
                               );
                             },
@@ -96,7 +106,9 @@ class _StudentsPageState extends State<StudentsPage> {
                               backgroundColor: Colors.white,
                               padding: EdgeInsets.all(0),
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(color: Color.fromARGB(255, 100, 100, 101), width: 2.0),
+                                side: BorderSide(
+                                    color: Color.fromARGB(255, 100, 100, 101),
+                                    width: 2.0),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
@@ -111,7 +123,8 @@ class _StudentsPageState extends State<StudentsPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => StudentData(_StudentsAdded[i].id),
+                                  builder: (context) =>
+                                      StudentData(_StudentsAdded[i].id),
                                 ),
                               );
                             },
@@ -119,7 +132,10 @@ class _StudentsPageState extends State<StudentsPage> {
                               backgroundColor: Colors.white,
                               padding: EdgeInsets.all(0),
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
+                                side: BorderSide(
+                                    color: const Color.fromARGB(
+                                        255, 100, 100, 101),
+                                    width: 2.0),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
@@ -128,31 +144,34 @@ class _StudentsPageState extends State<StudentsPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-
-                            if(_StudentsAdded[i].hasRequest == false){
+                            if (_StudentsAdded[i].hasRequest == false) {
                               resetRequests();
                               _StudentsAdded[i].hasRequest = true;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
+                                  builder: (context) =>
+                                      CreateRequestPage(_StudentsAdded[i].id),
                                 ),
                               );
-                            }
-                            else{
+                            } else {
                               _StudentsAdded[i].hasRequest = false;
                             }
 
                             setState(() {
                               _controller.updateStudent(_StudentsAdded[i]);
                             });
-                            
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: _StudentsAdded[i].hasRequest ? Colors.blue : Colors.white,
+                            backgroundColor: _StudentsAdded[i].hasRequest
+                                ? Colors.blue
+                                : Colors.white,
                             padding: EdgeInsets.all(0),
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
+                              side: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 100, 100, 101),
+                                  width: 2.0),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
@@ -160,8 +179,7 @@ class _StudentsPageState extends State<StudentsPage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-
-                            if(_StudentsAdded[i].hasKitchenOrder == false){
+                            if (_StudentsAdded[i].hasKitchenOrder == false) {
                               resetKitchenOrders();
                               _StudentsAdded[i].hasKitchenOrder = true;
 
@@ -172,21 +190,24 @@ class _StudentsPageState extends State<StudentsPage> {
                               //     builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
                               //   ),
                               // );
-                            }
-                            else{
+                            } else {
                               _StudentsAdded[i].hasKitchenOrder = false;
                             }
 
                             setState(() {
                               _controller.updateStudent(_StudentsAdded[i]);
                             });
-                            
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: _StudentsAdded[i].hasKitchenOrder ? Colors.blue : Colors.white,
+                            backgroundColor: _StudentsAdded[i].hasKitchenOrder
+                                ? Colors.blue
+                                : Colors.white,
                             padding: EdgeInsets.all(0),
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(color: const Color.fromARGB(255, 100, 100, 101), width: 2.0),
+                              side: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 100, 100, 101),
+                                  width: 2.0),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
@@ -203,18 +224,18 @@ class _StudentsPageState extends State<StudentsPage> {
     );
   }
 
-  void resetRequests(){
-    for(int i = 0; i < _StudentsAdded.length; i++){
-      if(_StudentsAdded[i].hasRequest == true){
+  void resetRequests() {
+    for (int i = 0; i < _StudentsAdded.length; i++) {
+      if (_StudentsAdded[i].hasRequest == true) {
         _StudentsAdded[i].hasRequest = false;
         _controller.updateStudent(_StudentsAdded[i]);
       }
     }
   }
 
-  void resetKitchenOrders(){
-    for(int i = 0; i < _StudentsAdded.length; i++){
-      if(_StudentsAdded[i].hasKitchenOrder == true){
+  void resetKitchenOrders() {
+    for (int i = 0; i < _StudentsAdded.length; i++) {
+      if (_StudentsAdded[i].hasKitchenOrder == true) {
         _StudentsAdded[i].hasKitchenOrder = false;
         _controller.updateStudent(_StudentsAdded[i]);
       }

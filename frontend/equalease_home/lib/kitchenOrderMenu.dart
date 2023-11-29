@@ -44,15 +44,23 @@ class _KitchenOrderPageState extends State<KitchenOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Menu> menusConCantidad = _MenusAgregados
-        .where((menu) => (_kitchenOrdersQuantities[menu.id!] ?? 0) > 0)
-        .toList();
+    List<Menu> menusConCantidad = _MenusAgregados.where(
+        (menu) => (_kitchenOrdersQuantities[menu.id!] ?? 0) > 0).toList();
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -63,7 +71,7 @@ class _KitchenOrderPageState extends State<KitchenOrderPage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 30.0,
+                    fontSize: 50.0,
                   ),
                 ),
               ],
@@ -131,16 +139,13 @@ class _KitchenOrderPageState extends State<KitchenOrderPage> {
 
   Widget _buildBottomNavigationBar() {
     return BottomAppBar(
-      color:  Color.fromARGB(255, 161, 182, 236),
+      color: Color.fromARGB(255, 161, 182, 236),
       child: Container(
         height: 60.0,
         padding: EdgeInsets.all(16.0),
-      
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          
           children: _buildStudentWidgets(),
-          
         ),
       ),
     );
@@ -150,21 +155,17 @@ class _KitchenOrderPageState extends State<KitchenOrderPage> {
     List<Widget> widgets = [];
     for (var student in _StudentsAdded) {
       if (student.hasKitchenOrder) {
-        widgets.add(
-          Container(
-            //color: Colors.lightBlue,
-            //padding: EdgeInsets.all(16.0),
-            child:Text(
+        widgets.add(Container(
+          //color: Colors.lightBlue,
+          //padding: EdgeInsets.all(16.0),
+          child: Text(
             "ESTUDIANTE ENCARGADO: ${student.name.toUpperCase()}",
             style: TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 22.0,
             ),
           ),
-          )
-         
-          
-        );
+        ));
       }
     }
     return widgets;

@@ -10,7 +10,8 @@ import 'package:equalease_home/tasks.dart';
 class StudentLandingPage extends StatefulWidget {
   final String idStudent;
 
-  const StudentLandingPage({Key? key, required this.idStudent}) : super(key: key);
+  const StudentLandingPage({Key? key, required this.idStudent})
+      : super(key: key);
 
   @override
   _StudentLandingPageState createState() => _StudentLandingPageState();
@@ -18,14 +19,14 @@ class StudentLandingPage extends StatefulWidget {
 
 class _StudentLandingPageState extends State<StudentLandingPage> {
   Student student = new Student(
-    id: 'id', 
-    name: 'name',
-    surname: 'surname',
-    pendingTasks: [],
-    doneTasks: [], 
-    profilePicture: 'profilePicture', 
-    hasRequest: false, 
-    hasKitchenOrder: false);
+      id: 'id',
+      name: 'name',
+      surname: 'surname',
+      pendingTasks: [],
+      doneTasks: [],
+      profilePicture: 'profilePicture',
+      hasRequest: false,
+      hasKitchenOrder: false);
 
   APIController controller = APIController();
 
@@ -48,6 +49,15 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
             preferredSize: Size.fromHeight(100.0),
             child: AppBar(
               backgroundColor: Color.fromARGB(255, 161, 182, 236),
+              toolbarHeight: 100.0,
+              leading: new IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: new Icon(
+                    Icons.arrow_back,
+                    size: 50.0,
+                  )),
               title: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +68,7 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
+                        fontSize: 50.0,
                       ),
                     ),
                   ],
@@ -88,8 +98,8 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(buttonColor),
                       foregroundColor: MaterialStateProperty.all(textColor),
-                      minimumSize: MaterialStateProperty.all(
-                    Size(double.infinity, 100)),
+                      minimumSize:
+                          MaterialStateProperty.all(Size(double.infinity, 100)),
                       textStyle: MaterialStateProperty.all(
                         TextStyle(
                           fontSize: 48,
@@ -101,9 +111,9 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                      builder: (context) => (ItemCarousel(
-                            studentId: "6gsy3HsO0GQLwVcPvySA",
-                          ))),
+                            builder: (context) => (ItemCarousel(
+                                  studentId: "6gsy3HsO0GQLwVcPvySA",
+                                ))),
                       );
                     },
                     child: const Text('PEDIDO'),
@@ -114,28 +124,30 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
-            child: student.hasKitchenOrder?
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(
-                    Size(double.infinity, 100)),
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StudentCommandPage()),
-                );
-              },
-              child: const Text('COMANDA'),
-            ):Container(),
+            child: student.hasKitchenOrder
+                ? ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(buttonColor),
+                      foregroundColor: MaterialStateProperty.all(textColor),
+                      minimumSize:
+                          MaterialStateProperty.all(Size(double.infinity, 100)),
+                      textStyle: MaterialStateProperty.all(
+                        TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StudentCommandPage()),
+                      );
+                    },
+                    child: const Text('COMANDA'),
+                  )
+                : Container(),
           ),
         ),
         Expanded(
@@ -145,8 +157,8 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(
-                    Size(double.infinity, 100)),
+                minimumSize:
+                    MaterialStateProperty.all(Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,

@@ -64,17 +64,26 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'TAREAS ASIGNADAS',
+                  'TAREAS ASIGNADAS DE ${_student!.name.toUpperCase()}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
+                    fontSize: 50.0,
                   ),
                 ),
               ],
