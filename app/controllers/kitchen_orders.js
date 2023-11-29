@@ -224,18 +224,24 @@ async function getOrdersFromClass(req, res) {
         // Get all the menus from the database
         const menusQuery = query(collection(db, "menus"));
         const menusSnapshot = await getDocs(menusQuery);
+        
+        // Create an array with all the menus
+        let menus = [];
+        menusSnapshot.forEach((doc) => {
+            menus.push(doc.id);
+        }
+        );
 
         // Check if the request has a menu that isn´t in the database, if it does, delete it
         request.orders.forEach((order) => {
             const menuId = order.menu;
-            if(!menusSnapshot.some(menu => menu.id === menuId)) {
+            if(!menus.some(menu => menu === menuId)) {
                 request.orders = request.orders.filter(order => order.menu !== menuId);
             }
         });
 
         // Check if the request has all the menus, if it doesn´t have one, add it with quantity 0
-        menusSnapshot.forEach((doc) => {
-            const menuId = doc.id;
+        menus.forEach((menuId) => {
             if(!request.orders.some(order => order.menu === menuId)) {
                 request.orders.push({
                     menu: menuId,
