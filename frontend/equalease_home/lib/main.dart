@@ -108,35 +108,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(
-                    const Size(double.infinity, 100)), // Ajusta la altura aquí
-                textStyle: MaterialStateProperty.all(
-                  const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
-                  ),
-                ),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ItemCarousel(
-                            studentId: "6gsy3HsO0GQLwVcPvySA",
-                          )),
-                );
-              },
-              child: const Text('ESTUDIANTE PEDIDO'),
-            ),
-          ),
-        ),
       ],
     );
   }
