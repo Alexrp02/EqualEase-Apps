@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:equalease_home/components/item_widget.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/task.dart';
 import 'package:equalease_home/models/student.dart';
@@ -87,7 +88,8 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(buttonColor),
                       foregroundColor: MaterialStateProperty.all(textColor),
-                      minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
+                      minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)),
                       textStyle: MaterialStateProperty.all(
                         TextStyle(
                           fontSize: 48,
@@ -98,7 +100,10 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TasksPage()),
+                        MaterialPageRoute(
+                      builder: (context) => (ItemCarousel(
+                            studentId: "6gsy3HsO0GQLwVcPvySA",
+                          ))),
                       );
                     },
                     child: const Text('PEDIDO'),
@@ -114,7 +119,8 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -139,7 +145,8 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
