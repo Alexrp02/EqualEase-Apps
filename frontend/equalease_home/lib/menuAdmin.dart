@@ -1,7 +1,10 @@
+import 'package:equalease_home/models/kitchen.dart';
+import 'package:equalease_home/models/kitchen_order.dart';
 import 'package:flutter/material.dart';
 import 'package:equalease_home/addMenu.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/menu.dart';
+import 'package:equalease_home/kitchenOrderMenu.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -148,26 +151,118 @@ class _MenuPageState extends State<MenuPage> {
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddMenuForm()),
-          ).then((value) {
-            //_MenuAgregadas.add(value);
-            setState(() {
-              _MenuAgregadas.add(value);
-            });
-          });
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            width: 90,
+            height: 90,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Lógica para el botón "Añadir"
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddMenuForm()),
+                ).then((value) {
+                  //_MenuAgregadas.add(value);
+                  setState(() {
+                    _MenuAgregadas.add(value);
+                  });
+                });
+              },
+              child: Icon(Icons.add, size:75),
+            ),
+          ),
+          SizedBox(height: 16),
+          Container(
+            width: 90,
+            height: 90,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => KitchenOrderPage()),
+                );
+              },
+              child: Icon(Icons.restaurant_menu, size: 75),
+              heroTag:
+                  null, // Agrega esta línea para evitar conflictos en los hero tags
+              mini: true, // Hace que el botón sea más pequeño
+              // Ajusta el tamaño según sea necesario
+            ),
+          ),
+        ],
       ),
     );
   }
 
   void _eliminarMenu(Menu menu) {
-    // Lógica para eliminar el menú
-    // Puedes utilizar el controller o cualquier otra lógica necesaria
-    // Ejemplo: controller.eliminarMenu(menu);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "ELIMINAR MENU",
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Text(
+                  "¿ESTÁ SEGURO?",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                "CANCELAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                "ACEPTAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                if (menu.id != null) {
+                  controller.deleteMenu(menu.id!);
+                  setState(() {
+                    _MenuAgregadas.remove(menu);
+                    // Llamar al controlador de eliminación
+                  });
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+        );
+      },
+    );
   }
 }
