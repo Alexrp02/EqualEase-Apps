@@ -221,9 +221,19 @@ async function getOrdersFromClass(req, res) {
         const data = snapshot.docs[0].data();
         const request = new KitchenOrder(data);
 
-        // Check if the request has all the menus, if it doesn´t have one, add it with quantity 0
+        // Get all the menus from the database
         const menusQuery = query(collection(db, "menus"));
         const menusSnapshot = await getDocs(menusQuery);
+
+        // Check if the request has a menu that isn´t in the database, if it does, delete it
+        request.orders.forEach((order) => {
+            const menuId = order.menu;
+            if(!menusSnapshot.some(menu => menu.id === menuId)) {
+                request.orders = request.orders.filter(order => order.menu !== menuId);
+            }
+        });
+
+        // Check if the request has all the menus, if it doesn´t have one, add it with quantity 0
         menusSnapshot.forEach((doc) => {
             const menuId = doc.id;
             if(!request.orders.some(order => order.menu === menuId)) {
