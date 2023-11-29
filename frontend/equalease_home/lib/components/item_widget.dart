@@ -75,6 +75,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
   List<Item> items = [];
   final PageController pageController = PageController();
   APIController controller = APIController();
+  bool changed = false;
 
   _ItemsCarouselState();
 
@@ -143,6 +144,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
           children: [
             Expanded(
               child: PageView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: pageController,
                 itemCount: items.length,
                 itemBuilder: (context, index) {
@@ -163,6 +165,18 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                         iconSize: 120,
                         onPressed: () {
                           if (pageController.page! > 0) {
+                            if (changed) {
+                              changed = false;
+                              // Update the Item in the database if the item changed
+                              controller
+                                  .updateItem(items[page])
+                                  .then((value) => {
+                                        if (value)
+                                          {print("Item updated")}
+                                        else
+                                          {print("Item not updated")}
+                                      });
+                            }
                             pageController.previousPage(
                               duration: Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
@@ -182,6 +196,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                         icon: Icon(Icons.remove),
                         onPressed: () {
                           if (items.isNotEmpty && items[page].quantity > 0) {
+                            changed = true;
                             setState(() {
                               items[page].quantity--;
                             });
@@ -202,6 +217,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                         icon: Icon(Icons.add),
                         onPressed: () {
                           if (items.isNotEmpty) {
+                            changed = true;
                             setState(() {
                               items[page].quantity++;
                             });
@@ -216,6 +232,16 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                         icon: Icon(Icons.arrow_forward),
                         iconSize: 120,
                         onPressed: () {
+                          if (changed) {
+                            changed = false;
+                            // Update the Item in the database if the item changed
+                            controller.updateItem(items[page]).then((value) => {
+                                  if (value)
+                                    {print("Item updated")}
+                                  else
+                                    {print("Item not updated")}
+                                });
+                          }
                           if (pageController.page! < items.length - 1) {
                             pageController.nextPage(
                               duration: Duration(milliseconds: 300),

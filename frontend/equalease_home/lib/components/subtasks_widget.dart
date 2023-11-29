@@ -138,6 +138,7 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
           children: [
             Expanded(
               child: PageView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: pageController,
                 itemCount: subtasks.length,
                 itemBuilder: (context, index) {
