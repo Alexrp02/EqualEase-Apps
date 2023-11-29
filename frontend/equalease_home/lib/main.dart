@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(100.0),
               child: AppBar(
+                toolbarHeight: 100.0,
                 backgroundColor: Color.fromARGB(255, 161, 182, 236),
                 title: Center(
                   child: Column(
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 24.0,
+                          fontSize: 50.0,
                         ),
                       ),
                     ],
@@ -101,7 +102,9 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentLandingPage(idStudent: "6gsy3HsO0GQLwVcPvySA")),
+                  MaterialPageRoute(
+                      builder: (context) => StudentLandingPage(
+                          idStudent: "6gsy3HsO0GQLwVcPvySA")),
                 );
               },
               child: const Text('ESTUDIANTE'),

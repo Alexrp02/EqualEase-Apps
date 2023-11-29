@@ -14,7 +14,16 @@ class AdminPage extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(100.0),
             child: AppBar(
+              toolbarHeight: 100.0,
               backgroundColor: Color.fromARGB(255, 161, 182, 236),
+              leading: new IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: new Icon(
+                    Icons.arrow_back,
+                    size: 50.0,
+                  )),
               title: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -25,7 +34,7 @@ class AdminPage extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
+                        fontSize: 50.0,
                       ),
                     ),
                   ],
@@ -54,7 +63,8 @@ class AdminPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -79,7 +89,8 @@ class AdminPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -104,7 +115,8 @@ class AdminPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize: MaterialStateProperty.all(
+                    Size(double.infinity, 100)), // Ajusta la altura aquí
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
@@ -124,6 +136,5 @@ class AdminPage extends StatelessWidget {
         ),
       ],
     );
-
   }
 }
