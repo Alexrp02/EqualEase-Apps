@@ -220,6 +220,21 @@ async function getOrdersFromClass(req, res) {
         // Si el snapshot no está vacío, creamos el objeto KitchenOrder y lo devolvemos
         const data = snapshot.docs[0].data();
         const request = new KitchenOrder(data);
+
+        // Check if the request has all the menus, if it doesn´t have one, add it with quantity 0
+        const menusQuery = query(collection(db, "menus"));
+        const menusSnapshot = await getDocs(menusQuery);
+        menusSnapshot.forEach((doc) => {
+            const menuId = doc.id;
+            if(!request.orders.some(order => order.menu === menuId)) {
+                request.orders.push({
+                    menu: menuId,
+                    quantity: 0
+                });
+            }
+        }
+        );
+
         res.status(200).json({id: snapshot.docs[0].id, ...request });
     } catch (error) {
         console.error("Error getting kitchen from Firestore:", error);
@@ -246,6 +261,8 @@ async function getQuantities(req, res) {
             res.status(200).json( quantities );
             return ;
         }
+
+
 
         // Mapea los documentos a objetos estructurados Task (pero incluyendo id)
         const requests = snapshot.docs.map((doc) => {
