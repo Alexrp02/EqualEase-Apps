@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:equalease_home/components/item_widget.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/task.dart';
 import 'package:equalease_home/models/student.dart';
@@ -29,6 +30,7 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
       hasKitchenOrder: false);
 
   APIController controller = APIController();
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -37,7 +39,14 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
       setState(() {
         student = value;
       });
+      _speakStudentName();
     });
+  }
+
+  Future<void> _speakStudentName() async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak("Hola ${student.name}");
   }
 
   @override
