@@ -71,33 +71,110 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Creación de pedido para ${_student.name}'), // Reemplaza con el nombre del estudiante
-      ),
-      body: FutureBuilder(
-        future: Future.wait(_request.items.map((itemId) => _controller.getItem(itemId))),
-        builder: (context, AsyncSnapshot<List<Item>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Item item = snapshot.data![index];
-                return ListTile(
-                  title: Text(item.name),
-                  subtitle: Text('Cantidad: ${item.quantity}, Tamaño: ${item.size}'),
-                  // Otros detalles del item
-                );
-              },
-            );
+              toolbarHeight: 100.0,
+              backgroundColor: Color.fromARGB(255, 161, 182, 236),
+              leading: new IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: new Icon(
+                    Icons.arrow_back,
+                    size: 50.0,
+                  )),
+              title: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'CREACION DE PEDIDO PARA ${_student.name.toUpperCase()}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            margin: EdgeInsets.only(top: 36.0),
+            child: FutureBuilder(
+              future: Future.wait(_request.items.map((itemId) => _controller.getItem(itemId))),
+              builder: (context, AsyncSnapshot<List<Item>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return DataTable(
 
-          } else {
-            return Text('No hay datos');
-          }
-        },
+                    columns: [
+                      DataColumn(
+                        label: Text('NOMBRE',
+                          style: TextStyle(fontSize: 44.0)),
+                      ),
+                      DataColumn(
+                        label: Text('CANTIDAD',
+                          style: TextStyle(fontSize: 44.0)),
+                      ),
+                      DataColumn(
+                        label: Text('TAMAÑO',
+                          style: TextStyle(fontSize: 44.0)),
+                      ),
+                    ],
+                    rows: snapshot.data!.map((item) {
+                      return DataRow(
+                        cells: [
+                          DataCell(
+                            Row(
+                              children: [
+                                if (item.pictogram != "")
+                                  Image.network(
+                                    item.pictogram,
+                                    width: 50.0,
+                                    height: 50.0,
+                                    fit: BoxFit.cover,
+                                  )
+                                else
+                                  Container(width: 50.0, height: 50.0), // Otra opción: Placeholder de imagen
+                                SizedBox(width: 8.0),
+                                Text(
+                                  item.name,
+                                  style: TextStyle(fontSize: 30.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              item.quantity.toString(),
+                              style: TextStyle(fontSize: 30.0),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              item.size,
+                              style: TextStyle(fontSize: 30.0),
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  );
+                } else {
+                  return Text('No hay datos');
+                }
+              },
+            ),
+          ),
+        ),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Navega a la página createItemPage y espera el resultado
