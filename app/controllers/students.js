@@ -108,6 +108,7 @@ async function getStudentByName(req, res) {
 async function updateStudent(req, res) {
     const id = req.params.id;
     const updatedData = req.body;
+    console.log(updatedData);
 
     try {
         const ref = doc(db, collectionName, id);
@@ -127,6 +128,60 @@ async function updateStudent(req, res) {
     }
 }
 
+// Get pending tasks of today from student id
+async function getPendingTasksToday(req, res) {
+    const id = req.params.id;
+
+    if (!id) {
+        res.status(400).json({ error: "Student's id cannot be empty." });
+        return;
+    }
+
+    try {
+        // Obtener una referencia al documento de subtarea por su ID
+        const ref = doc(db, collectionName, id);
+
+        // Obtener el documento
+        const snapshot = await getDoc(ref);
+
+        // Comprobar si el documento de subtarea existe
+        if (snapshot.exists()) {
+            const studentData = snapshot.data();
+            const student = new Student(studentData);
+            const pendingTasksToday = student.pendingTasks.filter(task => {
+                const currentDate = new Date();
+                const weekDays = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado"] ;
+                const startDate = new Date(task.startDate);
+                const endDate = new Date(task.endDate);
+                // Check if the current date is within the interval if there is one
+                if (task.startDate && task.endDate && task.daysOfTheWeek) {
+                    console.log("Task " + task.id + " has all the fields") ;
+                    return (currentDate >= startDate && currentDate <= endDate) && (task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]) || task.daysOfTheWeek.length == 0) ;
+                }else if (task.startDate && task.endDate){
+                    console.log("Task " + task.id + " has start and end date") ;
+                    return (currentDate >= startDate && currentDate <= endDate);
+                }else if(task.daysOfTheWeek){
+                    console.log("Task " + task.id + " has days of week") ;
+                    // Check if the current day of the week is in the days of the week array
+                    return task.daysOfTheWeek.includes(weekDays[currentDate.getDay()]) || task.daysOfTheWeek.length == 0;
+                }else if(!task.startDate && !task.endDate && !task.daysOfTheWeek){
+                    console.log("Task " + task.id + " has no fields") ;
+                    return true;
+                }
+                return false;
+            });
+            const pendingTasksIds = pendingTasksToday.map(task => task.id);
+
+            res.status(200).json(pendingTasksIds);
+        } else {
+            res.status(404).json({ error: `Student with id=${id} does not exist.`});
+        }
+    } catch (error) {
+        console.error("Error getting student from Firestore:", error);
+        res.status(500).send("Server error.");   
+    }
+}
+
 // Cuando se implemente la operación de eliminar estudiante,
 // tener en cuenta las dependencias y eliminarlo de los arrays teacher.students[].
 // Para ver como se implementa, ver el ejemplo deleteTask
@@ -138,4 +193,5 @@ module.exports = {
     getStudentById,
     getStudentByName,
     updateStudent,
+    getPendingTasksToday,
 }

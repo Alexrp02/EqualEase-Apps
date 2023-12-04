@@ -7,6 +7,39 @@ servers:
   - url: 'http://localhost:3000/api'
     description: Local server
 paths:
+
+  # Classroom
+  /classroom:
+    get:
+      tags:
+        - Classroom
+      summary: Retrieve a list of all classrooms
+      responses:
+        '200':
+          description: A list of classrooms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Classroom'
+
+  /classroom/{id}:
+    get:
+      tags:
+        - Classroom
+      summary: Get a classroom by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Classroom retrieved successfully
+
+  # Student
   /student:
     post:
       tags:
@@ -321,6 +354,419 @@ paths:
       responses:
         '200':
           description: Teacher retrieved successfully
+
+  # Item
+  /item:
+    post:
+      tags:
+        - Item
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '201':
+          description: Item created successfully
+
+  /item/{id}:
+    get:
+      tags:
+        - Item
+      summary: Get an item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Item retrieved successfully
+
+    put:
+      tags:
+        - Item
+      summary: Update an item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item updated successfully
+
+    delete:
+      tags:
+        - Item
+      summary: Delete an item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Item deleted successfully
+
+  # Request
+  /request:
+    get:
+      tags:
+        - Request
+      summary: Get all requests
+      responses:
+        '200':
+          description: A list of requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Request'
+
+    post:
+      tags:
+        - Request
+      summary: Create a new request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Request'
+      responses:
+        '201':
+          description: Request created successfully
+
+  /request/id/{id}:
+    get:
+      tags:
+        - Request
+      summary: Get a request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request retrieved successfully
+
+    put:
+      tags:
+        - Request
+      summary: Update a request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Request'
+      responses:
+        '200':
+          description: Request updated successfully
+
+    delete:
+      tags:
+        - Request
+      summary: Delete a request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Request deleted successfully
+
+  /request/student/{id}:
+    get:
+      tags:
+        - Request
+      summary: Get requests from a student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requests retrieved successfully
+  /request/studentAll/{id}: 
+    get:
+      tags:
+        - Request
+      summary: Get all items requested from a student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requests retrieved successfully
+
+  # Menu
+  /menu:
+    get:
+      tags:
+        - Menu
+      summary: Get all menus
+      responses:
+        '200':
+          description: A list of all menus
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Menu'
+
+    post:
+      tags:
+        - Menu
+      summary: Create a new menu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Menu'
+      responses:
+        '201':
+          description: Menu created successfully
+
+  /menu/{id}:
+    get:
+      tags:
+        - Menu
+      summary: Get a menu by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Menu retrieved successfully
+
+    put:
+      tags:
+        - Menu
+      summary: Update a menu by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Menu'
+      responses:
+        '200':
+          description: Menu updated successfully
+
+  # KitchenOrder
+  /kitchen-order:
+    get:
+      tags:
+        - KitchenOrder
+      summary: Get all kitchen orders
+      responses:
+        '200':
+          description: A list of all kitchen orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KitchenOrder'
+
+    post:
+      tags:
+        - KitchenOrder
+      summary: Create a new kitchen order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KitchenOrder'
+      responses:
+        '201':
+          description: Kitchen order created successfully
+
+  /kitchen-order/id/{id}:
+    get:
+      tags:
+        - KitchenOrder
+      summary: Get a kitchen order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kitchen order retrieved successfully
+
+    put:
+      tags:
+        - KitchenOrder
+      summary: Update a kitchen order by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KitchenOrder'
+      responses:
+        '200':
+          description: Kitchen order updated successfully
+  /kitchen-order/classroom/:classroomID:
+    get:
+      tags:
+        - KitchenOrder
+      summary: Get a kitchen order by classroom ID
+      parameters:
+        - in: path
+          name: classroomID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kitchen order retrieved successfully
+
+  # Kitchen
+  /kitchen:
+    get:
+      tags:
+        - Kitchen
+      summary: Get all kitchen requests
+      responses:
+        '200':
+          description: A list of all kitchen requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Kitchen'
+
+    post:
+      tags:
+        - Kitchen
+      summary: Create a new kitchen request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Kitchen'
+      responses:
+        '201':
+          description: Kitchen request created successfully
+
+  /kitchen/id/{id}:
+    get:
+      tags:
+        - Kitchen
+      summary: Get a kitchen request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kitchen request retrieved successfully
+
+    put:
+      tags:
+        - Kitchen
+      summary: Update a kitchen request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Kitchen'
+      responses:
+        '200':
+          description: Kitchen request updated successfully
+
+    delete:
+      tags:
+        - Kitchen
+      summary: Delete a kitchen request by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Kitchen request deleted successfully
+
+  /kitchen/student/{id}:
+    get:
+      tags:
+        - Kitchen
+      summary: Get kitchen requests from a student by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kitchen requests retrieved successfully
+
+
 components:
   schemas:
     Student:
@@ -336,13 +782,40 @@ components:
         pendingTasks:
           type: array
           items:
-            type: string
-            format: Reference to Task
+            type: object
+            properties:
+              taskID:
+                type: string
+                format: Reference to Task
+              startDate:
+                type: string
+                format: YYYY-MM-DD
+              endDate:
+                type: string
+                format: YYYY-MM-DD
+              daysOfTheWeek:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - Monday
+                    - Tuesday
+                    - Wednesday
+                    - Thursday
+                    - Friday
+                    - Saturday
+                    - Sunday       
         doneTasks:
           type: array
           items:
             type: string
             format: Reference to Task
+        hasRequest:
+          type: boolean
+          default: false
+        hasKitchenOrder:
+          type: boolean
+          default: false
       required:
         - name
         - surname
@@ -422,4 +895,99 @@ components:
         - name
         - surname
         - email
+
+    Classroom:
+      type: object
+      properties:
+        letter:
+          type: string
+        assignedTeacher:
+          type: string
+          format: Reference to Teacher
+
+    Item:
+      type: object
+      properties:
+        name:
+          type: string
+        pictogram:
+          type: string
+          format: uri
+        quantity:
+          type: integer
+          minimum: 1
+        size:
+          type: string
+      required:
+        - name
+
+    Request:
+      type: object
+      properties:
+        assignedStudent:
+          type: string
+          format: Reference to Student
+        items:
+          type: array
+          items:
+            type: string
+            format: Reference to Student
+      required:
+        - assignedStudent
+
+    Menu:
+      type: object
+      properties:
+        name:
+          type: string
+          format: Name in capital letters
+        image:
+          type: string
+          format: uri
+        type:
+          type: string
+          enum:
+            - Menu
+            - Dessert
+      required:
+        - name
+
+    KitchenOrder:
+      type: object
+      properties:
+        classroom:
+          type: string
+          format: Reference to Classroom
+        revised:
+          type: boolean
+          default: false
+        orders:
+          type: array
+          items:
+            type: object
+            properties:
+              menuID:
+                type: string
+                format: Reference to Menu
+              quantity:
+                type: integer
+                minimum: 0
+      required:
+        - classroom
+
+    Kitchen:
+      type: object
+      properties:
+        assignedStudent:
+          type: string
+          format: Reference to Student
+        orders:
+          type: array
+          items:
+            type: string
+            format: reference to KitchenOrder
+        date:
+          type: string
+          format: YYYY-MM-DD
+
 

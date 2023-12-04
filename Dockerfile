@@ -5,14 +5,10 @@ FROM node:14
 WORKDIR /usr/src
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY package.json ./
 
 # Install dependencies
 RUN npm install
-
-RUN npm install express
-
-RUN npm install multer
 
 # Install nodemon
 RUN npm install -g nodemon
@@ -21,4 +17,4 @@ RUN npm install -g nodemon
 EXPOSE 3000
 
 # Start the application
-CMD ["nodemon", "./app/index.js"]
+CMD ["nodemon", "--legacy-watch", "./app/index.js"]
