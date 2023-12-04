@@ -3,6 +3,7 @@ import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
+import 'createRequest.dart';
 
 class StudentsPage extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class StudentsPage extends StatefulWidget {
 class _StudentsPageState extends State<StudentsPage> {
   final APIController _controller = APIController();
   List<Student> _StudentsAdded = [];
+  int estilo = 0;
 
   @override
   void initState() {
@@ -29,7 +31,16 @@ class _StudentsPageState extends State<StudentsPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -38,10 +49,9 @@ class _StudentsPageState extends State<StudentsPage> {
                   'ESTUDIANTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color:
-                        Colors.white, // Cambia el color de la fuente a blanco
-                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                    fontSize: 24.0, // Cambia el tamaño de la fuente
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
                   ),
                 ),
               ],
@@ -54,12 +64,11 @@ class _StudentsPageState extends State<StudentsPage> {
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color.fromARGB(255, 170, 172, 174), // Color del borde
-              width: 3.0, // Ancho del borde
+              color: Color.fromARGB(255, 170, 172, 174),
+              width: 3.0,
             ),
-          ), // Color de fondo para mostrar el espacio del SingleChildScrollView
+          ),
           width: MediaQuery.of(context).size.width * 0.8,
-          // height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -77,62 +86,133 @@ class _StudentsPageState extends State<StudentsPage> {
                       borderRadius: BorderRadius.circular(0),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment
-                          .spaceAround, // Divide el espacio en tres partes
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Text('${_StudentsAdded[i].name}'), // Primera parte
+                        Text('${_StudentsAdded[i].name}'),
                         Container(
-                            width: 200,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          StudentsAssignedTask(
-                                              _StudentsAdded[i].id)),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                padding: EdgeInsets.all(0),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: Color.fromARGB(255, 100, 100, 101),
-                                      width: 2.0), // Borde
-                                  borderRadius: BorderRadius.circular(
-                                      10), // Borde cuadrado
+                          width: 200,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StudentsAssignedTask(
+                                      _StudentsAdded[i].id),
                                 ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Color.fromARGB(255, 100, 100, 101),
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Text('Tareas'), // Segunda parte
-                            )),
+                            ),
+                            child: Text('Tareas'),
+                          ),
+                        ),
                         Container(
-                            width: 200,
-                            height: 50,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          StudentData(_StudentsAdded[i].id)),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                padding: EdgeInsets.all(0),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                      color: const Color.fromARGB(
-                                          255, 100, 100, 101),
-                                      width: 2.0), // Borde
-                                  borderRadius: BorderRadius.circular(
-                                      10), // Borde cuadrado
+                          width: 200,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      StudentData(_StudentsAdded[i].id),
                                 ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              padding: EdgeInsets.all(0),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: const Color.fromARGB(
+                                        255, 100, 100, 101),
+                                    width: 2.0),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Text('Datos'), // Tercera parte
-                            )),
+                            ),
+                            child: Text('Datos'),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_StudentsAdded[i].hasRequest == false) {
+                              resetRequests();
+                              _StudentsAdded[i].hasRequest = true;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateRequestPage(_StudentsAdded[i].id),
+                                ),
+                              );
+                            } else {
+                              _StudentsAdded[i].hasRequest = false;
+                            }
+
+                            setState(() {
+                              _controller.updateStudent(_StudentsAdded[i]);
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _StudentsAdded[i].hasRequest
+                                ? Colors.blue
+                                : Colors.white,
+                            padding: EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 100, 100, 101),
+                                  width: 2.0),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('P'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (_StudentsAdded[i].hasKitchenOrder == false) {
+                              resetKitchenOrders();
+                              _StudentsAdded[i].hasKitchenOrder = true;
+
+                              //LLAMAR AQUI A VUESTRA PAGINA DE PEDIDO DE COCINA
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => CreateRequestPage(_StudentsAdded[i].id),
+                              //   ),
+                              // );
+                            } else {
+                              _StudentsAdded[i].hasKitchenOrder = false;
+                            }
+
+                            setState(() {
+                              _controller.updateStudent(_StudentsAdded[i]);
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _StudentsAdded[i].hasKitchenOrder
+                                ? Colors.blue
+                                : Colors.white,
+                            padding: EdgeInsets.all(0),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 100, 100, 101),
+                                  width: 2.0),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('C'),
+                        ),
                       ],
                     ),
                   ),
@@ -142,5 +222,23 @@ class _StudentsPageState extends State<StudentsPage> {
         ),
       ),
     );
+  }
+
+  void resetRequests() {
+    for (int i = 0; i < _StudentsAdded.length; i++) {
+      if (_StudentsAdded[i].hasRequest == true) {
+        _StudentsAdded[i].hasRequest = false;
+        _controller.updateStudent(_StudentsAdded[i]);
+      }
+    }
+  }
+
+  void resetKitchenOrders() {
+    for (int i = 0; i < _StudentsAdded.length; i++) {
+      if (_StudentsAdded[i].hasKitchenOrder == true) {
+        _StudentsAdded[i].hasKitchenOrder = false;
+        _controller.updateStudent(_StudentsAdded[i]);
+      }
+    }
   }
 }

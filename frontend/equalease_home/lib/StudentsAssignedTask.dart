@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:equalease_home/components/days_selector.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/task.dart';
@@ -61,17 +64,26 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'TAREAS ASIGNADAS',
+                  'TAREAS ASIGNADAS DE ${_student!.name.toUpperCase()}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
+                    fontSize: 50.0,
                   ),
                 ),
               ],
@@ -88,8 +100,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                 children: <Widget>[
                   Text(
                     _student!.name,
-                    style: TextStyle(
-                        fontSize: 40, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   Expanded(
                     child: Container(
@@ -104,15 +115,16 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            for (String taskId in _student!.pendingTasks)
+                            for (Map<String, dynamic> taskId
+                                in _student!.pendingTasks)
                               Container(
                                 padding: EdgeInsets.all(0),
                                 height: 80,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 255, 255, 255),
                                   border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 170, 172, 174),
+                                    color: const Color.fromARGB(
+                                        255, 170, 172, 174),
                                     width: 2.0,
                                   ),
                                   borderRadius: BorderRadius.circular(0),
@@ -123,7 +135,8 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                   children: <Widget>[
                                     Text(
                                       totalTasks
-                                          .firstWhere((task) => task.id == taskId)
+                                          .firstWhere(
+                                              (task) => task.id == taskId['id'])
                                           .title,
                                     ),
                                     Container(
@@ -132,8 +145,11 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           setState(() {
-                                            _student!.pendingTasks.remove(taskId);
-                                            _controller.updateStudent(_student!);
+                                            _student!.pendingTasks.removeWhere(
+                                                (task) =>
+                                                    taskId['id'] == task['id']);
+                                            _controller
+                                                .updateStudent(_student!);
                                           });
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -174,9 +190,9 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
 }
 
 class CustomDialog extends StatefulWidget {
-  final List<String> pendingTasks;
+  final List<Map<String, dynamic>> pendingTasks;
   final List<Task> totalTasks;
-  final Function(List<String>) onTasksUpdated;
+  final Function(List<Map<String, dynamic>>) onTasksUpdated;
   final Student? student;
 
   CustomDialog({
@@ -193,10 +209,62 @@ class CustomDialog extends StatefulWidget {
 }
 
 class _CustomDialogState extends State<CustomDialog> {
+  List<String> selectedDays = [];
+
+  Future<void> _selectDays(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Days'),
+          content: Column(
+            children: [
+              for (String day in [
+                'Lunes',
+                'Martes',
+                'Miercoles',
+                'Jueves',
+                'Viernes',
+                'Sábado',
+                'Domingo'
+              ])
+                Row(
+                  children: [
+                    Checkbox(
+                        value: selectedDays.contains(day),
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != null) {
+                              if (value) {
+                                selectedDays.add(day);
+                              } else {
+                                selectedDays.remove(day);
+                              }
+                            }
+                          });
+                        }),
+                    Text(day),
+                  ],
+                ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Seleccionar Tareas"),
+      title: const Text("Seleccionar Tareas"),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -204,19 +272,51 @@ class _CustomDialogState extends State<CustomDialog> {
             for (Task task in widget.totalTasks)
               CheckboxListTile(
                 title: Text(task.title),
-                value: widget.student!.pendingTasks.contains(task.id),
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value != null) {
-                      if (value) {
-                        widget.student!.pendingTasks.add(task.id);
-                      } else {
-                        widget.student!.pendingTasks.remove(task.id);
-                      }
+                value: widget.student!.pendingTasks
+                    .any((arrayTask) => task.id == arrayTask['id']),
+                onChanged: (bool? value) async {
+                  if (value == true) {
+                    DateTimeRange? dateRange = await showDateRangePicker(
+                        context: context,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2101),
+                        helpText: "Seleccione el intervalo de tiempo",
+                        fieldStartHintText: "Fecha de inicio",
+                        fieldEndHintText: "Fecha de fin",
+                        saveText: "Aceptar",
+                        cancelText: "Cancelar",
+                        fieldStartLabelText: "Inicio",
+                        fieldEndLabelText: "Fin");
+
+                    if (mounted) {
+                      selectedDays = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DaysSelector();
+                          });
                     }
 
-                    widget.onTasksUpdated(widget.student!.pendingTasks);
-                  });
+                    setState(() {
+                      if (value != null) {
+                        if (value) {
+                          widget.student!.pendingTasks.add({
+                            'id': task.id,
+                            'startDate': dateRange != null
+                                ? "${dateRange.start.year}-${dateRange.start.month}-${dateRange.start.day}"
+                                : "",
+                            'endDate': dateRange != null
+                                ? "${dateRange.end.year}-${dateRange.end.month}-${dateRange.end.day}"
+                                : "",
+                            'daysOfTheWeek': selectedDays
+                          });
+                        } else {
+                          widget.student!.pendingTasks.remove(task.id);
+                        }
+                      }
+
+                      widget.onTasksUpdated(widget.student!.pendingTasks);
+                    });
+                  }
                 },
               ),
           ],
@@ -233,4 +333,3 @@ class _CustomDialogState extends State<CustomDialog> {
     );
   }
 }
-
