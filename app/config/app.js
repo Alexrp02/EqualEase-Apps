@@ -25,6 +25,8 @@ const menu_routes = require("../routes/menu.js");
 const kitchen_order_routes = require("../routes/kitchen_orders.js");
 const kitchen_routes = require("../routes/kitchen.js")
 
+const login = require("../routes/login.js");
+
 // Rutas base
 app.use("/api", student_routes);
 app.use("/api", teacher_routes);
@@ -40,6 +42,8 @@ app.use("/api", request_routes);
 app.use("/api", menu_routes);
 app.use("/api", kitchen_order_routes);
 app.use("/api", kitchen_routes);
+
+app.use("/api", login) ;
 
 
 module.exports = {
