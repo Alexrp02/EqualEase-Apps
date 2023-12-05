@@ -110,7 +110,7 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
+                } else if (snapshot.data!.isNotEmpty) {
                   return DataTable(
 
                     columns: [
@@ -167,7 +167,17 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
                     }).toList(),
                   );
                 } else {
-                  return Text('No hay datos');
+                  return Center(
+                    child: Text(
+                      'Aún no se ha asociado ningún objeto al pedido',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.grey[700], // Puedes ajustar el color según tus preferencias
+                        fontStyle: FontStyle.italic,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
                 }
               },
             ),
