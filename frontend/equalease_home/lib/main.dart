@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'tasks.dart';
 import 'adminPage.dart';
 import 'controllers/controller_api.dart';
+import 'selectAvatarPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -100,11 +101,16 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => StudentLandingPage(
+                //           idStudent: "6gsy3HsO0GQLwVcPvySA")),
+                // );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => StudentLandingPage(
-                          idStudent: "6gsy3HsO0GQLwVcPvySA")),
+                      builder: (context) => SelectAvatarPage()),
                 );
               },
               child: const Text('ESTUDIANTE'),

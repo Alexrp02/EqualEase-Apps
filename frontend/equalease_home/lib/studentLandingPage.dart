@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:equalease_home/components/item_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
-import 'package:equalease_home/models/task.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentCommandPage.dart';
 import 'package:equalease_home/studentPage.dart';
-import 'package:equalease_home/tasks.dart';
 
 class StudentLandingPage extends StatefulWidget {
   final String idStudent;
