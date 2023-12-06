@@ -2,15 +2,23 @@
   "name": "equalease",
   "type": "module",
   "version": "1.0.0",
-  "dependencies": {
-    "firebase" : "^10.5.0",
-    "express" : "^4.17.1",
-    "multer": "1.4.5-lts.1"
-  },
-  "description": "An API to access to EqualEase database",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "description": "An API to access EqualEase's database",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase": "^10.5.0",
+    "multer": "^1.4.3",
+    "jsonwebtoken": "^8.5.1",
+    "express-jwt": "^6.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "redoc-cli": "^0.13.21"
   },
   "author": "EqualEase-Apps",
   "license": "ISC"

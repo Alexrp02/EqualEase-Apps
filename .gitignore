@@ -8,3 +8,4 @@ app/redoc-static.html
 app/redoc-static.html
 app/config/config.json
 package-lock.json
+node_modules

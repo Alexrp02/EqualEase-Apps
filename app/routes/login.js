@@ -1,10 +1,11 @@
 const express = require("express");
-const { login, authenticateToken } = require('../controllers/login');
+const { login, register, authenticateToken } = require('../controllers/login');
 
 
 const api = express.Router();
 
 api.post("/login", login);
+api.post("/register", register);
 
 api.get("/protected", authenticateToken, (req, res) => {
     res.status(200).json({
