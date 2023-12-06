@@ -48,7 +48,7 @@ const login = async (req, res) => {
 
 // Register a new account
 async function register(req, res) {
-  const account = ({ username, password } = req.body);
+  const account = ({ username, password, role } = req.body);
 
   const accountQuery = query(
     collection(db, "accounts"),
@@ -64,7 +64,7 @@ async function register(req, res) {
   }
 
   // Check for missing fields
-  if (!username || !password) {
+  if (!username || !password || !role) {
     res.status(400).json({
       error: "Must have username and password field",
     });

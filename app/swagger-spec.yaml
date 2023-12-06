@@ -765,6 +765,63 @@ paths:
       responses:
         '200':
           description: Kitchen requests retrieved successfully
+  
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    format: JWT
+        '401':
+          description: Unauthorized
+  /register:
+    post:
+      tags:
+        - Login
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                    - teacher
+                    - student
+                    - admin
+      responses:
+        '201':
+          description: Register successful
+        '409':
+          description: Username already exists
 
 
 components:
