@@ -15,8 +15,8 @@ import '../models/request.dart';
 
 /// class containing all operations with API
 class APIController {
-  // String baseUrl = 'http://localhost:3000/api';
-  String baseUrl = "http://10.0.2.2:3000/api";
+  String baseUrl = 'http://localhost:3000/api';
+  // String baseUrl = "http://10.0.2.2:3000/api";
 
   //-----------------------------------------------------------------------//
   //Subtask operations
@@ -811,6 +811,47 @@ class APIController {
       print('Error de red: $e');
       return false;
     }
+  }
+
+  /// Create a new student
+  ///
+  /// Params:
+  ///
+  ///   -[student]: Object of type student
+  ///
+  /// Returns: Boolean with the result of the operation, and the updated studentId
+  Future<bool> createStudent(Student student) async {
+    final String apiUrl = '$baseUrl/student';
+
+    // Necesitamos convertir el objeto a JSON pero sin su id
+    String jsonBody = student.toJsonWithoutId();
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      print(jsonBody);
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos de la tarea recién creada,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        student.id = body['id'];
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+    // ¿Crear un usuario en accounts, con una contraseña por defecto?
+
+    return false;
   }
 
   //-----------------------------------------------------------------------//
@@ -1639,5 +1680,76 @@ class APIController {
       print('Error al obtener todas las aulas: $e');
       throw Exception('No se pudo obtener la lista de aulas del sistema');
     }
+  }
+
+  /// Login a user
+  ///
+  /// Params:
+  ///
+  ///   - [username]: string
+  ///   - [password]: string
+  ///
+  /// Returns: bool
+  ///
+  ///   - Returns true if the login is correct and false if it is not
+  ///
+  ///
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    final String apiUrl = '$baseUrl/login';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"username": username, "password": password}),
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Error al hacer login: ${response.reasonPhrase}");
+        return {};
+      }
+    } catch (e) {
+      print("Error al hacer login: $e");
+    }
+    return {};
+  }
+
+  /// Register a new user
+  ///
+  /// Params:
+  ///
+  ///   - [username]: string
+  ///   - [password]: string
+  ///
+  /// Returns: bool
+  ///
+  ///   - Returns true if the register is correct and false if it is not
+  ///
+  ///
+  Future<bool> register(String username, String password, String role) async {
+    final String apiUrl = '$baseUrl/register';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json
+            .encode({"username": username, "password": password, "role": role}),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else if (response.statusCode == 409) {
+        return false;
+      } else {
+        print("Error al hacer register: ${response.reasonPhrase}");
+        return false;
+      }
+    } catch (e) {
+      print("Error al hacer register: $e");
+    }
+    return false;
   }
 }
