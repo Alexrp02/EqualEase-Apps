@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'studentLandingPage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EnterPasswordPage extends StatefulWidget {
   final String studentId;
@@ -17,7 +18,7 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Introducir Contraseña'),
+        title: Text('INTRODUCE TU CONTRASEÑA', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize:24)),
       ),
       body: Center(
         child: Column(

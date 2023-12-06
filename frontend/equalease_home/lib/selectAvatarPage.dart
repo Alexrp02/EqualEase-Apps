@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:equalease_home/controllers/controller_api.dart'; // Importa tu controlador de API
 import 'package:equalease_home/models/student.dart'; // Importa tu modelo Student
 import 'package:equalease_home/enterPasswordPage.dart'; // Importa la página EnterPasswordPage
+import 'package:google_fonts/google_fonts.dart';
+import 'adminLoginPage.dart';
+
 
 class SelectAvatarPage extends StatelessWidget {
   final APIController _controller = APIController();
@@ -10,7 +13,21 @@ class SelectAvatarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Seleccionar Avatar'),
+        title: Text('¿QUIEN ERES?', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize:24)),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              // Navega a la página de inicio de sesión para administradores
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AdminLoginPage(),
+                ),
+              );
+            },
+            child: Text('ADMINISTRADOR', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Student>>(
         future: _controller.getStudents(),
@@ -21,6 +38,7 @@ class SelectAvatarPage extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             List<Student> students = snapshot.data!;
+            ImageProvider profilePicture = AssetImage('assets/images/avatar.png');
 
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -31,6 +49,7 @@ class SelectAvatarPage extends StatelessWidget {
               itemCount: students.length,
               itemBuilder: (context, index) {
                 Student student = students[index];
+                profilePicture = AssetImage('student.profilePicture');
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -43,7 +62,7 @@ class SelectAvatarPage extends StatelessWidget {
                   child: GridTile(
                     child: CircleAvatar(
                       radius: 25,
-                      backgroundImage: NetworkImage(student.profilePicture),
+                      backgroundImage: profilePicture,
                     ),
                     footer: Container(
                       color: Colors.black.withOpacity(0.7),
