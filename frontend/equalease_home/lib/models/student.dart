@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+// Constantes globales de representacion:
+// Student.representation ["text", "audio", "image", "video"]
+
 class Student {
   String id;
   String name;
@@ -9,17 +12,18 @@ class Student {
   String profilePicture; // Agregar la propiedad para la imagen de perfil.
   bool hasRequest;
   bool hasKitchenOrder;
+  String representation;
 
-  Student({
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.pendingTasks,
-    required this.doneTasks,
-    required this.profilePicture,
-    required this.hasRequest,
-    required this.hasKitchenOrder,
-  });
+  Student(
+      {required this.id,
+      required this.name,
+      required this.surname,
+      required this.pendingTasks,
+      required this.doneTasks,
+      required this.profilePicture,
+      required this.hasRequest,
+      required this.hasKitchenOrder,
+      required this.representation});
 
   factory Student.fromMap(Map<String, dynamic> json) => Student(
       id: json['id'],
@@ -29,7 +33,8 @@ class Student {
       doneTasks: List<String>.from(json['doneTasks']),
       profilePicture: json['profilePicture'],
       hasRequest: json['hasRequest'] || false,
-      hasKitchenOrder: json['hasKitchenOrder'] || false);
+      hasKitchenOrder: json['hasKitchenOrder'] || false,
+      representation: json['representation']);
 
   factory Student.fromJson(String str) => Student.fromMap(json.decode(str));
 
@@ -54,7 +59,8 @@ class Student {
       'doneTasks': doneTasks,
       'profilePicture': profilePicture,
       'hasRequest': hasRequest,
-      'hasKitchenOrder': hasKitchenOrder
+      'hasKitchenOrder': hasKitchenOrder,
+      'representation': representation
     };
   }
 

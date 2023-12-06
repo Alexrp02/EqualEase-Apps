@@ -18,14 +18,16 @@ class StudentLandingPage extends StatefulWidget {
 
 class _StudentLandingPageState extends State<StudentLandingPage> {
   Student student = new Student(
-      id: 'id',
-      name: 'name',
-      surname: 'surname',
-      pendingTasks: [],
-      doneTasks: [],
-      profilePicture: 'profilePicture',
-      hasRequest: false,
-      hasKitchenOrder: false);
+    id: 'id',
+    name: 'name',
+    surname: 'surname',
+    pendingTasks: [],
+    doneTasks: [],
+    profilePicture: 'profilePicture',
+    hasRequest: false,
+    hasKitchenOrder: false,
+    representation: "text",
+  );
 
   APIController controller = APIController();
   FlutterTts flutterTts = FlutterTts();

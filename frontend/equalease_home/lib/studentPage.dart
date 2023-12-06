@@ -15,14 +15,16 @@ class _StudentPageState extends State<StudentPage> {
   //     ControllerStudent('http://www.google.es');
   APIController controller = APIController();
   Student student = Student(
-      id: "",
-      name: "",
-      surname: "",
-      pendingTasks: [],
-      doneTasks: [],
-      profilePicture: "",
-      hasRequest: false,
-      hasKitchenOrder: false);
+    id: "",
+    name: "",
+    surname: "",
+    pendingTasks: [],
+    doneTasks: [],
+    profilePicture: "",
+    hasRequest: false,
+    hasKitchenOrder: false,
+    representation: "text",
+  );
   List<Task> doneTasks = [];
   List<Task> pendingTasks = [
     // Task(
