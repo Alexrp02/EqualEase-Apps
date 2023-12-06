@@ -1653,7 +1653,7 @@ class APIController {
   ///   - Returns true if the login is correct and false if it is not
   ///
   ///
-  Future<bool> login(String username, String password) async {
+  Future<Map<String, dynamic>> login(String username, String password) async {
     final String apiUrl = '$baseUrl/login';
 
     try {
@@ -1664,15 +1664,15 @@ class APIController {
       );
 
       if (response.statusCode == 200) {
-        return true;
+        return json.decode(response.body);
       } else {
         print("Error al hacer login: ${response.reasonPhrase}");
-        return false;
+        return {};
       }
     } catch (e) {
       print("Error al hacer login: $e");
     }
-    return false;
+    return {};
   }
 
   /// Register a new user
@@ -1687,14 +1687,15 @@ class APIController {
   ///   - Returns true if the register is correct and false if it is not
   ///
   ///
-  Future<bool> register(String username, String password) async {
+  Future<bool> register(String username, String password, String role) async {
     final String apiUrl = '$baseUrl/register';
 
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode({"username": username, "password": password}),
+        body: json
+            .encode({"username": username, "password": password, "role": role}),
       );
 
       if (response.statusCode == 201) {
