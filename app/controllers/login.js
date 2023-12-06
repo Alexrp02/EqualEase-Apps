@@ -43,6 +43,7 @@ const login = async (req, res) => {
 
   res.status(200).json({
     token: token,
+    role: account.role,
   });
 };
 
