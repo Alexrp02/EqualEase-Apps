@@ -57,7 +57,7 @@ async function register(req, res) {
   const accountSnapshot = await getDocs(accountQuery);
 
   if (!accountSnapshot.empty) {
-    res.status(401).json({
+    res.status(409).json({
       error: "User already exists on database",
     });
     return;
@@ -65,7 +65,7 @@ async function register(req, res) {
 
   // Check for missing fields
   if (!username || !password) {
-    res.status(401).json({
+    res.status(400).json({
       error: "Must have username and password field",
     });
     return;
