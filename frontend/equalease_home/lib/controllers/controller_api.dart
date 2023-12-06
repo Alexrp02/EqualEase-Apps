@@ -15,8 +15,8 @@ import '../models/request.dart';
 
 /// class containing all operations with API
 class APIController {
-  // String baseUrl = 'http://localhost:3000/api';
-  String baseUrl = "http://10.0.2.2:3000/api";
+  String baseUrl = 'http://localhost:3000/api';
+  // String baseUrl = "http://10.0.2.2:3000/api";
 
   //-----------------------------------------------------------------------//
   //Subtask operations
@@ -1639,5 +1639,75 @@ class APIController {
       print('Error al obtener todas las aulas: $e');
       throw Exception('No se pudo obtener la lista de aulas del sistema');
     }
+  }
+
+  /// Login a user
+  ///
+  /// Params:
+  ///
+  ///   - [username]: string
+  ///   - [password]: string
+  ///
+  /// Returns: bool
+  ///
+  ///   - Returns true if the login is correct and false if it is not
+  ///
+  ///
+  Future<bool> login(String username, String password) async {
+    final String apiUrl = '$baseUrl/login';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"username": username, "password": password}),
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print("Error al hacer login: ${response.reasonPhrase}");
+        return false;
+      }
+    } catch (e) {
+      print("Error al hacer login: $e");
+    }
+    return false;
+  }
+
+  /// Register a new user
+  ///
+  /// Params:
+  ///
+  ///   - [username]: string
+  ///   - [password]: string
+  ///
+  /// Returns: bool
+  ///
+  ///   - Returns true if the register is correct and false if it is not
+  ///
+  ///
+  Future<bool> register(String username, String password) async {
+    final String apiUrl = '$baseUrl/register';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"username": username, "password": password}),
+      );
+
+      if (response.statusCode == 201) {
+        return true;
+      } else if (response.statusCode == 409) {
+        return false;
+      } else {
+        print("Error al hacer register: ${response.reasonPhrase}");
+        return false;
+      }
+    } catch (e) {
+      print("Error al hacer register: $e");
+    }
+    return false;
   }
 }
