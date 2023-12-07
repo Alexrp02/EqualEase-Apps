@@ -881,7 +881,56 @@ class APIController {
     }
   }
 
-  // create teacher
+  /// Method to create a new teacher with his account in the database
+  ///
+  /// Params:
+  ///
+  ///   -[teacher]: a Teacher object
+  ///
+  ///   -[password]: password of the teacher (String)
+  ///
+  ///   -[role]: role of the teacher (String)
+  ///
+  /// Returns: boolean
+  ///
+  ///   -true if the operation has been done
+  ///
+  ///   -false if the operation has failed
+  ///
+
+  Future<bool> createTeacher(
+      Teacher teacher, String password, String role) async {
+    final String apiUrl = '$baseUrl/teacher';
+
+    Map<String, dynamic> jsonBody = teacher.toMap();
+    jsonBody['password'] = password;
+    jsonBody['role'] = role;
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(jsonBody),
+      );
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos del profesor recién creado,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        teacher.id = body['id'];
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
   /// Private method to update a teacher in the database
   ///
