@@ -350,6 +350,20 @@ paths:
       responses:
         "200":
           description: Teacher updated successfully
+    delete:
+      description: Delete a teacher by his ID and also delete any account with his ID as username and any classrom that had him as assigned teacher
+      tags:
+        - Teacher
+      summary: Delete a teacher by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Teacher deleted successfully
   /teacher/name/{name}:
     get:
       tags:
