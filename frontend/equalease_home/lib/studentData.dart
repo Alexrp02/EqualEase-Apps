@@ -48,15 +48,27 @@ class _StudentDataState extends State<StudentData> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'DATOS DE ${_student!.name.toUpperCase()}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50.0,
-                  ),
-                ),
+                _student != null
+                    ? Text(
+                        'DATOS DE ${_student!.name.toUpperCase()}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0,
+                        ),
+                      )
+                    :
+                    // Si no se ha obtenido el estudiante, se muestra un texto genérico
+                    const Text(
+                        'DATOS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0,
+                        ),
+                      ),
               ],
             ),
           ),
