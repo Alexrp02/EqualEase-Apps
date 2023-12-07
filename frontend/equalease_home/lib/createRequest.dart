@@ -5,7 +5,6 @@ import 'package:equalease_home/models/item.dart';
 import 'package:equalease_home/createItem.dart';
 import 'package:equalease_home/models/request.dart';
 
-
 class CreateRequestPage extends StatefulWidget {
   final String studentId;
 
@@ -32,19 +31,20 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
       profilePicture: '',
       hasRequest: false,
       hasKitchenOrder: false,
+      representation: "text",
     );
-    
+
     // Utilizando then para realizar la operación de obtención de manera asincrónica
     _controller.getStudent(widget.studentId).then((student) {
       setState(() {
         _student = student;
       });
     });
-    
+
     _request = Request(
-          id: '',
-          items: [],
-          assignedStudent: widget.studentId,
+      id: '',
+      items: [],
+      assignedStudent: widget.studentId,
     );
 
     _controller.getRequestsFromStudent(widget.studentId).then((reqList) {
@@ -55,7 +55,6 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
           _request = reqList[0];
         });
       } else {
-        
         //print("La lista de ${_student.name} está vacía");
         _controller.createRequest(_request).then((request) {
           setState(() {
@@ -64,47 +63,47 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
         });
       }
     });
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-              toolbarHeight: 100.0,
-              backgroundColor: Color.fromARGB(255, 161, 182, 236),
-              leading: new IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: new Icon(
-                    Icons.arrow_back,
-                    size: 50.0,
-                  )),
-              title: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'CREACION DE PEDIDO PARA ${_student.name.toUpperCase()}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 50.0,
-                      ),
-                    ),
-                  ],
+        toolbarHeight: 100.0,
+        backgroundColor: Color.fromARGB(255, 161, 182, 236),
+        leading: new IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: new Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            )),
+        title: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'CREACION DE PEDIDO PARA ${_student.name.toUpperCase()}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50.0,
                 ),
               ),
-            ),
+            ],
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Center(
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
             margin: EdgeInsets.only(top: 36.0),
             child: FutureBuilder(
-              future: Future.wait(_request.items.map((itemId) => _controller.getItem(itemId))),
+              future: Future.wait(
+                  _request.items.map((itemId) => _controller.getItem(itemId))),
               builder: (context, AsyncSnapshot<List<Item>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -112,19 +111,16 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.data!.isNotEmpty) {
                   return DataTable(
-
                     columns: [
                       DataColumn(
-                        label: Text('NOMBRE',
-                          style: TextStyle(fontSize: 44.0)),
+                        label: Text('NOMBRE', style: TextStyle(fontSize: 44.0)),
                       ),
                       DataColumn(
-                        label: Text('CANTIDAD',
-                          style: TextStyle(fontSize: 44.0)),
+                        label:
+                            Text('CANTIDAD', style: TextStyle(fontSize: 44.0)),
                       ),
                       DataColumn(
-                        label: Text('TAMAÑO',
-                          style: TextStyle(fontSize: 44.0)),
+                        label: Text('TAMAÑO', style: TextStyle(fontSize: 44.0)),
                       ),
                     ],
                     rows: snapshot.data!.map((item) {
@@ -141,7 +137,10 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
                                     fit: BoxFit.cover,
                                   )
                                 else
-                                  Container(width: 50.0, height: 50.0), // Otra opción: Placeholder de imagen
+                                  Container(
+                                      width: 50.0,
+                                      height:
+                                          50.0), // Otra opción: Placeholder de imagen
                                 SizedBox(width: 8.0),
                                 Text(
                                   item.name,
@@ -172,7 +171,8 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
                       'Aún no se ha asociado ningún objeto al pedido',
                       style: TextStyle(
                         fontSize: 24.0,
-                        color: Colors.grey[700], // Puedes ajustar el color según tus preferencias
+                        color: Colors.grey[
+                            700], // Puedes ajustar el color según tus preferencias
                         fontStyle: FontStyle.italic,
                       ),
                       textAlign: TextAlign.center,
@@ -184,7 +184,6 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
           ),
         ),
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // Navega a la página createItemPage y espera el resultado
@@ -205,5 +204,3 @@ class _CreateRequestPageState extends State<CreateRequestPage> {
     );
   }
 }
-
-
