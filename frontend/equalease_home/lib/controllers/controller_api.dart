@@ -15,8 +15,8 @@ import '../models/request.dart';
 
 /// class containing all operations with API
 class APIController {
-  //String baseUrl = 'http://localhost:3000/api';
-  String baseUrl = "http://10.0.2.2:3000/api";
+  String baseUrl = 'http://localhost:3000/api';
+  // String baseUrl = "http://10.0.2.2:3000/api";
 
   //-----------------------------------------------------------------------//
   //Subtask operations
@@ -1800,7 +1800,7 @@ class APIController {
   ///   - Returns true if the login is correct and false if it is not
   ///
   ///
-  Future<bool> login(String username, String password) async {
+  Future<Map<String, dynamic>> login(String username, String password) async {
     final String apiUrl = '$baseUrl/login';
 
     try {
@@ -1811,15 +1811,15 @@ class APIController {
       );
 
       if (response.statusCode == 200) {
-        return true;
+        return json.decode(response.body);
       } else {
         print("Error al hacer login: ${response.reasonPhrase}");
-        return false;
+        return {};
       }
     } catch (e) {
       print("Error al hacer login: $e");
     }
-    return false;
+    return {};
   }
 
   /// Register a new user

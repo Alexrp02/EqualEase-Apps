@@ -35,73 +35,93 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'INICIO DE SESION DE ADMINISTRADOR',
-          style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 24),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'INICIO DE SESION DE ADMINISTRADOR',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AdminPage(),
+      body: FutureBuilder<List<Teacher>>(
+        future: _controller.getTeachers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            List<Teacher> teachers = snapshot.data!;
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, // Número de columnas en la cuadrícula
+                  crossAxisSpacing: 130.0, // Espaciado horizontal entre elementos
+                  mainAxisSpacing: 130.0, // Espaciado vertical entre elementos
                 ),
-              );
-            },
-            child: Text(
-              'Ingresar como Admin',
-              style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18),
-            ),
-          ),
-          SizedBox(height: 20), // Espaciado entre el botón y la cuadrícula de profesores
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Número de columnas en la cuadrícula
-                crossAxisSpacing: 8.0, // Espaciado horizontal entre elementos
-                mainAxisSpacing: 8.0, // Espaciado vertical entre elementos
-              ),
-              itemCount: _teachers.length,
-              itemBuilder: (context, index) {
-                Teacher teacher = _teachers[index];
-                return InkWell(
-                  onTap: () {
-                    print('Profesor seleccionado: ${teacher.name}');
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EnterAdminPasswordPage(adminId: teacher.id),
+                itemCount: teachers.length,
+                itemBuilder: (context, index) {
+                  Teacher teacher = teachers[index];
+                  ImageProvider profilePicture = AssetImage('teacher.profilePicture');
+                  return GestureDetector(
+                    onTap: () {
+                      print('Profesor seleccionado: ${teacher.name}');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EnterAdminPasswordPage(adminId: teacher.id),
+                        ),
+                      );
+                    },
+                    child: GridTile(
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: profilePicture,
                       ),
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1.0),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    padding: EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Puedes agregar una imagen del profesor aquí si es necesario
-                        Text(
-                          teacher.name,
-                          style: TextStyle(fontSize: 18.0),
+                      footer: Container(
+                        color: Colors.black.withOpacity(0.7),
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        child: Text(
+                          '${teacher.name} ${teacher.surname}',
+                          style: TextStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+                  );
+                },
+              ),
+            );
+          } else {
+            return Text('No hay datos');
+          }
+        },
       ),
+
     );
   }
 }

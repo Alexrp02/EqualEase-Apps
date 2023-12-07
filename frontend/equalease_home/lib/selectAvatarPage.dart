@@ -12,22 +12,42 @@ class SelectAvatarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('¿QUIÉN ERES?', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 24)),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              // Navega a la página de inicio de sesión para administradores
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AdminLoginPage(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '¿QUIÉN ERES?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
+                  ),
                 ),
-              );
-            },
-            child: Text('ADMINISTRADOR', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+              ],
+            ),
           ),
-        ],
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                // Navega a la página de inicio de sesión para administradores
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminLoginPage(),
+                  ),
+                );
+              },
+              child: Text('ADMINISTRADOR', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+            ),
+          ],
+        ),
       ),
       body: FutureBuilder<List<Student>>(
         future: _controller.getStudents(),

@@ -17,8 +17,36 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('INTRODUCE TU CONTRASEÑA', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize:24)),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'ACCESO DE ALUMNO',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Center(
         child: Column(

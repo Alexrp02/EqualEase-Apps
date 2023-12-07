@@ -21,29 +21,29 @@ class MyApp extends StatelessWidget {
       home: OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
           return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(100.0),
-              child: AppBar(
-                toolbarHeight: 100.0,
-                backgroundColor: Color.fromARGB(255, 161, 182, 236),
-                title: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'EQUALEASE HOME',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // appBar: PreferredSize(
+            //   preferredSize: Size.fromHeight(100.0),
+            //   child: AppBar(
+            //     toolbarHeight: 100.0,
+            //     backgroundColor: Color.fromARGB(255, 161, 182, 236),
+            //     title: Center(
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: <Widget>[
+            //           Text(
+            //             'EQUALEASE HOME',
+            //             textAlign: TextAlign.center,
+            //             style: TextStyle(
+            //               color: Colors.white,
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 50.0,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             body: Center(
               //child: _buildLandscapeLayout(context),
               child: SelectAvatarPage(),

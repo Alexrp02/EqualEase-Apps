@@ -25,28 +25,62 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Introduce la Contraseña', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 24)),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: AppBar(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          toolbarHeight: 100.0,
+          leading: new IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: new Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              )),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'ACCESO DE ADMINISTRADOR',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Introduce la contraseña',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 70),
             TextField(
               controller: _passwordController,
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Contraseña',
+                border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 // Realiza la validación de la contraseña
-                bool isValid = await _controller.login(widget.adminId, _passwordController.text);
+                Map<String, dynamic> loginResult = await _controller.login(widget.adminId, _passwordController.text);
 
-                if (isValid) {
+                if (loginResult["token"] != null) {
                   // Contraseña válida, navega a la página de administrador
                   Navigator.push(
                     context,
@@ -75,7 +109,7 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
                   );
                 }
               },
-              child: Text('Ingresar', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+              child: Text('Acceder', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
             ),
           ],
         ),
