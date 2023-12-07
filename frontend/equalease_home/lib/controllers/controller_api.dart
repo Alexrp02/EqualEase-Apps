@@ -932,14 +932,10 @@ class APIController {
   ///
   ///   -[role]: role of the teacher (String)
   ///
-  /// Returns: boolean
-  ///
-  ///   -true if the operation has been done
-  ///
-  ///   -false if the operation has failed
+  /// Returns: String (teacherId)
   ///
 
-  Future<bool> createTeacher(
+  Future<String> createTeacher(
       Teacher teacher, String password, String role) async {
     final String apiUrl = '$baseUrl/teacher';
 
@@ -963,13 +959,42 @@ class APIController {
         // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
         final body = json.decode(response.body);
         teacher.id = body['id'];
-        return true;
+        return teacher.id;
       } else {
-        return false;
+        return "";
       }
     } catch (e) {
       print(e);
-      return false;
+      return "";
+    }
+  }
+
+  /// Method to delete a teacher with his account in the database and every assigned classroom
+  ///
+  /// Params:
+  ///
+  ///   -[teacherId]: a Teacher id
+  ///
+  /// Returns: bool
+  ///
+  ///  -true if the operation has been done
+  ///
+  /// -false if the operation has failed
+  ///
+  Future<bool> deleteTeacher(String teacherId) async {
+    final String apiUrl = '$baseUrl/teacher/id/$teacherId';
+
+    try {
+      final response = await http.delete(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        print('profesor eliminado correctamente');
+        return true; // Devuelve true para indicar que la eliminación fue exitosa.
+      } else {
+        return false; // Devuelve false para indicar que la eliminación falló.
+      }
+    } catch (e) {
+      return false; // Devuelve false en caso de error de red.
     }
   }
 
@@ -1801,4 +1826,26 @@ class APIController {
     }
     return false;
   }
+}
+
+void main() {
+  var controller = APIController();
+  // Create a new teacher and then delete it
+  Teacher teacher = Teacher(
+      id: '',
+      name: 'Juan',
+      surname: 'García',
+      email: 'prueba@gmail.com',
+      students: [],
+      profilePicture: "");
+
+  controller.createTeacher(teacher, "1234", "teacher").then((value) {
+    print("Create teacher with id $value");
+    controller.deleteTeacher(value).then((value) {
+      if (value)
+        print("Teacher deleted");
+      else
+        print("Teacher not deleted");
+    });
+  });
 }
