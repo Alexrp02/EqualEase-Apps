@@ -9,5 +9,6 @@ api.post("/teacher", TeachersController.createTeacher);
 api.get("/teacher/id/:id", TeachersController.getTeacherById);
 api.get("/teacher/name/:name", TeachersController.getTeacherByName);
 api.put("/teacher/id/:id", TeachersController.updateTeacher);
+api.delete("/teacher/id/:id", TeachersController.deleteTeacher);
 
 module.exports = api;
