@@ -40,6 +40,17 @@ async function createStudent(req, res) {
           return;
       }
 
+      // Check different representation fields
+      if (
+            studentData.representation !== "text" &&
+            studentData.representation !== "video" &&
+            studentData.representation !== "image" &&
+            studentData.representation !== "audio"
+        ) {
+            res.status(400).json({ error: "Student's representation can only be: 'text' or 'video' or 'image' or 'audio'" });
+            return;
+        }
+
       // check if student exists. how??
 
       const ref = await addDoc(collection(db, collectionName), studentData.toJSON());
@@ -108,13 +119,26 @@ async function getStudentByName(req, res) {
 async function updateStudent(req, res) {
     const id = req.params.id;
     const updatedData = req.body;
-    console.log(updatedData);
 
     try {
         const ref = doc(db, collectionName, id);
         const snapshot = await getDoc(ref);
 
         if (snapshot.exists()) {
+
+            // Check different representation fields
+            if (updatedData.representation) {
+                if (
+                    updatedData.representation !== "text" &&
+                    updatedData.representation !== "video" &&
+                    updatedData.representation !== "image" &&
+                    updatedData.representation !== "audio"
+                ) {
+                    res.status(400).json({ error: "Student's representation can only be: 'text' or 'video' or 'image' or 'audio'" });
+                    return;
+                }
+            }
+
             // El documento existe, proceder a la actualización
             await updateDoc(ref, updatedData);
             res.status(200).json({ message: `Student with id=${id} updated successfully` });
