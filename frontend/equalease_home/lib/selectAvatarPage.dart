@@ -5,7 +5,6 @@ import 'package:equalease_home/enterPasswordPage.dart'; // Importa la página En
 import 'package:google_fonts/google_fonts.dart';
 import 'adminLoginPage.dart';
 
-
 class SelectAvatarPage extends StatelessWidget {
   final APIController _controller = APIController();
 
@@ -44,7 +43,9 @@ class SelectAvatarPage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('ADMINISTRADOR', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+              child: Text('ADMINISTRADOR',
+                  style:
+                      GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
             ),
           ],
         ),
@@ -58,26 +59,33 @@ class SelectAvatarPage extends StatelessWidget {
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             List<Student> students = snapshot.data!;
-            ImageProvider profilePicture = AssetImage('assets/images/avatar.png');
+            ImageProvider profilePicture =
+                AssetImage('assets/images/avatar.png');
 
             return Padding(
-              padding: const EdgeInsets.all(60.0), // Agrega espacio alrededor del contenido
+              padding: const EdgeInsets.all(
+                  60.0), // Agrega espacio alrededor del contenido
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4, // Número de columnas en la cuadrícula
-                  crossAxisSpacing: 130.0, // Espaciado horizontal entre los elementos
-                  mainAxisSpacing: 130.0, // Espaciado vertical entre los elementos
+                  crossAxisSpacing:
+                      130.0, // Espaciado horizontal entre los elementos
+                  mainAxisSpacing:
+                      130.0, // Espaciado vertical entre los elementos
                 ),
                 itemCount: students.length,
                 itemBuilder: (context, index) {
                   Student student = students[index];
-                  profilePicture = AssetImage('student.profilePicture');
+                  student.profilePicture == ""
+                      ? profilePicture = AssetImage('')
+                      : profilePicture = NetworkImage(student.profilePicture);
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EnterPasswordPage(studentId: student.id),
+                          builder: (context) =>
+                              EnterPasswordPage(studentId: student.id),
                         ),
                       );
                     },
@@ -88,7 +96,8 @@ class SelectAvatarPage extends StatelessWidget {
                       ),
                       footer: Container(
                         color: Colors.black.withOpacity(0.7),
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
                         child: Text(
                           '${student.name} ${student.surname}',
                           style: TextStyle(color: Colors.white),
