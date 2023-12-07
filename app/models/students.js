@@ -8,6 +8,7 @@ class Student {
         this.doneTasks = student.doneTasks || [];
         this.hasRequest = student.hasRequest || false;
         this.hasKitchenOrder = student.hasKitchenOrder || false;
+        this.representation = student.representation || "image";
     }
 
     toJSON() {
@@ -18,7 +19,8 @@ class Student {
             pendingTasks: this.pendingTasks,
             doneTasks: this.doneTasks,
             hasRequest: this.hasRequest,
-            hasKitchenOrder: this.hasKitchenOrder
+            hasKitchenOrder: this.hasKitchenOrder,
+            representation: this.representation
         };
     }
 }
