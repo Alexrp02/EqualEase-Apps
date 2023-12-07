@@ -34,7 +34,7 @@ class Student {
       profilePicture: json['profilePicture'],
       hasRequest: json['hasRequest'] || false,
       hasKitchenOrder: json['hasKitchenOrder'] || false,
-      representation: json['representation']);
+      representation: json['representation'] ?? '');
 
   factory Student.fromJson(String str) => Student.fromMap(json.decode(str));
 
@@ -76,7 +76,8 @@ class Student {
       'doneTasks': doneTasks,
       'profilePicture': profilePicture,
       'hasRequest': hasRequest,
-      'hasKitchenOrder': hasKitchenOrder
+      'hasKitchenOrder': hasKitchenOrder,
+      'representation': representation
     };
     return json.encode(data);
   }

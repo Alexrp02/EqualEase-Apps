@@ -14,12 +14,13 @@ class StudentData extends StatefulWidget {
 class _StudentDataState extends State<StudentData> {
   // Simulando la obtención de datos del estudiante
   Student? _student;
-  APIController _controller =
-      APIController(); // No tengo acceso a este controlador, así que lo he comentado para simular la lógica
+  APIController _controller = APIController(); 
 
   @override
   void initState() {
     super.initState();
+
+    _student = null;
 
     _controller.getStudent(widget._id).then((student) {
       setState(() {

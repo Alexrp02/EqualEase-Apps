@@ -99,7 +99,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    _student!.name,
+                    _student!.name.toUpperCase(),
                     style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   Expanded(

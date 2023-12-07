@@ -13,7 +13,7 @@ class SelectAvatarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('¿QUIEN ERES?', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize:24)),
+        title: Text('¿QUIÉN ERES?', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 24)),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -40,42 +40,45 @@ class SelectAvatarPage extends StatelessWidget {
             List<Student> students = snapshot.data!;
             ImageProvider profilePicture = AssetImage('assets/images/avatar.png');
 
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4, // Número de columnas en la cuadrícula
-                crossAxisSpacing: 130.0, // Espaciado horizontal entre los elementos
-                mainAxisSpacing: 130.0, // Espaciado vertical entre los elementos
+            return Padding(
+              padding: const EdgeInsets.all(60.0), // Agrega espacio alrededor del contenido
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, // Número de columnas en la cuadrícula
+                  crossAxisSpacing: 130.0, // Espaciado horizontal entre los elementos
+                  mainAxisSpacing: 130.0, // Espaciado vertical entre los elementos
+                ),
+                itemCount: students.length,
+                itemBuilder: (context, index) {
+                  Student student = students[index];
+                  profilePicture = AssetImage('student.profilePicture');
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EnterPasswordPage(studentId: student.id),
+                        ),
+                      );
+                    },
+                    child: GridTile(
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundImage: profilePicture,
+                      ),
+                      footer: Container(
+                        color: Colors.black.withOpacity(0.7),
+                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        child: Text(
+                          '${student.name} ${student.surname}',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-              itemCount: students.length,
-              itemBuilder: (context, index) {
-                Student student = students[index];
-                profilePicture = AssetImage('student.profilePicture');
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EnterPasswordPage(studentId: student.id),
-                      ),
-                    );
-                  },
-                  child: GridTile(
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundImage: profilePicture,
-                    ),
-                    footer: Container(
-                      color: Colors.black.withOpacity(0.7),
-                      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      child: Text(
-                        '${student.name} ${student.surname}',
-                        style: TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                );
-              },
             );
           } else {
             return Text('No hay datos');
