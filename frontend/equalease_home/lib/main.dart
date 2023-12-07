@@ -5,6 +5,7 @@ import 'tasks.dart';
 import 'adminPage.dart';
 import 'controllers/controller_api.dart';
 import 'selectAvatarPage.dart';
+import 'adminLoginPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
               ),
             ),
             body: Center(
-              child: _buildLandscapeLayout(context),
+              //child: _buildLandscapeLayout(context),
+              child: SelectAvatarPage(),
             ),
           );
         },
@@ -77,7 +79,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminPage()),
+                  MaterialPageRoute(builder: (context) => AdminLoginPage()),
                 );
               },
               child: const Text('ADMINISTRADOR'),
@@ -101,12 +103,6 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => StudentLandingPage(
-                //           idStudent: "6gsy3HsO0GQLwVcPvySA")),
-                // );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
