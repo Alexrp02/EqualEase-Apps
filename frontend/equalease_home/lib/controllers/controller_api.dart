@@ -857,6 +857,38 @@ class APIController {
   //-----------------------------------------------------------------------//
   // Teacher operations
 
+  /// Get all the teachers from the database
+  ///
+  /// Params:
+  ///
+  ///   -
+  ///
+  /// Returns: List[Teacher]
+  ///
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
+  Future<List<Teacher>> getTeachers() async {
+    final String apiUrl = '$baseUrl/teacher';
+
+    try {
+      List<Teacher> teachers = [];
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // Analizar la respuesta JSON
+        final List<dynamic> list = json.decode(response.body);
+        for (var element in list) {
+          teachers.add(Teacher.fromMap(element));
+        }
+      } else {
+        throw Exception('Error al obtener profesores: ${response.statusCode}');
+      }
+
+      return teachers;
+    } catch (e) {
+      print('Error al obtener todos los profesores: $e');
+      throw Exception('No se pudo obtener la lista de profesores del sistema');
+    }
+  }
+
   /// Get teacher by identifier from the database
   ///
   /// Params:
@@ -922,7 +954,81 @@ class APIController {
     }
   }
 
-  // create teacher
+  /// Method to create a new teacher with his account in the database
+  ///
+  /// Params:
+  ///
+  ///   -[teacher]: a Teacher object
+  ///
+  ///   -[password]: password of the teacher (String)
+  ///
+  ///   -[role]: role of the teacher (String)
+  ///
+  /// Returns: String (teacherId)
+  ///
+
+  Future<String> createTeacher(
+      Teacher teacher, String password, String role) async {
+    final String apiUrl = '$baseUrl/teacher';
+
+    Map<String, dynamic> jsonBody = teacher.toMap();
+    jsonBody['password'] = password;
+    jsonBody['role'] = role;
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(jsonBody),
+      );
+
+      if (response.statusCode == 201) {
+        // La solicitud POST fue exitosa.
+        // La respuesta incluye los datos del profesor recién creado,
+        // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
+        // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
+        final body = json.decode(response.body);
+        teacher.id = body['id'];
+        return teacher.id;
+      } else {
+        return "";
+      }
+    } catch (e) {
+      print(e);
+      return "";
+    }
+  }
+
+  /// Method to delete a teacher with his account in the database and every assigned classroom
+  ///
+  /// Params:
+  ///
+  ///   -[teacherId]: a Teacher id
+  ///
+  /// Returns: bool
+  ///
+  ///  -true if the operation has been done
+  ///
+  /// -false if the operation has failed
+  ///
+  Future<bool> deleteTeacher(String teacherId) async {
+    final String apiUrl = '$baseUrl/teacher/id/$teacherId';
+
+    try {
+      final response = await http.delete(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        print('profesor eliminado correctamente');
+        return true; // Devuelve true para indicar que la eliminación fue exitosa.
+      } else {
+        return false; // Devuelve false para indicar que la eliminación falló.
+      }
+    } catch (e) {
+      return false; // Devuelve false en caso de error de red.
+    }
+  }
 
   /// Private method to update a teacher in the database
   ///
@@ -1752,4 +1858,41 @@ class APIController {
     }
     return false;
   }
+}
+
+void main() {
+  var controller = APIController();
+  // Create a new teacher and then delete it
+  Teacher teacher = Teacher(
+      id: '',
+      name: 'Juan',
+      surname: 'García',
+      email: 'prueba@gmail.com',
+      students: [],
+      profilePicture: "");
+
+  controller.createTeacher(teacher, "1234", "teacher").then((teacherId) {
+    print("Create teacher with id $teacherId");
+    // Print all the teachers
+    controller.getTeachers().then((value) {
+      print("Teachers:");
+      for (Teacher teacher in value) {
+        print(teacher.toMap());
+      }
+      // Delete the created teacher
+      controller.deleteTeacher(teacherId).then((value) {
+        if (value) {
+          print("Teacher deleted");
+          // Print all teachers again
+          controller.getTeachers().then((value) {
+            print("Teachers:");
+            for (Teacher teacher in value) {
+              print(teacher.toMap());
+            }
+          });
+        } else
+          print("Teacher not deleted");
+      });
+    });
+  });
 }
