@@ -14,6 +14,25 @@ const Teacher = require("../models/teachers.js");
 
 const collectionName = "teachers";
 
+// Get all teachers
+async function getTeachers(req, res) {
+  try {
+    const teachers = [];
+    const querySnapshot = await getDocs(collection(db, collectionName));
+
+    querySnapshot.forEach((doc) => {
+      const teacherData = doc.data();
+      const teacher = new Teacher(teacherData);
+      teachers.push({ id: doc.id, ...teacher });
+    });
+
+    res.status(200).json(teachers);
+  } catch (error) {
+    console.error("Error getting teachers from Firestore:", error);
+    res.status(500).send("Server error.");
+  }
+}
+
 // Create a teacher
 async function createTeacher(req, res) {
   const teacherData = new Teacher(req.body);
@@ -182,16 +201,16 @@ async function deleteTeacher(req, res) {
       }
 
       // Eliminamos cualquier clase con el profesor asignado
-        const classesQuery = query(
-            collection(db, "classrooms"),
-            where("assignedTeacher", "==", id)
-        );
-        const classesQuerySnapshot = await getDocs(classesQuery);
-        if (!classesQuerySnapshot.empty) {
-            classesQuerySnapshot.forEach(async (doc) => {
-                await deleteDoc(doc.ref);
-            });
-        }
+      const classesQuery = query(
+        collection(db, "classrooms"),
+        where("assignedTeacher", "==", id)
+      );
+      const classesQuerySnapshot = await getDocs(classesQuery);
+      if (!classesQuerySnapshot.empty) {
+        classesQuerySnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+      }
       res
         .status(200)
         .json({ message: `Teacher with id=${id} deleted successfully` });
@@ -207,6 +226,7 @@ async function deleteTeacher(req, res) {
 
 // Exportamos las funciones
 module.exports = {
+  getTeachers,
   createTeacher,
   getTeacherById,
   getTeacherByName,
