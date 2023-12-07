@@ -27,6 +27,11 @@ async function createTeacher(req, res) {
             return;
         }
 
+        if(!req.body.password) {
+            res.status(400).json({ error: "Teacher's password cannot be empty." });
+            return;
+        }
+
         // Verificar si el profesor ya existe.
         // Para ello se comprueba que el email no coincida.
         const validationQuery = query(collection(db, collectionName), where("email", "==", teacherData.email));
@@ -38,8 +43,11 @@ async function createTeacher(req, res) {
         } else {
             // Si no hay resultados, procedemos a crearla
             const ref = await addDoc(collection(db, collectionName), teacherData.toJSON());
+
+            // Añadimos el id del profesor con su contraseña a la base de datos de autenticación
+            const refAuth = await addDoc(collection(db, "accounts"), {id: ref.id, password: req.body.password, role: req.body.role || "teacher"});
                    
-            console.log(`Created new teacher (name: ${teacherData.name}, surname: ${teacherData.surname}, email: ${teacherData.email}).`);
+            console.log(`Created new teacher (name: ${teacherData.name}, surname: ${teacherData.surname}, email: ${teacherData.email}, password: ${req.body.password}).`);
             res.status(201).json({id: ref.id, ...teacherData });
         }
 

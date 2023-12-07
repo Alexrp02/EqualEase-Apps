@@ -4,10 +4,9 @@ info:
   version: 1.0.0
   description: API para gestionar las alumnos, profesores y tareas y subtareas
 servers:
-  - url: 'http://localhost:3000/api'
+  - url: "http://localhost:3000/api"
     description: Local server
 paths:
-
   # Classroom
   /classroom:
     get:
@@ -15,14 +14,14 @@ paths:
         - Classroom
       summary: Retrieve a list of all classrooms
       responses:
-        '200':
+        "200":
           description: A list of classrooms
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Classroom'
+                  $ref: "#/components/schemas/Classroom"
 
   /classroom/{id}:
     get:
@@ -36,7 +35,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Classroom retrieved successfully
 
   # Student
@@ -50,23 +49,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Student'
+              $ref: "#/components/schemas/Student"
       responses:
-        '201':
+        "201":
           description: Student created successfully
     get:
       tags:
         - Student
       summary: Retrieve a list of students
       responses:
-        '200':
+        "200":
           description: A list of students
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Student'
+                  $ref: "#/components/schemas/Student"
   /student/id/{id}:
     get:
       tags:
@@ -79,7 +78,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Student retrieved successfully
     put:
       tags:
@@ -96,9 +95,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Student'
+              $ref: "#/components/schemas/Student"
       responses:
-        '200':
+        "200":
           description: Student updated successfully
   /student/name/{name}:
     get:
@@ -112,7 +111,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Student retrieved successfully
 
   # Subtasks
@@ -126,23 +125,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Subtask'
+              $ref: "#/components/schemas/Subtask"
       responses:
-        '201':
+        "201":
           description: Subtask created successfully
     get:
       tags:
         - Subtask
       summary: Retrieve all subtasks
       responses:
-        '200':
+        "200":
           description: A list of subtasks
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Subtask'
+                  $ref: "#/components/schemas/Subtask"
   /subtask/id/{id}:
     get:
       tags:
@@ -155,7 +154,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Subtask retrieved successfully
     put:
       tags:
@@ -172,9 +171,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Subtask'
+              $ref: "#/components/schemas/Subtask"
       responses:
-        '200':
+        "200":
           description: Subtask updated successfully
     delete:
       tags:
@@ -187,7 +186,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Subtask deleted successfully
   # Tasks
   /task:
@@ -200,23 +199,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Task'
+              $ref: "#/components/schemas/Task"
       responses:
-        '201':
+        "201":
           description: Task created successfully
     get:
       tags:
         - Task
       summary: Retrieve all tasks
       responses:
-        '200':
+        "200":
           description: A list of all tasks
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Task'
+                  $ref: "#/components/schemas/Task"
   /task/id/{id}:
     get:
       tags:
@@ -229,7 +228,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Task retrieved successfully
     put:
       tags:
@@ -246,9 +245,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Task'
+              $ref: "#/components/schemas/Task"
       responses:
-        '200':
+        "200":
           description: Task updated successfully
     delete:
       tags:
@@ -261,7 +260,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Task deleted successfully
   /task/type/{type}:
     get:
@@ -275,7 +274,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Tasks retrieved successfully
   /task/title/{title}:
     get:
@@ -289,7 +288,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Task retrieved successfully
 
   # Teachers
@@ -298,14 +297,25 @@ paths:
       tags:
         - Teacher
       summary: Create a new teacher
+      description: Create a new teacher with the given values and also create its account
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Teacher'
+              allOf:
+                - $ref: "#/components/schemas/Teacher"
+                - type: object
+                  properties:
+                    password:
+                      type: string
+                    role:
+                      type: string
+                      enum:
+                        - teacher
+                        - admin
       responses:
-        '201':
+        "201":
           description: Teacher created successfully
   /teacher/id/{id}:
     get:
@@ -319,7 +329,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Teacher retrieved successfully
     put:
       tags:
@@ -336,9 +346,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Teacher'
+              $ref: "#/components/schemas/Teacher"
       responses:
-        '200':
+        "200":
           description: Teacher updated successfully
   /teacher/name/{name}:
     get:
@@ -352,7 +362,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Teacher retrieved successfully
 
   # Item
@@ -366,9 +376,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Item'
+              $ref: "#/components/schemas/Item"
       responses:
-        '201':
+        "201":
           description: Item created successfully
 
   /item/{id}:
@@ -383,7 +393,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Item retrieved successfully
 
     put:
@@ -401,9 +411,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Item'
+              $ref: "#/components/schemas/Item"
       responses:
-        '200':
+        "200":
           description: Item updated successfully
 
     delete:
@@ -417,7 +427,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Item deleted successfully
 
   # Request
@@ -427,14 +437,14 @@ paths:
         - Request
       summary: Get all requests
       responses:
-        '200':
+        "200":
           description: A list of requests
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Request'
+                  $ref: "#/components/schemas/Request"
 
     post:
       tags:
@@ -445,9 +455,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Request'
+              $ref: "#/components/schemas/Request"
       responses:
-        '201':
+        "201":
           description: Request created successfully
 
   /request/id/{id}:
@@ -462,7 +472,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Request retrieved successfully
 
     put:
@@ -480,9 +490,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Request'
+              $ref: "#/components/schemas/Request"
       responses:
-        '200':
+        "200":
           description: Request updated successfully
 
     delete:
@@ -496,7 +506,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Request deleted successfully
 
   /request/student/{id}:
@@ -511,9 +521,9 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Requests retrieved successfully
-  /request/studentAll/{id}: 
+  /request/studentAll/{id}:
     get:
       tags:
         - Request
@@ -525,7 +535,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Requests retrieved successfully
 
   # Menu
@@ -535,14 +545,14 @@ paths:
         - Menu
       summary: Get all menus
       responses:
-        '200':
+        "200":
           description: A list of all menus
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Menu'
+                  $ref: "#/components/schemas/Menu"
 
     post:
       tags:
@@ -553,9 +563,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: "#/components/schemas/Menu"
       responses:
-        '201':
+        "201":
           description: Menu created successfully
 
   /menu/{id}:
@@ -570,7 +580,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Menu retrieved successfully
 
     put:
@@ -588,9 +598,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Menu'
+              $ref: "#/components/schemas/Menu"
       responses:
-        '200':
+        "200":
           description: Menu updated successfully
 
   # KitchenOrder
@@ -600,14 +610,14 @@ paths:
         - KitchenOrder
       summary: Get all kitchen orders
       responses:
-        '200':
+        "200":
           description: A list of all kitchen orders
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/KitchenOrder'
+                  $ref: "#/components/schemas/KitchenOrder"
 
     post:
       tags:
@@ -618,9 +628,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/KitchenOrder'
+              $ref: "#/components/schemas/KitchenOrder"
       responses:
-        '201':
+        "201":
           description: Kitchen order created successfully
 
   /kitchen-order/id/{id}:
@@ -635,7 +645,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Kitchen order retrieved successfully
 
     put:
@@ -653,9 +663,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/KitchenOrder'
+              $ref: "#/components/schemas/KitchenOrder"
       responses:
-        '200':
+        "200":
           description: Kitchen order updated successfully
   /kitchen-order/classroom/:classroomID:
     get:
@@ -669,7 +679,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Kitchen order retrieved successfully
 
   # Kitchen
@@ -679,14 +689,14 @@ paths:
         - Kitchen
       summary: Get all kitchen requests
       responses:
-        '200':
+        "200":
           description: A list of all kitchen requests
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Kitchen'
+                  $ref: "#/components/schemas/Kitchen"
 
     post:
       tags:
@@ -697,9 +707,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Kitchen'
+              $ref: "#/components/schemas/Kitchen"
       responses:
-        '201':
+        "201":
           description: Kitchen request created successfully
 
   /kitchen/id/{id}:
@@ -714,7 +724,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Kitchen request retrieved successfully
 
     put:
@@ -732,9 +742,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Kitchen'
+              $ref: "#/components/schemas/Kitchen"
       responses:
-        '200':
+        "200":
           description: Kitchen request updated successfully
 
     delete:
@@ -748,7 +758,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Kitchen request deleted successfully
 
   /kitchen/student/{id}:
@@ -763,9 +773,9 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Kitchen requests retrieved successfully
-  
+
   /login:
     post:
       tags:
@@ -783,7 +793,7 @@ paths:
                 password:
                   type: string
       responses:
-        '200':
+        "200":
           description: Login successful
           content:
             application/json:
@@ -793,7 +803,7 @@ paths:
                   token:
                     type: string
                     format: JWT
-        '401':
+        "401":
           description: Unauthorized
   /register:
     post:
@@ -818,11 +828,10 @@ paths:
                     - student
                     - admin
       responses:
-        '201':
+        "201":
           description: Register successful
-        '409':
+        "409":
           description: Username already exists
-
 
 components:
   schemas:
@@ -861,7 +870,7 @@ components:
                     - Thursday
                     - Friday
                     - Saturday
-                    - Sunday       
+                    - Sunday
         doneTasks:
           type: array
           items:
@@ -1046,5 +1055,3 @@ components:
         date:
           type: string
           format: YYYY-MM-DD
-
-
