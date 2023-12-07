@@ -857,6 +857,38 @@ class APIController {
   //-----------------------------------------------------------------------//
   // Teacher operations
 
+  /// Get all the teachers from the database
+  ///
+  /// Params:
+  ///
+  ///   -
+  ///
+  /// Returns: List[Teacher]
+  ///
+  /// Exceptions: throws exceptions if problems are detected while trying to connect with the API
+  Future<List<Teacher>> getTeachers() async {
+    final String apiUrl = '$baseUrl/teacher';
+
+    try {
+      List<Teacher> teachers = [];
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        // Analizar la respuesta JSON
+        final List<dynamic> list = json.decode(response.body);
+        for (var element in list) {
+          teachers.add(Teacher.fromMap(element));
+        }
+      } else {
+        throw Exception('Error al obtener profesores: ${response.statusCode}');
+      }
+
+      return teachers;
+    } catch (e) {
+      print('Error al obtener todos los profesores: $e');
+      throw Exception('No se pudo obtener la lista de profesores del sistema');
+    }
+  }
+
   /// Get teacher by identifier from the database
   ///
   /// Params:
@@ -1839,13 +1871,28 @@ void main() {
       students: [],
       profilePicture: "");
 
-  controller.createTeacher(teacher, "1234", "teacher").then((value) {
-    print("Create teacher with id $value");
-    controller.deleteTeacher(value).then((value) {
-      if (value)
-        print("Teacher deleted");
-      else
-        print("Teacher not deleted");
+  controller.createTeacher(teacher, "1234", "teacher").then((teacherId) {
+    print("Create teacher with id $teacherId");
+    // Print all the teachers
+    controller.getTeachers().then((value) {
+      print("Teachers:");
+      for (Teacher teacher in value) {
+        print(teacher.toMap());
+      }
+      // Delete the created teacher
+      controller.deleteTeacher(teacherId).then((value) {
+        if (value) {
+          print("Teacher deleted");
+          // Print all teachers again
+          controller.getTeachers().then((value) {
+            print("Teachers:");
+            for (Teacher teacher in value) {
+              print(teacher.toMap());
+            }
+          });
+        } else
+          print("Teacher not deleted");
+      });
     });
   });
 }
