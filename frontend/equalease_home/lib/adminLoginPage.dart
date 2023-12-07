@@ -1,3 +1,4 @@
+import 'package:equalease_home/enterAdminPasswordPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:equalease_home/adminPage.dart';
@@ -14,16 +15,16 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   List<Teacher> _teachers = [];
 
   @override
-  // void initState() {
-  //   super.initState();
-  //   _loadTeachers();
-  // }
+  void initState() {
+    super.initState();
+    _loadTeachers();
+  }
 
   Future<void> _loadTeachers() async {
     try {
-      //List<Teacher> teachers = await _controller.getTeachers();
+      List<Teacher> teachers = await _controller.getTeachers();
       setState(() {
-        //_teachers = teachers;
+        _teachers = teachers;
       });
     } catch (error) {
       print('Error al cargar profesores: $error');
@@ -69,8 +70,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 Teacher teacher = _teachers[index];
                 return InkWell(
                   onTap: () {
-                    // Lógica para manejar el toque en un profesor específico
                     print('Profesor seleccionado: ${teacher.name}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EnterAdminPasswordPage(adminId: teacher.id),
+                      ),
+                    );
                   },
                   child: Container(
                     decoration: BoxDecoration(
