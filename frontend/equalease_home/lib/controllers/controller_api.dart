@@ -643,7 +643,7 @@ class APIController {
 
       for (Map<String, dynamic> taskId in student.doneTasks) {
         try {
-          Task task = await getTask(taskId["taskId"]);
+          Task task = await getTask(taskId["id"]);
           list.add(task);
         } catch (e) {
           print('Error al obtener la tarea $taskId: $e');
@@ -710,14 +710,15 @@ class APIController {
     // Obtiene el estudiante.
     Student student = await getStudent(studentId);
 
+    Map<String, dynamic> taskInfo =
+        student.pendingTasks.singleWhere((task) => taskId == task['id']);
+    taskInfo["doneDate"] = DateTime.now().toUtc().toString().split(" ")[0];
+
     // Modifica el array de pending tasks -> elimina la tarea con id = taskId.
     student.pendingTasks.removeWhere((task) => taskId == task['id']);
 
     // Modifica el array de done tasks -> inserta el id de la tarea taskId.
-    student.doneTasks.add({
-      "taskId": taskId,
-      "doneDate": DateTime.now().toUtc().toString().split(" ")[0]
-    });
+    student.doneTasks.add(taskInfo);
 
     // Crea el JSON con las tareas actualizadas.
     Map<String, dynamic> requestJson = {
