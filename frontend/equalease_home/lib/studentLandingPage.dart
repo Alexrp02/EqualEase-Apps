@@ -178,7 +178,10 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentPage()),
+                  MaterialPageRoute(
+                      builder: (context) => StudentPage(
+                            student: student,
+                          )),
                 );
               },
               child: const Text('TAREAS'),

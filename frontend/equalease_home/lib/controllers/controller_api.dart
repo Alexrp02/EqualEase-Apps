@@ -641,9 +641,9 @@ class APIController {
 
       List<Task> list = [];
 
-      for (String taskId in student.doneTasks) {
+      for (Map<String, dynamic> taskId in student.doneTasks) {
         try {
-          Task task = await getTask(taskId);
+          Task task = await getTask(taskId["taskId"]);
           list.add(task);
         } catch (e) {
           print('Error al obtener la tarea $taskId: $e');
@@ -714,7 +714,10 @@ class APIController {
     student.pendingTasks.removeWhere((task) => taskId == task['id']);
 
     // Modifica el array de done tasks -> inserta el id de la tarea taskId.
-    student.doneTasks.add(taskId);
+    student.doneTasks.add({
+      "taskId": taskId,
+      "doneDate": DateTime.now().toUtc().toString().split(" ")[0]
+    });
 
     // Crea el JSON con las tareas actualizadas.
     Map<String, dynamic> requestJson = {
