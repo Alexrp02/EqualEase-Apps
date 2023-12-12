@@ -1,6 +1,7 @@
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 
 class StudentData extends StatefulWidget {
   final String _id;
@@ -11,14 +12,18 @@ class StudentData extends StatefulWidget {
   _StudentDataState createState() => _StudentDataState();
 }
 
-class _StudentDataState extends State<StudentData> {
+class _StudentDataState extends State<StudentData>
+    with TickerProviderStateMixin {
   // Simulando la obtención de datos del estudiante
   Student? _student;
-  APIController _controller = APIController(); 
+  APIController _controller = APIController();
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
+
+    tabController = TabController(length: 2, vsync: this);
 
     _student = null;
 
@@ -27,6 +32,12 @@ class _StudentDataState extends State<StudentData> {
         _student = student;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -75,10 +86,35 @@ class _StudentDataState extends State<StudentData> {
           ),
         ),
       ),
-      body: Center(
-        child: _student != null
-            ? buildStudentInfo()
-            : Text('No se encontraron datos del estudiante'),
+      body: TabBarView(controller: tabController, children: [
+        Center(
+          child: _student != null
+              ? buildStudentInfo()
+              : Text('No se encontraron datos del estudiante'),
+        ),
+        Center(
+          child: _student != null
+              ? Text('Estadísticas del estudiante')
+              : Text('No se encontraron datos del estudiante'),
+        ),
+      ]),
+      bottomNavigationBar: GFTabBar(
+        length: 2,
+        controller: tabController,
+        tabs: const [
+          Tab(
+            icon: Icon(Icons.person),
+            child: Text(
+              "Datos",
+            ),
+          ),
+          Tab(
+            icon: Icon(Icons.bar_chart),
+            child: Text(
+              "Estadísticas",
+            ),
+          ),
+        ],
       ),
     );
   }
