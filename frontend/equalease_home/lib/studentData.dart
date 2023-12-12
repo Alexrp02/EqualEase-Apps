@@ -2,6 +2,7 @@ import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StudentData extends StatefulWidget {
   final String _id;
@@ -18,12 +19,23 @@ class _StudentDataState extends State<StudentData>
   Student? _student;
   APIController _controller = APIController();
   late TabController tabController;
+  late Map<String, dynamic> data;
 
   @override
   void initState() {
     super.initState();
 
     tabController = TabController(length: 2, vsync: this);
+
+    data = {
+      'Enero': 10,
+      'Febrero': 20,
+      'Marzo': 30,
+      'Abril': 40,
+      'Mayo': 30,
+      'Junio': 20,
+      'Julio': 10,
+    };
 
     _student = null;
 
@@ -90,15 +102,30 @@ class _StudentDataState extends State<StudentData>
         Center(
           child: _student != null
               ? buildStudentInfo()
-              : Text('No se encontraron datos del estudiante'),
+              : const Text('No se encontraron datos del estudiante'),
         ),
         Center(
           child: _student != null
-              ? Text('Estadísticas del estudiante')
-              : Text('No se encontraron datos del estudiante'),
+              ? SfCartesianChart(
+                  primaryXAxis: CategoryAxis(),
+                  primaryYAxis:
+                      NumericAxis(minimum: 0, maximum: 40, interval: 10),
+                  tooltipBehavior: TooltipBehavior(enable: true),
+                  series: <ChartSeries<MapEntry<String, dynamic>, dynamic>>[
+                      ColumnSeries<MapEntry<String, dynamic>, String>(
+                          dataSource: data.entries.toList(),
+                          xValueMapper: (MapEntry<String, dynamic> entry, _) =>
+                              entry.key,
+                          yValueMapper: (MapEntry<String, dynamic> entry, _) =>
+                              entry.value,
+                          name: 'Gold',
+                          color: const Color.fromARGB(255, 161, 182, 236))
+                    ])
+              : const Text('No se encontraron datos del estudiante'),
         ),
       ]),
       bottomNavigationBar: GFTabBar(
+        tabBarColor: const Color.fromARGB(255, 161, 182, 236),
         length: 2,
         controller: tabController,
         tabs: const [
