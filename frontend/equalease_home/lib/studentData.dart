@@ -44,6 +44,11 @@ class _StudentDataState extends State<StudentData>
         _student = student;
       });
     });
+    _controller.getStudentStatistics(widget._id).then((studentData) {
+      setState(() {
+        data = studentData;
+      });
+    });
   }
 
   @override
@@ -109,16 +114,20 @@ class _StudentDataState extends State<StudentData>
               ? SfCartesianChart(
                   primaryXAxis: CategoryAxis(),
                   primaryYAxis:
-                      NumericAxis(minimum: 0, maximum: 40, interval: 10),
+                      NumericAxis(minimum: 0, maximum: 100, interval: 5),
                   tooltipBehavior: TooltipBehavior(enable: true),
                   series: <ChartSeries<MapEntry<String, dynamic>, dynamic>>[
                       ColumnSeries<MapEntry<String, dynamic>, String>(
-                          dataSource: data.entries.toList(),
+                          dataSource: data["percentageDone"]
+                              .entries
+                              .toList()
+                              .reversed
+                              .toList(),
                           xValueMapper: (MapEntry<String, dynamic> entry, _) =>
                               entry.key,
                           yValueMapper: (MapEntry<String, dynamic> entry, _) =>
                               entry.value,
-                          name: 'Gold',
+                          name: 'Porcentaje',
                           color: const Color.fromARGB(255, 161, 182, 236))
                     ])
               : const Text('No se encontraron datos del estudiante'),
@@ -126,6 +135,8 @@ class _StudentDataState extends State<StudentData>
       ]),
       bottomNavigationBar: GFTabBar(
         tabBarColor: const Color.fromARGB(255, 161, 182, 236),
+        indicatorColor: const Color.fromARGB(255, 83, 120, 214),
+        indicatorWeight: 5,
         length: 2,
         controller: tabController,
         tabs: const [

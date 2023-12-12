@@ -1862,41 +1862,66 @@ class APIController {
     }
     return false;
   }
+
+  // Get the statistics of a student given its id
+  Future<Map<String, dynamic>> getStudentStatistics(String studentId) async {
+    final String apiUrl = '$baseUrl/student/stats/$studentId';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Si la solicitud se completó con éxito (código de respuesta 200), analiza la respuesta JSON.
+        Map<String, dynamic> statistics = json.decode(response.body);
+        return statistics;
+      } else {
+        print(response.statusCode);
+        throw Exception(
+            'Error al obtener las estadísticas del estudiante(id=$studentId): ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
 }
 
 void main() {
   var controller = APIController();
-  // Create a new teacher and then delete it
-  Teacher teacher = Teacher(
-      id: '',
-      name: 'Juan',
-      surname: 'García',
-      email: 'prueba@gmail.com',
-      students: [],
-      profilePicture: "");
+  // // Create a new teacher and then delete it
+  // Teacher teacher = Teacher(
+  //     id: '',
+  //     name: 'Juan',
+  //     surname: 'García',
+  //     email: 'prueba@gmail.com',
+  //     students: [],
+  //     profilePicture: "");
 
-  controller.createTeacher(teacher, "1234", "teacher").then((teacherId) {
-    print("Create teacher with id $teacherId");
-    // Print all the teachers
-    controller.getTeachers().then((value) {
-      print("Teachers:");
-      for (Teacher teacher in value) {
-        print(teacher.toMap());
-      }
-      // Delete the created teacher
-      controller.deleteTeacher(teacherId).then((value) {
-        if (value) {
-          print("Teacher deleted");
-          // Print all teachers again
-          controller.getTeachers().then((value) {
-            print("Teachers:");
-            for (Teacher teacher in value) {
-              print(teacher.toMap());
-            }
-          });
-        } else
-          print("Teacher not deleted");
-      });
-    });
-  });
+  // controller.createTeacher(teacher, "1234", "teacher").then((teacherId) {
+  //   print("Create teacher with id $teacherId");
+  //   // Print all the teachers
+  //   controller.getTeachers().then((value) {
+  //     print("Teachers:");
+  //     for (Teacher teacher in value) {
+  //       print(teacher.toMap());
+  //     }
+  //     // Delete the created teacher
+  //     controller.deleteTeacher(teacherId).then((value) {
+  //       if (value) {
+  //         print("Teacher deleted");
+  //         // Print all teachers again
+  //         controller.getTeachers().then((value) {
+  //           print("Teachers:");
+  //           for (Teacher teacher in value) {
+  //             print(teacher.toMap());
+  //           }
+  //         });
+  //       } else
+  //         print("Teacher not deleted");
+  //     });
+  //   });
+  // });
+
+  controller
+      .getStudentStatistics("6gsy3HsO0GQLwVcPvySA")
+      .then((value) => print(value));
 }
