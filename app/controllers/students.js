@@ -258,7 +258,7 @@ async function getStatisticsFromStudentId(req, res) {
     if (snapshot.exists()) {
       const studentData = snapshot.data();
       const student = new Student(studentData);
-      let response = {};
+      let response = {totalDays: {}, totalDone: {}, percentageDone: {}};
 
       // Get the number of tasks done in the last 7 days
       let doneTasksLastWeek = 0;
@@ -273,9 +273,13 @@ async function getStatisticsFromStudentId(req, res) {
         );
         let doneTasks = student.doneTasks.filter((task) => {
           let taskDate = new Date(task.doneDate);
-          return taskDate <= lastWeek && new Date(task.startDate) <= lastWeek && new Date(task.endDate) >= lastWeek;
+          return (
+            taskDate <= lastWeek &&
+            new Date(task.startDate) <= lastWeek &&
+            new Date(task.endDate) >= lastWeek
+          );
         });
-        response["doneTasksLast" + i] = doneTasks.length;
+        response[`totalDone`][lastWeek.toISOString().split("T")[0]] = doneTasks.length;
       }
 
       // Check for the pending tasks of every day and add the percentage of done tasks
@@ -292,16 +296,44 @@ async function getStatisticsFromStudentId(req, res) {
         let notDoneTasks = student.doneTasks.filter((task) => {
           let taskDate = new Date(task.doneDate);
           // Get the tasks that wasn't done yet in that day
-          return taskDate > lastWeek && new Date(task.startDate) <= lastWeek && new Date(task.endDate) >= lastWeek;
+          return (
+            taskDate > lastWeek &&
+            new Date(task.startDate) <= lastWeek &&
+            new Date(task.endDate) >= lastWeek
+          );
         });
         let percentage = 0;
-        if (pendingTasks.length + response[`doneTasksLast${i}`] != 0) {
+        if (pendingTasks.length == 0 && notDoneTasks.length == 0) {
+          percentage = 100;
+        } else if (pendingTasks.length + response[`doneTasksLast${i}`] != 0) {
           percentage =
-            (response[`doneTasksLast${i}`] * 100) /
-            (pendingTasks.length + response[`doneTasksLast${i}`] + notDoneTasks.length);
+            (response[`totalDone`][lastWeek.toISOString().split("T")[0]] * 100) /
+            (pendingTasks.length +
+              response[`totalDone`][lastWeek.toISOString().split("T")[0]] +
+              notDoneTasks.length);
         }
-        console.log(response[`doneTasksLast${i}`]) ;
-        response["percentageTasksLast" + i] = percentage;
+
+        // For each doneTask, calculate how many days it took to complete it
+        let doneTasks = student.doneTasks.filter((task) => {
+          let taskDate = new Date(task.doneDate);
+          return (
+            taskDate <= lastWeek &&
+            new Date(task.startDate) <= lastWeek &&
+            new Date(task.endDate) >= lastWeek
+          );
+        });
+        
+        for(task of doneTasks) {
+          let taskDate = new Date(task.doneDate);
+          let startDate = new Date(task.startDate);
+          let endDate = new Date(task.endDate);
+          let days = Math.round((taskDate - startDate) / (1000 * 60 * 60 * 24));
+          response["totalDays"][task.id] = task;
+          response["totalDays"][task.id]["days"] = days;
+        }
+
+        console.log(response[`doneTasksLast${i}`]);
+        response["percentageDone"][lastWeek.toISOString().split("T")[0]] = percentage;
       }
 
       res.status(200).json(response);
