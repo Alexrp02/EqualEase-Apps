@@ -14,6 +14,8 @@ class _PictogramSelectState extends State<PictogramSelect> {
   String _searchText = '';
   bool _selected = false;
   int _selectedNumber = 0;
+ 
+
 
   Future<void> _fetchImages() async {
     final response = await http
@@ -88,6 +90,8 @@ class _PictogramSelectState extends State<PictogramSelect> {
       print(_images[index]['selected']);
     });
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +208,11 @@ class _PictogramSelectState extends State<PictogramSelect> {
       );
     });
   }
+
+    
+
 }
+
 
 class ImageScreen extends StatelessWidget {
   final String imageUrl;
@@ -223,6 +231,8 @@ class ImageScreen extends StatelessWidget {
     );
   }
 }
+
+
 
 class NewTaskScreen extends StatefulWidget {
   final List<dynamic> images;
@@ -316,4 +326,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
           }),
     );
   }
+
+   
+
 }
