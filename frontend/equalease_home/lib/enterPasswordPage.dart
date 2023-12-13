@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'studentLandingPage.dart';
+import 'package:equalease_home/controllers/controller_api.dart';
+import 'components/widget_grid.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EnterPasswordPage extends StatefulWidget {
@@ -13,6 +15,17 @@ class EnterPasswordPage extends StatefulWidget {
 
 class _EnterPasswordPageState extends State<EnterPasswordPage> {
   String password = '';
+  final APIController _controller = APIController();
+  late TextEditingController _passwordController;
+
+  final GlobalKey<PictogramGridViewState> _passwordGridKey =
+      GlobalKey<PictogramGridViewState>();
+
+  void updatePassword(String newPassword) {
+    setState(() {
+      password = newPassword;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +36,14 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           toolbarHeight: 100.0,
           leading: new IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: new Icon(
-                Icons.arrow_back,
-                size: 50.0,
-              )),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: new Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            ),
+          ),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -52,42 +66,55 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Introduce tu contraseña',
-              style: TextStyle(fontSize: 20),
-            ),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextField(
-                obscureText: true,
-                onChanged: (value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Contraseña',
-                  border: OutlineInputBorder(),
-                ),
+            Expanded(
+              child: PictogramGridView(
+                gridKey: _passwordGridKey,
+                onPasswordChanged: updatePassword,
               ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Realiza la validación de la contraseña aquí
-                // Puedes utilizar el controlador de API para verificar la contraseña del estudiante
-                // Por ejemplo, _controller.validatePassword(widget.studentId, password);
+              onPressed: () async {
+                Map<String, dynamic> loginResult =
+                    await _controller.login(widget.studentId, password);
 
-                // Si la contraseña es válida, puedes navegar a la siguiente página
-                // Si no, puedes mostrar un mensaje de error o realizar otra acción
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
+                if (loginResult["token"] != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) => StudentLandingPage(
-                          idStudent: widget.studentId)),
-                );
+                        idStudent: widget.studentId,
+                      ),
+                    ),
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Contraseña Incorrecta'),
+                        content: Text('La contraseña introducida no es válida.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                password = '';
+                                 // Llamar a la función para resetear las imágenes
+                              _passwordGridKey.currentState?.resetSelectedImages();
+                               Navigator.pop(context);
+                              });
+
+                             
+                             
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
               child: Text('Iniciar Sesión'),
             ),
@@ -97,3 +124,5 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
     );
   }
 }
+
+// Resto del código...

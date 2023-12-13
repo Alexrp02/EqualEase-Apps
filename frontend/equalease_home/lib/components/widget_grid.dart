@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
 class PictogramGridView extends StatefulWidget {
+  final GlobalKey<PictogramGridViewState> gridKey;
+  final Function(String) onPasswordChanged;
+
+  PictogramGridView({
+    required this.gridKey,
+    required this.onPasswordChanged,
+  });
+
   @override
-  _PictogramGridViewState createState() => _PictogramGridViewState();
+  PictogramGridViewState createState() => PictogramGridViewState();
 }
 
-class _PictogramGridViewState extends State<PictogramGridView> {
+class PictogramGridViewState extends State<PictogramGridView> {
   final List<String> pictogramAssets = [
     'coche',
     'botella',
@@ -19,43 +27,49 @@ class _PictogramGridViewState extends State<PictogramGridView> {
   String concatenatedPassword = '';
   final double bottomContainerHeight = 100.0;
 
+  // Lista de claves para acceder al estado de las tarjetas
+  final List<GlobalKey<_PictogramCardState>> cardKeys = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pictogramas'),
-      ),
       body: Column(
         children: [
           Expanded(
             child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-              double gridHeight = constraints.maxHeight;
-              return GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                  childAspectRatio: constraints.maxWidth /
-                      (gridHeight * 2 - 250 - bottomContainerHeight),
-                ),
-                itemCount: pictogramAssets.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final imageName = pictogramAssets[index];
-                  return PictogramCard(
-                    imageName: imageName,
-                    onSelected: (isSelected) {
-                      updateSelectedPictograms(imageName, isSelected);
-                    },
-                    height: gridHeight,
-                  );
-                },
-              );
-            }),
+              builder: (BuildContext context, BoxConstraints constraints) {
+                double gridHeight = constraints.maxHeight;
+                return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                    childAspectRatio: constraints.maxWidth /
+                        (gridHeight * 2 - 250 - bottomContainerHeight),
+                  ),
+                  itemCount: pictogramAssets.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final imageName = pictogramAssets[index];
+
+                    // Crear una clave para cada tarjeta
+                    final cardKey = GlobalKey<_PictogramCardState>();
+                    cardKeys.add(cardKey);
+
+                    return PictogramCard(
+                      key: cardKey,
+                      imageName: imageName,
+                      onSelected: (isSelected) {
+                        updateSelectedPictograms(imageName, isSelected);
+                      },
+                      height: gridHeight,
+                    );
+                  },
+                );
+              },
+            ),
           ),
           SizedBox(
-            height: bottomContainerHeight, // Altura del ListView
-            // alignment: Alignment.center,
+            height: bottomContainerHeight,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: selectedPictograms.length,
@@ -64,9 +78,8 @@ class _PictogramGridViewState extends State<PictogramGridView> {
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
                     'assets/${selectedPictograms[index]}.png',
-                    height: 80.0, // Ajusta el tamaño según sea necesario
+                    height: 80.0,
                     width: 80.0,
-                    // fit: BoxFit.cover,
                   ),
                 );
               },
@@ -85,9 +98,24 @@ class _PictogramGridViewState extends State<PictogramGridView> {
         selectedPictograms.remove(imageName);
       }
 
-      // Actualizar la contraseña concatenando los nombres de los pictogramas
       concatenatedPassword = selectedPictograms.join();
       print(concatenatedPassword);
+
+      // Notificar cambios a través del callback
+      widget.onPasswordChanged(concatenatedPassword);
+    });
+  }
+
+  // Método para reiniciar las imágenes seleccionadas
+  void resetSelectedImages() {
+    setState(() {
+      selectedPictograms.clear();
+      concatenatedPassword = '';
+
+      // Iterar sobre las tarjetas y reiniciar su estado y color
+      for (final cardKey in cardKeys) {
+        cardKey.currentState?.resetCardState();
+      }
     });
   }
 }
@@ -101,6 +129,7 @@ class PictogramCard extends StatefulWidget {
     required this.imageName,
     required this.onSelected,
     required this.height,
+    required GlobalKey<_PictogramCardState> key,
   });
 
   @override
@@ -109,27 +138,42 @@ class PictogramCard extends StatefulWidget {
 
 class _PictogramCardState extends State<PictogramCard> {
   bool isSelected = false;
+  Color _colorfondo = Colors.transparent;
+
+  void resetCardState() {
+    setState(() {
+      isSelected = false;
+      _colorfondo = Colors.transparent;
+      widget.onSelected(false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: isSelected ? Colors.blue : null,
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            isSelected = !isSelected;
-            widget.onSelected(isSelected);
-          });
-        },
+    Color cardColor = isSelected ? Colors.blue : Colors.transparent;
+    
+    if (!isSelected) {
+      cardColor = _colorfondo;
+    }
+    //Color cardColor = _colorfondo;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isSelected = !isSelected;
+          widget.onSelected(isSelected);
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: cardColor,
+        ),
         child: SizedBox(
           height: widget.height,
           width: widget.height,
           child: Center(
             child: Image.asset(
               'assets/${widget.imageName}.png',
-              // height: 120.0,
-              // width: 120.0,
-              // fit: BoxFit.cover,
             ),
           ),
         ),
@@ -138,8 +182,13 @@ class _PictogramCardState extends State<PictogramCard> {
   }
 }
 
+
+
+
+/*
 void main() {
   runApp(MaterialApp(
     home: PictogramGridView(),
   ));
 }
+*/
