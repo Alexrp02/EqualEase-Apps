@@ -17,54 +17,61 @@ class _PictogramGridViewState extends State<PictogramGridView> {
 
   List<String> selectedPictograms = [];
   String concatenatedPassword = '';
+  final double bottomContainerHeight = 100.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pictogramas'),
+        title: const Text('Pictogramas'),
       ),
       body: Column(
         children: [
-          Container(
-            height: 800,
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: pictogramAssets.length,
+          Expanded(
+            child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              double gridHeight = constraints.maxHeight;
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  childAspectRatio: constraints.maxWidth /
+                      (gridHeight * 2 - 250 - bottomContainerHeight),
+                ),
+                itemCount: pictogramAssets.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final imageName = pictogramAssets[index];
+                  return PictogramCard(
+                    imageName: imageName,
+                    onSelected: (isSelected) {
+                      updateSelectedPictograms(imageName, isSelected);
+                    },
+                    height: gridHeight,
+                  );
+                },
+              );
+            }),
+          ),
+          SizedBox(
+            height: bottomContainerHeight, // Altura del ListView
+            // alignment: Alignment.center,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: selectedPictograms.length,
               itemBuilder: (BuildContext context, int index) {
-                final imageName = pictogramAssets[index];
-                return PictogramCard(
-                  imageName: imageName,
-                  onSelected: (isSelected) {
-                    updateSelectedPictograms(imageName, isSelected);
-                  },
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/${selectedPictograms[index]}.png',
+                    height: 80.0, // Ajusta el tamaño según sea necesario
+                    width: 80.0,
+                    // fit: BoxFit.cover,
+                  ),
                 );
               },
             ),
           ),
-          Container(
-                height: 100.0, // Altura del ListView
-              alignment: Alignment.center,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: selectedPictograms.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      'assets/${selectedPictograms[index]}.png',
-                      height: 80.0, // Ajusta el tamaño según sea necesario
-                      width: 80.0,
-                      // fit: BoxFit.cover,
-                    ),
-                  );
-                },
-              ),
-            ),
         ],
       ),
     );
@@ -88,10 +95,12 @@ class _PictogramGridViewState extends State<PictogramGridView> {
 class PictogramCard extends StatefulWidget {
   final String imageName;
   final Function(bool isSelected) onSelected;
+  final double height;
 
   PictogramCard({
     required this.imageName,
     required this.onSelected,
+    required this.height,
   });
 
   @override
@@ -112,24 +121,17 @@ class _PictogramCardState extends State<PictogramCard> {
             widget.onSelected(isSelected);
           });
         },
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: Center(
-                    child: Image.asset(
-                      'assets/${widget.imageName}.png',
-                      // height: 120.0,
-                      // width: 120.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
+        child: SizedBox(
+          height: widget.height,
+          width: widget.height,
+          child: Center(
+            child: Image.asset(
+              'assets/${widget.imageName}.png',
+              // height: 120.0,
+              // width: 120.0,
+              // fit: BoxFit.cover,
             ),
-          ],
+          ),
         ),
       ),
     );
