@@ -122,19 +122,11 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                 Icons.arrow_back,
                 size: 50.0,
               )),
-          title: Center(
+          title: const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.network(
-                  widget.student.profilePicture,
-                  width: 100.0,
-                  height: 100.0,
-                ),
-                const SizedBox(
-                  width: 20.0,
-                ),
-                const Text(
+                Text(
                   'MATERIALES DE PEDIDO',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -147,6 +139,18 @@ class _ItemsCarouselState extends State<ItemCarousel> {
               ],
             ),
           ),
+          actions: [
+            ClipOval(
+              child: Container(
+                color: const Color.fromARGB(107, 255, 255, 255),
+                child: Image.network(
+                  widget.student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
