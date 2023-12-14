@@ -1,133 +1,235 @@
-const { addDoc, collection, query, where, getDocs, doc, getDoc, updateDoc} = require("firebase/firestore");
+const {
+  addDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+} = require("firebase/firestore");
 const { db } = require("../config/database.js");
 const Teacher = require("../models/teachers.js");
 
 const collectionName = "teachers";
 
+// Get all teachers
+async function getTeachers(req, res) {
+  try {
+    const teachers = [];
+    const querySnapshot = await getDocs(collection(db, collectionName));
+
+    querySnapshot.forEach((doc) => {
+      const teacherData = doc.data();
+      const teacher = new Teacher(teacherData);
+      teachers.push({ id: doc.id, ...teacher });
+    });
+
+    res.status(200).json(teachers);
+  } catch (error) {
+    console.error("Error getting teachers from Firestore:", error);
+    res.status(500).send("Server error.");
+  }
+}
+
 // Create a teacher
 async function createTeacher(req, res) {
+  const teacherData = new Teacher(req.body);
 
-    const teacherData = new Teacher(req.body);
-  
-    try {
-
-        // Verificar campos vacíos
-        if (!teacherData.name) {
-            res.status(400).json({ error: "Teacher's name cannot be empty.'" });
-            return;
-        }
-
-        if (!teacherData.surname) {
-            res.status(400).json({ error: "Teacher's surname cannot be empty." });
-            return;
-        }
-
-        if (!teacherData.email) {
-            res.status(400).json({ error: "Teacher's email cannot be empty." });
-            return;
-        }
-
-        // Verificar si el profesor ya existe.
-        // Para ello se comprueba que el email no coincida.
-        const validationQuery = query(collection(db, collectionName), where("email", "==", teacherData.email));
-        const querySnapshot = await getDocs(validationQuery);
-
-        if (!querySnapshot.empty) {
-            // Si hay resultados en la consulta, significa que ya existe una tarea con el mismo título
-            res.status(400).json({ error: `Teacher with email ${teacherData.email} already exists.` });
-        } else {
-            // Si no hay resultados, procedemos a crearla
-            const ref = await addDoc(collection(db, collectionName), teacherData.toJSON());
-                   
-            console.log(`Created new teacher (name: ${teacherData.name}, surname: ${teacherData.surname}, email: ${teacherData.email}).`);
-            res.status(201).json({id: ref.id, ...teacherData });
-        }
-
-    } catch (error) {
-        console.error("Error creating teacher in Firestore:", error);
-        res.status(500).send("Server error.");        
+  try {
+    // Verificar campos vacíos
+    if (!teacherData.name) {
+      res.status(400).json({ error: "Teacher's name cannot be empty.'" });
+      return;
     }
+
+    if (!teacherData.surname) {
+      res.status(400).json({ error: "Teacher's surname cannot be empty." });
+      return;
+    }
+
+    if (!teacherData.email) {
+      res.status(400).json({ error: "Teacher's email cannot be empty." });
+      return;
+    }
+
+    if (!req.body.password) {
+      res.status(400).json({ error: "Teacher's password cannot be empty." });
+      return;
+    }
+
+    // Verificar si el profesor ya existe.
+    // Para ello se comprueba que el email no coincida.
+    const validationQuery = query(
+      collection(db, collectionName),
+      where("email", "==", teacherData.email)
+    );
+    const querySnapshot = await getDocs(validationQuery);
+
+    if (!querySnapshot.empty) {
+      // Si hay resultados en la consulta, significa que ya existe una tarea con el mismo título
+      res.status(400).json({
+        error: `Teacher with email ${teacherData.email} already exists.`,
+      });
+    } else {
+      // Si no hay resultados, procedemos a crearla
+      const ref = await addDoc(
+        collection(db, collectionName),
+        teacherData.toJSON()
+      );
+
+      // Añadimos el id del profesor con su contraseña a la base de datos de autenticación
+      const refAuth = await addDoc(collection(db, "accounts"), {
+        username: ref.id,
+        password: req.body.password,
+        role: req.body.role || "teacher",
+      });
+
+      console.log(
+        `Created new teacher (name: ${teacherData.name}, surname: ${teacherData.surname}, email: ${teacherData.email}, password: ${req.body.password}).`
+      );
+      res.status(201).json({ id: ref.id, ...teacherData });
+    }
+  } catch (error) {
+    console.error("Error creating teacher in Firestore:", error);
+    res.status(500).send("Server error.");
+  }
 }
 
 // Get teacher (id)
 async function getTeacherById(req, res) {
-    const id = req.params.id;
+  const id = req.params.id;
 
-    try {
-        // Obtener una referencia al documento de subtarea por su ID
-        const ref = doc(db, collectionName, id);
+  try {
+    // Obtener una referencia al documento de subtarea por su ID
+    const ref = doc(db, collectionName, id);
 
-        // Obtener el documento
-        const snapshot = await getDoc(ref);
+    // Obtener el documento
+    const snapshot = await getDoc(ref);
 
-        // Comprobar si el documento de subtarea existe
-        if (snapshot.exists()) {
-            const teacherData = snapshot.data();
-            const teacher = new Teacher(teacherData);
+    // Comprobar si el documento de subtarea existe
+    if (snapshot.exists()) {
+      const teacherData = snapshot.data();
+      const teacher = new Teacher(teacherData);
 
-            res.status(200).json({id: ref.id, ...teacher });
-        } else {
-            res.status(404).json({ error: `Teacher with id=${id} does not exist.`});
-        }
-    } catch (error) {
-        console.error("Error getting teacher from Firestore:", error);
-        res.status(500).send("Server error.");   
+      res.status(200).json({ id: ref.id, ...teacher });
+    } else {
+      res.status(404).json({ error: `Teacher with id=${id} does not exist.` });
     }
+  } catch (error) {
+    console.error("Error getting teacher from Firestore:", error);
+    res.status(500).send("Server error.");
+  }
 }
 
 // Get teacher (name)
 async function getTeacherByName(req, res) {
-    const name = req.params.name; // Assuming the teacher's name is part of the route parameters
+  const name = req.params.name; // Assuming the teacher's name is part of the route parameters
 
-    try {
-        // Query the Firestore collection to find a teacher with the specified name
-        const nameQuery = query(collection(db, collectionName), where("name", "==", name));
-        const querySnapshot = await getDocs(nameQuery);
+  try {
+    // Query the Firestore collection to find a teacher with the specified name
+    const nameQuery = query(
+      collection(db, collectionName),
+      where("name", "==", name)
+    );
+    const querySnapshot = await getDocs(nameQuery);
 
-        if (!querySnapshot.empty) {
-            // Assuming you want to get the first teacher found with the specified name
-            const teacherId = querySnapshot.docs[0].id;
-            const teacherData = querySnapshot.docs[0].data();
-            const teacher = new Teacher(teacherData);
+    if (!querySnapshot.empty) {
+      // Assuming you want to get the first teacher found with the specified name
+      const teacherId = querySnapshot.docs[0].id;
+      const teacherData = querySnapshot.docs[0].data();
+      const teacher = new Teacher(teacherData);
 
-            res.status(200).json({id: teacherId, ...teacher});
-        } else {
-            res.status(404).json({ error: `Teacher with name ${name} does not exist.` });
-        }
-    } catch (error) {
-        console.error("Error getting teacher from Firestore:", error);
-        res.status(500).send("Server error.");
+      res.status(200).json({ id: teacherId, ...teacher });
+    } else {
+      res
+        .status(404)
+        .json({ error: `Teacher with name ${name} does not exist.` });
     }
+  } catch (error) {
+    console.error("Error getting teacher from Firestore:", error);
+    res.status(500).send("Server error.");
+  }
 }
 
 // update teacher's data
 async function updateTeacher(req, res) {
-    const id = req.params.id;
-    const updatedData = req.body;
+  const id = req.params.id;
+  const updatedData = req.body;
 
-    try {
-        const ref = doc(db, collectionName, id);
-        const snapshot = await getDoc(ref);
+  try {
+    const ref = doc(db, collectionName, id);
+    const snapshot = await getDoc(ref);
 
-        if (snapshot.exists()) {
-            // El documento existe, proceder a la actualización
-            await updateDoc(ref, updatedData);
-            res.status(200).json({ message: `Teacher with id=${id} updated successfully` });
-        } else {
-            // El documento no existe
-            res.status(404).json({ error: `Teacher with id=${id} does not exist.`});
-        }
-    } catch (error) {
-        console.error("Error updating teacher from Firestore:", error);
-        res.status(500).send("Server error.");
+    if (snapshot.exists()) {
+      // El documento existe, proceder a la actualización
+      await updateDoc(ref, updatedData);
+      res
+        .status(200)
+        .json({ message: `Teacher with id=${id} updated successfully` });
+    } else {
+      // El documento no existe
+      res.status(404).json({ error: `Teacher with id=${id} does not exist.` });
     }
+  } catch (error) {
+    console.error("Error updating teacher from Firestore:", error);
+    res.status(500).send("Server error.");
+  }
 }
 
+async function deleteTeacher(req, res) {
+  const id = req.params.id;
+
+  try {
+    const ref = doc(db, collectionName, id);
+    const snapshot = await getDoc(ref);
+
+    if (snapshot.exists()) {
+      // El documento existe, proceder a la eliminación
+      await deleteDoc(ref);
+
+      // Eliminamos también el documento con su cuenta
+      const accountQuery = query(
+        collection(db, "accounts"),
+        where("username", "==", id)
+      );
+      const querySnapshot = await getDocs(accountQuery);
+      if (!querySnapshot.empty) {
+        const refAuth = doc(db, "accounts", querySnapshot.docs[0].id);
+        await deleteDoc(refAuth);
+      }
+
+      // Eliminamos cualquier clase con el profesor asignado
+      const classesQuery = query(
+        collection(db, "classrooms"),
+        where("assignedTeacher", "==", id)
+      );
+      const classesQuerySnapshot = await getDocs(classesQuery);
+      if (!classesQuerySnapshot.empty) {
+        classesQuerySnapshot.forEach(async (doc) => {
+          await deleteDoc(doc.ref);
+        });
+      }
+      res
+        .status(200)
+        .json({ message: `Teacher with id=${id} deleted successfully` });
+    } else {
+      // El documento no existe
+      res.status(404).json({ error: `Teacher with id=${id} does not exist.` });
+    }
+  } catch (error) {
+    console.error("Error deleting teacher from Firestore:", error);
+    res.status(500).send("Server error.");
+  }
+}
 
 // Exportamos las funciones
 module.exports = {
-    createTeacher,
-    getTeacherById,
-    getTeacherByName,
-    updateTeacher
-}
+  getTeachers,
+  createTeacher,
+  getTeacherById,
+  getTeacherByName,
+  updateTeacher,
+  deleteTeacher,
+};
