@@ -51,7 +51,7 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           leading: new IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, widget.student);
               },
               icon: new Icon(
                 Icons.arrow_back,
