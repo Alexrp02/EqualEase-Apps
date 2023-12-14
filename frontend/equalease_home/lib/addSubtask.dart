@@ -137,23 +137,27 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 161, 182, 236),
-                    onPrimary: Colors.white,
+                    backgroundColor: Color.fromARGB(255, 161, 182, 236),
+                    foregroundColor: Colors.white,
                   ),
                 ),
                 ImageUploader(
-                    source: ImageSource.camera, controller: imageController),
+                    source: ImageSource.camera, controller: imageController
+                ),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PictogramSelect()))
+                                  builder: (context) => PictogramSelect()
+                              )
+                            )
                           .then((value) {
                         pictogramURL = value;
                       });
                     },
-                    child: Text('Seleccionar Pictograma'))
+                    child: Text('Seleccionar Pictograma')
+                )
               ],
             )
           ],
