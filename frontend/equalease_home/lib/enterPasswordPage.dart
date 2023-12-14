@@ -74,51 +74,7 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
                 studentId: widget.studentId,
               ),
             ),
-            /*SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                Map<String, dynamic> loginResult =
-                    await _controller.login(widget.studentId, password);
-
-                if (loginResult["token"] != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StudentLandingPage(
-                        idStudent: widget.studentId,
-                      ),
-                    ),
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Contraseña Incorrecta'),
-                        content: Text('La contraseña introducida no es válida.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                password = '';
-                                 // Llamar a la función para resetear las imágenes
-                              _passwordGridKey.currentState?.resetSelectedImages();
-                               Navigator.pop(context);
-                              });
-
-                             
-                             
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              child: Text('Iniciar Sesión'),
-            ),*/
+            
           ],
         ),
       ),
