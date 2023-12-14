@@ -6,6 +6,7 @@ class Teacher {
         this.email = teacher.email;
         this.profilePicture = teacher.profilePicture || "";
         this.students = teacher.students || [];
+        this.isAdmin = teacher.isAdmin || false;
     }
 
     toJSON() {
@@ -15,6 +16,7 @@ class Teacher {
             email: this.email,
             profilePicture: this.profilePicture,
             students: this.students,
+            isAdmin: this.isAdmin,
         };
     }
 }
