@@ -71,16 +71,6 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    student.profilePicture == 'profilePicture'
-                        ? Container()
-                        : Image.network(
-                            student.profilePicture,
-                            width: 100.0,
-                            height: 100.0,
-                          ),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
                     Flexible(
                       child: Text(
                         '${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
@@ -95,6 +85,20 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                   ],
                 ),
               ),
+              actions: [
+                ClipOval(
+                  child: Container(
+                    color: const Color.fromARGB(107, 255, 255, 255),
+                    child: student.profilePicture == 'profilePicture'
+                        ? Container()
+                        : Image.network(
+                            student.profilePicture,
+                            width: 100.0,
+                            height: 100.0,
+                          ),
+                  ),
+                ),
+              ],
             ),
           ),
           body: Center(
