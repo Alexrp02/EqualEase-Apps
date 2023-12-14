@@ -1,8 +1,10 @@
+import 'package:equalease_home/addStudent.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'detallesStudentPage.dart';
 
 class AdministrationPage extends StatefulWidget {
   AdministrationPage();
@@ -63,7 +65,7 @@ class _AdministrationPage extends State<AdministrationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'LISTA DE ALUMNOS',
+                  'LISTA DE ESTUDIANTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -91,15 +93,20 @@ class _AdministrationPage extends State<AdministrationPage>
                     int currentIndex = i + 1;
                     return GestureDetector(
                       onTap: () {
-                        /* Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetallesTaskPage(
-                              task: TaskAgregada,
-                              controller: controller,
+                            builder: (context) => DetallesStudentPage(
+                              student: StudentAgregada,
                             ),
                           ),
-                        );*/
+                        ).then((value) {
+                          setState(() {
+                            if (value) {
+                              _StudentsAdded.remove(StudentAgregada);
+                            }
+                          });
+                        });
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -116,39 +123,11 @@ class _AdministrationPage extends State<AdministrationPage>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'ALUMNO: ${StudentAgregada.name} ${StudentAgregada.surname}',
+                                'ESTUDIANTE $currentIndex: ${StudentAgregada.name} ${StudentAgregada.surname}',
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 0, 0, 0),
                                   fontSize: 30.0, // Ajusta el tamaño del texto
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                      iconSize: 50.0,
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {
-                                        /*Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditTaskPage(task: TaskAgregada),
-                                        ),
-                                      ).then((value) {
-                                        setState(() {
-                                          TaskAgregada.title = value;
-                                        });
-                                      });*/
-                                      }),
-                                  IconButton(
-                                    iconSize: 50.0,
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      // _showDeleteConfirmationDialog(
-                                      //   TaskAgregada);
-                                    },
-                                  ),
-                                ],
                               ),
                             ],
                           ),
@@ -169,20 +148,14 @@ class _AdministrationPage extends State<AdministrationPage>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          /*Navigator.push(
+          Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => AgregarTaskPage(
-                onTaskSaved: (task) {
-                  // Ajusta el parámetro para que sea de tipo Task
-                },
-              ),
-            ),
-          ).then((value) {
+          MaterialPageRoute(builder: (context) => AddStudentForm()),
+                ).then((value) {
             setState(() {
-              _TasksAgregadas.add(value);
+              _StudentsAdded.add(value);
             });
-          });*/
+          });
         },
         child: Icon(Icons.add),
       ),
@@ -210,7 +183,7 @@ class _AdministrationPage extends State<AdministrationPage>
     );
   }
 
-  Widget buildStudentInfo() {
+ /* Widget buildStudentInfo() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -264,5 +237,5 @@ class _AdministrationPage extends State<AdministrationPage>
         ),
       ],
     );
-  }
+  }*/
 }

@@ -1,60 +1,44 @@
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
+import 'package:equalease_home/models/teacher.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:equalease_home/editStudentDataPage.dart';
 
-class StudentData extends StatefulWidget {
-  final String _id;
+class DetallesTeacherPage extends StatefulWidget {
+  final Teacher teacher;
 
-  StudentData(String studentId) : _id = studentId;
+  DetallesTeacherPage({required this.teacher});
 
   @override
-  _StudentDataState createState() => _StudentDataState();
+  _DetallesTeacherPage createState() => _DetallesTeacherPage();
 }
 
-class _StudentDataState extends State<StudentData>
+class _DetallesTeacherPage extends State<DetallesTeacherPage>
     with TickerProviderStateMixin {
   // Simulando la obtención de datos del estudiante
-  Student? _student;
-  APIController _controller = APIController();
-  late TabController tabController;
-  late Map<String, dynamic> data;
+  Teacher? _teacher;
+  APIController controller = APIController();
+  //late TabController tabController;
 
   @override
   void initState() {
     super.initState();
 
-    tabController = TabController(length: 2, vsync: this);
+    //tabController = TabController(length: 2, vsync: this);
 
-    data = {
-      'Enero': 10,
-      'Febrero': 20,
-      'Marzo': 30,
-      'Abril': 40,
-      'Mayo': 30,
-      'Junio': 20,
-      'Julio': 10,
-    };
+    _teacher = null;
 
-    _student = null;
-
-    _controller.getStudent(widget._id).then((student) {
+    controller.getTeacher(widget.teacher.id).then((teacher) {
       setState(() {
-        _student = student;
-      });
-    });
-    _controller.getStudentStatistics(widget._id).then((studentData) {
-      setState(() {
-        data = studentData;
+        _teacher = teacher;
       });
     });
   }
 
   @override
   void dispose() {
-    tabController.dispose();
     super.dispose();
   }
 
@@ -78,9 +62,9 @@ class _StudentDataState extends State<StudentData>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                _student != null
+                _teacher != null
                     ? Text(
-                        'DATOS DE ${_student!.name.toUpperCase()}',
+                        'DATOS DE ${_teacher!.name.toUpperCase()}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -104,56 +88,10 @@ class _StudentDataState extends State<StudentData>
           ),
         ),
       ),
-      body: TabBarView(controller: tabController, children: [
-        Center(
-          child: _student != null
-              ? buildStudentInfo()
-              : const Text('No se encontraron datos del estudiante'),
-        ),
-        Center(
-          child: _student != null
-              ? SfCartesianChart(
-                  primaryXAxis: CategoryAxis(),
-                  primaryYAxis:
-                      NumericAxis(minimum: 0, maximum: 100, interval: 5),
-                  tooltipBehavior: TooltipBehavior(enable: true),
-                  series: <ChartSeries<MapEntry<String, dynamic>, dynamic>>[
-                      ColumnSeries<MapEntry<String, dynamic>, String>(
-                          dataSource: data["percentageDone"]
-                              .entries
-                              .toList()
-                              .reversed
-                              .toList(),
-                          xValueMapper: (MapEntry<String, dynamic> entry, _) =>
-                              entry.key,
-                          yValueMapper: (MapEntry<String, dynamic> entry, _) =>
-                              entry.value,
-                          name: 'Porcentaje',
-                          color: const Color.fromARGB(255, 161, 182, 236))
-                    ])
-              : const Text('No se encontraron datos del estudiante'),
-        ),
-      ]),
-      bottomNavigationBar: GFTabBar(
-        tabBarColor: const Color.fromARGB(255, 161, 182, 236),
-        indicatorColor: const Color.fromARGB(255, 83, 120, 214),
-        indicatorWeight: 5,
-        length: 2,
-        controller: tabController,
-        tabs: const [
-          Tab(
-            icon: Icon(Icons.person),
-            child: Text(
-              "Datos",
-            ),
-          ),
-          Tab(
-            icon: Icon(Icons.bar_chart),
-            child: Text(
-              "Estadísticas",
-            ),
-          ),
-        ],
+      body: Center(
+        child: _teacher != null
+            ? buildStudentInfo()
+            : const Text('No se encontraron datos del estudiante'),
       ),
     );
   }
@@ -167,7 +105,7 @@ class _StudentDataState extends State<StudentData>
           style: TextStyle(fontSize: 18),
         ),
         Text(
-          _student!.name,
+          _teacher!.name,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 20),
@@ -176,31 +114,40 @@ class _StudentDataState extends State<StudentData>
           style: TextStyle(fontSize: 18),
         ),
         Text(
-          _student!.surname,
+          _teacher!.surname,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 20),
+        Text(
+          'Correo Electronico:',
+          style: TextStyle(fontSize: 18),
+        ),
+        Text(
+          _teacher!.email,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Image.network(
-          _student!.profilePicture,
+          _teacher!.profilePicture,
           width: 150.0,
           height: 150.0,
         ),
-        //SizedBox(height: 20),
-        /*Row(
+        SizedBox(height: 20),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                /*Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => EditStudentDataPage(
                             student: _student!,
                           )),
-                ).then((value){
+                ).then((value) {
                   setState(() {
                     _student = value;
                   });
-                });
+                });*/
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 161, 182, 236),
@@ -212,7 +159,8 @@ class _StudentDataState extends State<StudentData>
             SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
-                // Acción a realizar al presionar el botón de eliminar
+               // _showDeleteConfirmationDialog(_student);
+
                 print('Eliminar');
               },
               style: ElevatedButton.styleFrom(
@@ -223,8 +171,80 @@ class _StudentDataState extends State<StudentData>
               child: Text('Eliminar'),
             ),
           ],
-        ),*/
+        ),
       ],
     );
+  }
+
+  void _showDeleteConfirmationDialog(Student? student) {
+    bool isDeleted = false;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "ELIMINAR ESTUDIANTE",
+            style: TextStyle(
+              color: Color.fromARGB(255, 0, 0, 0),
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Text(
+                  "¿ESTA SEGURO?",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 20.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text(
+                "CANCELAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                "ACEPTAR",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () async {
+                await controller.deleteStudent(student!.id);
+                isDeleted = true;
+                setState(() {
+                  //_TasksAgregadas.remove(task);
+
+                  // Llamar al controlador de eliminación
+                });
+                //Navigator.of(context).pop();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+        );
+      },
+    ).then((value) => Navigator.pop(context, isDeleted));
   }
 }

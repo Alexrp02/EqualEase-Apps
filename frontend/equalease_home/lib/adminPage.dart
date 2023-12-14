@@ -1,5 +1,6 @@
-import 'package:equalease_home/administrationPage.dart';
+import 'package:equalease_home/administrationPagePRUEBA.dart';
 import 'package:equalease_home/menuAdmin.dart';
+import 'package:equalease_home/pruebamenu.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
 import 'tasks.dart';
@@ -50,7 +51,7 @@ class AdminPage extends StatelessWidget {
               // Coloca aquí el código que deseas ejecutar al presionar el botón de engranaje.
                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdministrationPage()),
+                  MaterialPageRoute(builder: (context) => MuestraMenu()),
                 );
             },
             tooltip: 'Configuración',
