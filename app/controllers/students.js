@@ -412,7 +412,7 @@ async function deleteStudent(req, res) {
             // Tras las comprobaciones, eliminar el estudiante.
             await deleteDoc(ref);
             console.log(`Deleted student with ID ${id}`);
-            res.status(200).json({ message: `Savefully deleted student with id=${id}.` });
+            res.status(204).json({ message: `Savefully deleted student with id=${id}.` });
         } else {
             // El documento no existe
             res.status(404).json({ error: `Student with id=${id} does not exist.` });
