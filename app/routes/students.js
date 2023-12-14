@@ -12,8 +12,7 @@ api.get("/student/tasks/:id", StudentsController.getPendingTasksToday);
 api.get("/student/id/:id", StudentsController.getStudentById);
 api.get("/student/name/:name", StudentsController.getStudentByName);
 api.get("/student/stats/:id", StudentsController.getStatisticsFromStudentId);
-
 api.put("/student/id/:id", StudentsController.updateStudent);
-api.delete("/student/id/:id", StudentsController.updateStudent);
+api.delete("/student/id/:id", StudentsController.deleteStudent);
 
 module.exports = api;

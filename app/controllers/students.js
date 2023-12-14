@@ -7,6 +7,7 @@ const {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
 } = require("firebase/firestore");
 const { db } = require("../config/database.js");
 const Student = require("../models/students.js");
@@ -62,12 +63,24 @@ async function createStudent(req, res) {
       return;
     }
 
+    if (!req.body.password) {
+        res.status(400).json({ error: "Students' password cannot be empty." });
+        return;
+    }
+
     // check if student exists. how??
 
     const ref = await addDoc(
       collection(db, collectionName),
       studentData.toJSON()
     );
+
+    // Añadimos el id del profesor con su contraseña a la base de datos de autenticación
+    const refAuth = await addDoc(collection(db, "accounts"), {
+        username: ref.id,
+        password: req.body.password,
+        role: req.body.role || "student",
+    });
 
     console.log(
       `Created new student (name: ${studentData.name}, surname: ${studentData.surname}).`
