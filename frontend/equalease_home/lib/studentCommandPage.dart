@@ -59,19 +59,11 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                   size: 50.0,
                 )),
             backgroundColor: Color.fromARGB(255, 161, 182, 236),
-            title: Center(
+            title: const Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.network(
-                    widget.student.profilePicture,
-                    width: 100.0,
-                    height: 100.0,
-                  ),
-                  const SizedBox(
-                    width: 20.0,
-                  ),
-                  const Text(
+                  Text(
                     'COMANDAS',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -83,6 +75,18 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                 ],
               ),
             ),
+            actions: [
+              ClipOval(
+                child: Container(
+                  color: const Color.fromARGB(107, 255, 255, 255),
+                  child: Image.network(
+                    widget.student.profilePicture,
+                    width: 100.0,
+                    height: 100.0,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         body: _teachers.isNotEmpty
@@ -251,6 +255,7 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                             MaterialPageRoute(builder: (context) {
                           return MenuCarousel(
                             classroom: _classrooms[i],
+                            student: widget.student,
                           );
                         }));
                       },

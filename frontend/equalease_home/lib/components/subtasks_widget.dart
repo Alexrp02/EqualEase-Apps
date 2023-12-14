@@ -1,4 +1,5 @@
 // Example widget for a subtask item
+import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
 
 import '../models/subtask.dart';
@@ -57,8 +58,11 @@ class SubtaskWidget extends StatelessWidget {
 // Main carousel widget
 class SubtasksCarousel extends StatefulWidget {
   final String taskId;
+  final Student student;
 
-  SubtasksCarousel({Key? key, required this.taskId}) : super(key: key);
+  const SubtasksCarousel(
+      {Key? key, required this.taskId, required this.student})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -130,6 +134,18 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
               ],
             ),
           ),
+          actions: [
+            ClipOval(
+              child: Container(
+                color: const Color.fromARGB(107, 255, 255, 255),
+                child: Image.network(
+                  widget.student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(

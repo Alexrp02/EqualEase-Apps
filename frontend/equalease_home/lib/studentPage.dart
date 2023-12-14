@@ -97,14 +97,6 @@ class _StudentPageState extends State<StudentPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.network(
-                  student.profilePicture,
-                  width: 100.0,
-                  height: 100.0,
-                ),
-                const SizedBox(
-                  width: 20.0,
-                ),
                 Flexible(
                   child: Text(
                     'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
@@ -121,6 +113,18 @@ class _StudentPageState extends State<StudentPage> {
               ],
             ),
           ),
+          actions: [
+            ClipOval(
+              child: Container(
+                color: const Color.fromARGB(107, 255, 255, 255),
+                child: Image.network(
+                  widget.student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
@@ -174,6 +178,7 @@ class _StudentPageState extends State<StudentPage> {
                                   MaterialPageRoute(builder: (context) {
                                 return SubtasksCarousel(
                                   taskId: pendingTasks[i].id,
+                                  student: student,
                                 );
                               }));
                             },
@@ -208,6 +213,7 @@ class _StudentPageState extends State<StudentPage> {
                                       MaterialPageRoute(builder: (context) {
                                     return SubtasksCarousel(
                                       taskId: doneTasks[i].id,
+                                      student: student,
                                     );
                                   }));
                                 },

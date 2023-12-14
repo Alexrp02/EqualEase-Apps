@@ -74,7 +74,6 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
                 studentId: widget.studentId,
               ),
             ),
-            
           ],
         ),
       ),
