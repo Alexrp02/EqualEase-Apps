@@ -7,24 +7,25 @@ class Teacher {
   String email;
   List<String> students;
   String profilePicture; // Agregar la propiedad para la imagen de perfil.
+  bool isAdmin;
 
-  Teacher({
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.email,
-    required this.students,
-    required this.profilePicture,
-  });
+  Teacher(
+      {required this.id,
+      required this.name,
+      required this.surname,
+      required this.email,
+      required this.students,
+      required this.profilePicture,
+      required this.isAdmin});
 
   factory Teacher.fromMap(Map<String, dynamic> json) => Teacher(
-        id: json['id'],
-        name: json['name'],
-        surname: json['surname'],
-        email: json['email'],
-        students: List<String>.from(json['students']),
-        profilePicture: json['profilePicture'],
-      );
+      id: json['id'],
+      name: json['name'],
+      surname: json['surname'],
+      email: json['email'],
+      students: List<String>.from(json['students']),
+      profilePicture: json['profilePicture'],
+      isAdmin: json['isAdmin']);
 
   factory Teacher.fromJson(String str) => Teacher.fromMap(json.decode(str));
 
@@ -36,6 +37,7 @@ class Teacher {
       'email': email,
       'students': students,
       'profilePicture': profilePicture,
+      'isAdmin': isAdmin
     };
   }
 
@@ -48,6 +50,7 @@ class Teacher {
       'email': email,
       'students': students,
       'profilePicture': profilePicture,
+      'isAdmin': isAdmin
     };
     return json.encode(data);
   }
