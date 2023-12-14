@@ -209,6 +209,66 @@ async function getPendingTasksToday(req, res) {
 // Cuando se implemente la operación de eliminar estudiante,
 // tener en cuenta las dependencias y eliminarlo de los arrays teacher.students[].
 // Para ver como se implementa, ver el ejemplo deleteTask
+async function deleteStudent(req, res) {
+    const id = req.params.id;
+
+    try {
+        const ref = doc(db, collectionName, id);
+        const snapshot = await getDoc(ref);
+
+        if (snapshot.exists()) {
+            // Antes de eliminar un estudiante, se deben eliminar sus referencias.
+            // Eliminar todos aquellos requests cuyo assignedStudent == id
+            const requestsCollection = collection(db, "requests");
+            const requestsQuery = query(requestsCollection, where("assignedStudent", "==", id));
+
+            const requestsSnapshot = await getDocs(requestsQuery);
+            await Promise.all(requestsSnapshot.docs.map(async (requestDoc) => {
+                await deleteDoc(requestDoc.ref);
+                console.log(`Deleted request (id:  ${requestDoc.ref.id}) with assginedStudent=${id}`);
+            }));
+
+            // Eliminar el account relacionado con el estudiante
+            const accountsCollection = collection(db, "accounts");
+            const accountsQuery = query(accountsCollection, where("username", "==", id));
+
+            const accountsSnapshot = await getDocs(accountsQuery);
+            await Promise.all(accountsSnapshot.docs.map(async (accountDoc) => {
+                await deleteDoc(accountDoc.ref);
+                console.log(`Deleted account (id:  ${accountDoc.ref.id}) with username=${id}`);
+            }));
+
+            // Eliminar el student de todos los arrays de profesores donde aparezca
+            const teachersCollection = collection(db, "teachers");
+            const teachersQuery = query(teachersCollection);
+
+            const teachersSnapshot = await getDocs(teachersQuery);
+
+            teachersSnapshot.forEach(async (teacherDoc) => {
+                const teacherData = teacherDoc.data();
+
+                // Comprobar si el estudiante está en el array de students
+                if (teacherData.students.includes(id)) {
+                    const students = teacherData.students.filter(studentId => studentId !== id);
+                    await updateDoc(teacherDoc.ref, { students });
+                    console.log(`Updated 'students' for teacher (ID: ${teacherDoc.ref.id}). Removed student with ID ${id}`);
+                }
+
+            });
+
+            // Tras las comprobaciones, eliminar el estudiante.
+            await deleteDoc(ref);
+            console.log(`Deleted student with ID ${id}`);
+            res.status(200).json({ message: `Savefully deleted student with id=${id}.` });
+        } else {
+            // El documento no existe
+            res.status(404).json({ error: `Student with id=${id} does not exist.` });
+        }
+    } catch (error) {
+        console.error("Error deleting student from Firestore:", error);
+        res.status(500).send("Server error.");
+    }
+}
 
 // Exportamos las funciones
 module.exports = {
@@ -218,4 +278,5 @@ module.exports = {
     getStudentByName,
     updateStudent,
     getPendingTasksToday,
+    deleteStudent,
 }
