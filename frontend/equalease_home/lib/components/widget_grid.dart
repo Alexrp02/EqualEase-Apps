@@ -192,7 +192,7 @@ class _PictogramCardState extends State<PictogramCard> {
     setState(() {
       isSelected = false;
       _colorfondo = Colors.transparent;
-      widget.onSelected(false);
+      //widget.onSelected(false);
       //concatenatedPassword = widget.concatenatedPassword;
       //selectedPictograms = widget.selectedPictograms;
     });
@@ -210,18 +210,19 @@ class _PictogramCardState extends State<PictogramCard> {
       onTap: () async {
         setState(() {
           isSelected = !isSelected;
+          _colorfondo = isSelected ? Colors.blue : Colors.transparent;
           widget.onSelected(isSelected);
           selectedPictograms = widget.selectedPictograms;
           concatenatedPassword = widget.concatenatedPassword;
           concatenatedPassword = concatenatedPassword + this.widget.imageName;
         });
-
+        
         if (selectedPictograms.length >= 3) {
           Map<String, dynamic> loginResult =
               await _controller.login(widget.studentId, concatenatedPassword);
 
-          print(concatenatedPassword);
-          print("REalizando comprobación automatica");
+          
+          print("Realizando comprobación automatica");
 
           if (loginResult["token"] != null) {
             widget.clear();
@@ -239,8 +240,28 @@ class _PictogramCardState extends State<PictogramCard> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Contraseña Incorrecta'),
-                  content: Text('La contraseña introducida no es válida.'),
+                  title: Text('INTÉNTALO OTRA VEZ'),
+                  content: Row(
+                    children: [
+                      Icon(
+                        Icons
+                            .sentiment_satisfied, // El icono de la cara sonriente
+                        color: Colors
+                            .green, // Puedes ajustar el color según tus preferencias
+                        size:
+                            80.0, // Puedes ajustar el tamaño según tus preferencias
+                      ),
+                      SizedBox(
+                          width: 10.0), // Espaciado entre el icono y el texto
+                      Text(
+                        'ÁNIMO',
+                        style: TextStyle(
+                          fontSize:
+                              20.0, // Ajusta el tamaño del texto según tus preferencias
+                        ),
+                      ),
+                    ],
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {

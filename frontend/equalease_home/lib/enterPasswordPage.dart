@@ -74,7 +74,7 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
                 studentId: widget.studentId,
               ),
             ),
-            SizedBox(height: 20),
+            /*SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 Map<String, dynamic> loginResult =
@@ -118,7 +118,7 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
                 }
               },
               child: Text('Iniciar Sesión'),
-            ),
+            ),*/
           ],
         ),
       ),
