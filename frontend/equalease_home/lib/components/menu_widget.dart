@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../models/subtask.dart';
 import '../controllers/controller_api.dart';
 bool _changed = false;
+bool debug = false;
 
 class MenuWidget extends StatefulWidget {
   final Map<String, dynamic> order;
@@ -92,10 +93,25 @@ class _MenuWidgetState extends State<MenuWidget> {
               ),
             ),
             SizedBox(width: 16),
-            Text(
-              '${widget.order['quantity']}',
-              style: TextStyle(fontSize: 50),
-            ),
+
+            if (debug)
+              Text(
+                '${widget.order['quantity']}',
+                style: TextStyle(fontSize: 50),
+              )
+            else
+          
+              SizedBox(
+                width: 100.0, // Ajusta el ancho deseado
+                height: 100.0, // Ajusta la altura deseada
+                child: Image.asset(
+                  'assets/cero.png', // Reemplaza con la ruta de tu imagen local
+                  fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                ),
+              ),
+        
+              
+
             SizedBox(width: 16),
             InkWell(
               onTap: () {
