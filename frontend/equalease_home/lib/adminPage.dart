@@ -1,3 +1,4 @@
+import 'package:equalease_home/administrationPage.dart';
 import 'package:equalease_home/menuAdmin.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
@@ -47,6 +48,10 @@ class AdminPage extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               // Coloca aquí el código que deseas ejecutar al presionar el botón de engranaje.
+               Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdministrationPage()),
+                );
             },
             tooltip: 'Configuración',
             backgroundColor: Color.fromARGB(255, 161, 182, 236),
