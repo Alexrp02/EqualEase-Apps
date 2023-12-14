@@ -3,6 +3,7 @@ import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:equalease_home/editStudentDataPage.dart';
 
 class StudentData extends StatefulWidget {
   final String _id;
@@ -184,12 +185,21 @@ class _StudentDataState extends State<StudentData>
           children: [
             ElevatedButton(
               onPressed: () {
-                // Acción a realizar al presionar el botón de editar
-                print('Editar');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditStudentDataPage(
+                            student: _student!,
+                          )),
+                ).then((value){
+                  setState(() {
+                    _student = value;
+                  });
+                });
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 161, 182, 236),
-                onPrimary: Colors.white,
+                backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+                foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               ),
               child: Text('Editar'),
@@ -201,8 +211,8 @@ class _StudentDataState extends State<StudentData>
                 print('Eliminar');
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color.fromARGB(255, 161, 182, 236),
-                onPrimary: Colors.white,
+                backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+                foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               ),
               child: Text('Eliminar'),
