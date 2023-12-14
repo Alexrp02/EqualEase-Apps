@@ -116,30 +116,45 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
             padding: const EdgeInsets.all(32.0),
             child: student.hasRequest
                 ? ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(buttonColor),
-                      foregroundColor: MaterialStateProperty.all(textColor),
-                      minimumSize:
-                          MaterialStateProperty.all(Size(double.infinity, 100)),
-                      textStyle: MaterialStateProperty.all(
-                        TextStyle(
-                          fontSize: 48,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ItemCarousel(
+                          studentId: student.id,
+                          student: student,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/materialEscolar.png',
+                        height: 300,
+                        width: 300,
+                        //fit: BoxFit.contain,
+                      ),
+                      SizedBox(height: 50.0),
+                      Text(
+                        'PEDIDO',
+                        style: TextStyle(
+                          fontSize: 60,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => (ItemCarousel(
-                                  studentId: "6gsy3HsO0GQLwVcPvySA",
-                                  student: student,
-                                ))),
-                      );
-                    },
-                    child: const Text('PEDIDO'),
+                      SizedBox(height: 50.0),
+                    ],
+                  ),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(buttonColor),
+                    foregroundColor: MaterialStateProperty.all(textColor),
+                    //minimumSize: MaterialStateProperty.all(Size(double.infinity, 100)),
                   )
+                   
+                )
+
                 : Container(),
           ),
         ),
@@ -169,7 +184,26 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                                 )),
                       );
                     },
-                    child: const Text('COMANDA'),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'assets/comida.png',
+                          height: 300,
+                          width: 300,
+                          //fit: BoxFit.contain,
+                        ),
+                        SizedBox(height: 50.0),
+                        Text(
+                          'COMANDA',
+                          style: TextStyle(
+                            fontSize: 60,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 50.0),
+                      ],
+                    ),
                   )
                 : Container(),
           ),
@@ -199,7 +233,26 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                           )),
                 );
               },
-              child: const Text('TAREAS'),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/tareas.png',
+                    height: 300,
+                    width: 300,
+                    //fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 50.0),
+                  Text(
+                    'TAREAS',
+                    style: TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 50.0),
+                ],
+              ),
             ),
           ),
         ),
