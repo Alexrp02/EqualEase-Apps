@@ -8,7 +8,7 @@ class Student {
   String name;
   String surname;
   List<Map<String, dynamic>> pendingTasks;
-  List<String> doneTasks;
+  List<Map<String, dynamic>> doneTasks;
   String profilePicture; // Agregar la propiedad para la imagen de perfil.
   bool hasRequest;
   bool hasKitchenOrder;
@@ -30,11 +30,11 @@ class Student {
       name: json['name'],
       surname: json['surname'],
       pendingTasks: _parsePendingTasks(json['pendingTasks']),
-      doneTasks: List<String>.from(json['doneTasks']),
+      doneTasks: _parsePendingTasks(json['doneTasks']),
       profilePicture: json['profilePicture'],
       hasRequest: json['hasRequest'] || false,
       hasKitchenOrder: json['hasKitchenOrder'] || false,
-      representation: json['representation']);
+      representation: json['representation'] ?? '');
 
   factory Student.fromJson(String str) => Student.fromMap(json.decode(str));
 
@@ -76,7 +76,8 @@ class Student {
       'doneTasks': doneTasks,
       'profilePicture': profilePicture,
       'hasRequest': hasRequest,
-      'hasKitchenOrder': hasKitchenOrder
+      'hasKitchenOrder': hasKitchenOrder,
+      'representation': representation
     };
     return json.encode(data);
   }
