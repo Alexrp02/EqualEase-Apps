@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'tasks.dart';
 import 'adminPage.dart';
 import 'controllers/controller_api.dart';
+import 'selectAvatarPage.dart';
+import 'adminLoginPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,31 +21,32 @@ class MyApp extends StatelessWidget {
       home: OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
           return Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(100.0),
-              child: AppBar(
-                toolbarHeight: 100.0,
-                backgroundColor: Color.fromARGB(255, 161, 182, 236),
-                title: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'EQUALEASE HOME',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // appBar: PreferredSize(
+            //   preferredSize: Size.fromHeight(100.0),
+            //   child: AppBar(
+            //     toolbarHeight: 100.0,
+            //     backgroundColor: Color.fromARGB(255, 161, 182, 236),
+            //     title: Center(
+            //       child: Column(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: <Widget>[
+            //           Text(
+            //             'EQUALEASE HOME',
+            //             textAlign: TextAlign.center,
+            //             style: TextStyle(
+            //               color: Colors.white,
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 50.0,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             body: Center(
-              child: _buildLandscapeLayout(context),
+              //child: _buildLandscapeLayout(context),
+              child: SelectAvatarPage(),
             ),
           );
         },
@@ -76,7 +79,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminPage()),
+                  MaterialPageRoute(builder: (context) => AdminLoginPage()),
                 );
               },
               child: const Text('ADMINISTRADOR'),
@@ -103,8 +106,7 @@ class MyApp extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => StudentLandingPage(
-                          idStudent: "6gsy3HsO0GQLwVcPvySA")),
+                      builder: (context) => SelectAvatarPage()),
                 );
               },
               child: const Text('ESTUDIANTE'),

@@ -77,15 +77,27 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'TAREAS ASIGNADAS DE ${_student!.name.toUpperCase()}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50.0,
-                  ),
-                ),
+                _student != null
+                    ? Text(
+                        'TAREAS ASIGNADAS DE ${_student!.name.toUpperCase()}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0,
+                        ),
+                      )
+                    :
+                    // Si no se ha obtenido el estudiante, se muestra un texto genérico
+                    const Text(
+                        'TAREAS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0,
+                        ),
+                      ),
               ],
             ),
           ),
@@ -99,7 +111,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    _student!.name,
+                    _student!.name.toUpperCase(),
                     style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                   Expanded(

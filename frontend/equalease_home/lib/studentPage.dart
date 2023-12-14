@@ -6,6 +6,10 @@ import 'components/subtasks_widget.dart';
 import 'models/subtask.dart';
 
 class StudentPage extends StatefulWidget {
+  final Student student;
+
+  const StudentPage({Key? key, required this.student}) : super(key: key);
+
   @override
   _StudentPageState createState() => _StudentPageState();
 }
@@ -13,16 +17,19 @@ class StudentPage extends StatefulWidget {
 class _StudentPageState extends State<StudentPage> {
   // final ControllerStudent _controller =
   //     ControllerStudent('http://www.google.es');
+
   APIController controller = APIController();
   Student student = Student(
-      id: "",
-      name: "",
-      surname: "",
-      pendingTasks: [],
-      doneTasks: [],
-      profilePicture: "",
-      hasRequest: false,
-      hasKitchenOrder: false);
+    id: "",
+    name: "",
+    surname: "",
+    pendingTasks: [],
+    doneTasks: [],
+    profilePicture: "",
+    hasRequest: false,
+    hasKitchenOrder: false,
+    representation: "text",
+  );
   List<Task> doneTasks = [];
   List<Task> pendingTasks = [
     // Task(
@@ -42,19 +49,30 @@ class _StudentPageState extends State<StudentPage> {
   @override
   void initState() {
     super.initState();
-    controller.getStudent("6gsy3HsO0GQLwVcPvySA").then((value) {
+    // controller.getStudent("6gsy3HsO0GQLwVcPvySA").then((value) {
+    //   setState(() {
+    //     student = value;
+    //   });
+    //   controller.getPendingTasksTodayFromStudent(student.id).then((value) {
+    //     setState(() {
+    //       pendingTasks = value;
+    //     });
+    //   });
+    //   controller.getDoneTasksFromStudent(student.id).then((value) {
+    //     setState(() {
+    //       doneTasks = value;
+    //     });
+    //   });
+    // });
+    student = widget.student;
+    controller.getPendingTasksTodayFromStudent(student.id).then((value) {
       setState(() {
-        student = value;
+        pendingTasks = value;
       });
-      controller.getPendingTasksTodayFromStudent(student.id).then((value) {
-        setState(() {
-          pendingTasks = value;
-        });
-      });
-      controller.getDoneTasksFromStudent(student.id).then((value) {
-        setState(() {
-          doneTasks = value;
-        });
+    });
+    controller.getDoneTasksFromStudent(student.id).then((value) {
+      setState(() {
+        doneTasks = value;
       });
     });
   }

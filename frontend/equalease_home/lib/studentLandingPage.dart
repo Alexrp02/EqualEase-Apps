@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:equalease_home/components/item_widget.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
-import 'package:equalease_home/models/task.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/studentCommandPage.dart';
 import 'package:equalease_home/studentPage.dart';
-import 'package:equalease_home/tasks.dart';
 
 class StudentLandingPage extends StatefulWidget {
   final String idStudent;
@@ -19,16 +18,19 @@ class StudentLandingPage extends StatefulWidget {
 
 class _StudentLandingPageState extends State<StudentLandingPage> {
   Student student = new Student(
-      id: 'id',
-      name: 'name',
-      surname: 'surname',
-      pendingTasks: [],
-      doneTasks: [],
-      profilePicture: 'profilePicture',
-      hasRequest: false,
-      hasKitchenOrder: false);
+    id: 'id',
+    name: 'name',
+    surname: 'surname',
+    pendingTasks: [],
+    doneTasks: [],
+    profilePicture: 'profilePicture',
+    hasRequest: false,
+    hasKitchenOrder: false,
+    representation: "text",
+  );
 
   APIController controller = APIController();
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -37,7 +39,14 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
       setState(() {
         student = value;
       });
+      _speakStudentName();
     });
+  }
+
+  Future<void> _speakStudentName() async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak("Hola ${student.name}");
   }
 
   @override
@@ -169,7 +178,10 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => StudentPage()),
+                  MaterialPageRoute(
+                      builder: (context) => StudentPage(
+                            student: student,
+                          )),
                 );
               },
               child: const Text('TAREAS'),

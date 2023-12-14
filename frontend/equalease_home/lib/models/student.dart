@@ -1,35 +1,40 @@
 import 'dart:convert';
 
+// Constantes globales de representacion:
+// Student.representation ["text", "audio", "image", "video"]
+
 class Student {
   String id;
   String name;
   String surname;
   List<Map<String, dynamic>> pendingTasks;
-  List<String> doneTasks;
+  List<Map<String, dynamic>> doneTasks;
   String profilePicture; // Agregar la propiedad para la imagen de perfil.
   bool hasRequest;
   bool hasKitchenOrder;
+  String representation;
 
-  Student({
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.pendingTasks,
-    required this.doneTasks,
-    required this.profilePicture,
-    required this.hasRequest,
-    required this.hasKitchenOrder,
-  });
+  Student(
+      {required this.id,
+      required this.name,
+      required this.surname,
+      required this.pendingTasks,
+      required this.doneTasks,
+      required this.profilePicture,
+      required this.hasRequest,
+      required this.hasKitchenOrder,
+      required this.representation});
 
   factory Student.fromMap(Map<String, dynamic> json) => Student(
       id: json['id'],
       name: json['name'],
       surname: json['surname'],
       pendingTasks: _parsePendingTasks(json['pendingTasks']),
-      doneTasks: List<String>.from(json['doneTasks']),
+      doneTasks: _parsePendingTasks(json['doneTasks']),
       profilePicture: json['profilePicture'],
       hasRequest: json['hasRequest'] || false,
-      hasKitchenOrder: json['hasKitchenOrder'] || false);
+      hasKitchenOrder: json['hasKitchenOrder'] || false,
+      representation: json['representation'] ?? '');
 
   factory Student.fromJson(String str) => Student.fromMap(json.decode(str));
 
@@ -54,7 +59,8 @@ class Student {
       'doneTasks': doneTasks,
       'profilePicture': profilePicture,
       'hasRequest': hasRequest,
-      'hasKitchenOrder': hasKitchenOrder
+      'hasKitchenOrder': hasKitchenOrder,
+      'representation': representation
     };
   }
 
@@ -70,7 +76,8 @@ class Student {
       'doneTasks': doneTasks,
       'profilePicture': profilePicture,
       'hasRequest': hasRequest,
-      'hasKitchenOrder': hasKitchenOrder
+      'hasKitchenOrder': hasKitchenOrder,
+      'representation': representation
     };
     return json.encode(data);
   }
