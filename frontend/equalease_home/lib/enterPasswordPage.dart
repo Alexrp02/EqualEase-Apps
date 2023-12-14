@@ -71,6 +71,7 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
               child: PictogramGridView(
                 gridKey: _passwordGridKey,
                 onPasswordChanged: updatePassword,
+                studentId: widget.studentId,
               ),
             ),
             SizedBox(height: 20),

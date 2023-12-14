@@ -1,12 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../studentLandingPage.dart';
+
+import 'package:equalease_home/controllers/controller_api.dart';
+//import 'components/widget_grid.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PictogramGridView extends StatefulWidget {
   final GlobalKey<PictogramGridViewState> gridKey;
   final Function(String) onPasswordChanged;
+  final String studentId; // Agregamos el nuevo parámetro
 
   PictogramGridView({
     required this.gridKey,
     required this.onPasswordChanged,
+    required this.studentId, // Agregamos el nuevo parámetro
   });
 
   @override
@@ -54,6 +62,7 @@ class PictogramGridViewState extends State<PictogramGridView> {
                     // Crear una clave para cada tarjeta
                     final cardKey = GlobalKey<_PictogramCardState>();
                     cardKeys.add(cardKey);
+                    final resetKey = GlobalKey<PictogramGridViewState>();
 
                     return PictogramCard(
                       key: cardKey,
@@ -62,6 +71,11 @@ class PictogramGridViewState extends State<PictogramGridView> {
                         updateSelectedPictograms(imageName, isSelected);
                       },
                       height: gridHeight,
+                      selectColor: selectedPictograms.contains(imageName),
+                      studentId: widget.studentId, // Pasamos el studentId
+                      concatenatedPassword: concatenatedPassword,
+                      selectedPictograms: selectedPictograms,
+                      gridKey: resetKey,
                     );
                   },
                 );
@@ -110,7 +124,9 @@ class PictogramGridViewState extends State<PictogramGridView> {
   void resetSelectedImages() {
     setState(() {
       selectedPictograms.clear();
+      selectedPictograms = [];
       concatenatedPassword = '';
+      print("entramos aqui");
 
       // Iterar sobre las tarjetas y reiniciar su estado y color
       for (final cardKey in cardKeys) {
@@ -118,19 +134,30 @@ class PictogramGridViewState extends State<PictogramGridView> {
       }
     });
   }
+
+  static void deleteAll() {}
 }
 
 class PictogramCard extends StatefulWidget {
   final String imageName;
   final Function(bool isSelected) onSelected;
   final double height;
+  final bool selectColor;
+  final String studentId; // Agregamos el nuevo parámetro
+  final String concatenatedPassword;
+  List<String> selectedPictograms;
+  final GlobalKey<PictogramGridViewState> gridKey; // Nueva línea
 
-  PictogramCard({
-    required this.imageName,
-    required this.onSelected,
-    required this.height,
-    required GlobalKey<_PictogramCardState> key,
-  });
+  PictogramCard(
+      {required this.imageName,
+      required this.onSelected,
+      required this.height,
+      required GlobalKey<_PictogramCardState> key,
+      required this.selectColor,
+      required this.studentId, // Agregamos el nuevo parámetro
+      required this.concatenatedPassword,
+      required this.selectedPictograms,
+      required this.gridKey});
 
   @override
   _PictogramCardState createState() => _PictogramCardState();
@@ -139,30 +166,90 @@ class PictogramCard extends StatefulWidget {
 class _PictogramCardState extends State<PictogramCard> {
   bool isSelected = false;
   Color _colorfondo = Colors.transparent;
+  final APIController _controller = APIController();
+  String concatenatedPassword = '';
+  List<String> selectedPictograms = [];
+
+  @override
+  void initState() {
+    concatenatedPassword = widget.concatenatedPassword;
+    selectedPictograms = widget.selectedPictograms;
+    super.initState();
+  }
 
   void resetCardState() {
     setState(() {
       isSelected = false;
       _colorfondo = Colors.transparent;
       widget.onSelected(false);
+      //concatenatedPassword = widget.concatenatedPassword;
+      //selectedPictograms = widget.selectedPictograms;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Color cardColor = isSelected ? Colors.blue : Colors.transparent;
-    
+    Color cardColor = widget.selectColor ? Colors.blue : Colors.transparent;
+
     if (!isSelected) {
       cardColor = _colorfondo;
     }
-    //Color cardColor = _colorfondo;
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         setState(() {
           isSelected = !isSelected;
           widget.onSelected(isSelected);
+          selectedPictograms = widget.selectedPictograms;
+          concatenatedPassword = widget.concatenatedPassword;
+          concatenatedPassword = concatenatedPassword + this.widget.imageName;
         });
+
+        if (selectedPictograms.length >= 3) {
+          Map<String, dynamic> loginResult =
+              await _controller.login(widget.studentId, concatenatedPassword);
+
+          print(concatenatedPassword);
+          print("REalizando comprobación automatica");
+
+          if (loginResult["token"] != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StudentLandingPage(
+                  idStudent: widget.studentId,
+                ),
+              ),
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Contraseña Incorrecta'),
+                  content: Text('La contraseña introducida no es válida.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // Llamar a la función para resetear las imágenes
+                          //_passwordGridKey.currentState?.resetSelectedImages();
+                          widget.gridKey.currentState?.resetSelectedImages();
+
+                          selectedPictograms.clear();
+                          selectedPictograms = [];
+
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -181,8 +268,6 @@ class _PictogramCardState extends State<PictogramCard> {
     );
   }
 }
-
-
 
 
 /*
