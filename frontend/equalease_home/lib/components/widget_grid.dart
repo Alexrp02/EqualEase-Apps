@@ -192,9 +192,7 @@ class _PictogramCardState extends State<PictogramCard> {
     setState(() {
       isSelected = false;
       _colorfondo = Colors.transparent;
-      //widget.onSelected(false);
-      //concatenatedPassword = widget.concatenatedPassword;
-      //selectedPictograms = widget.selectedPictograms;
+      
     });
   }
 
@@ -247,7 +245,7 @@ class _PictogramCardState extends State<PictogramCard> {
                         Icons
                             .sentiment_satisfied, // El icono de la cara sonriente
                         color: Colors
-                            .green, // Puedes ajustar el color según tus preferencias
+                            .orange, // Puedes ajustar el color según tus preferencias
                         size:
                             80.0, // Puedes ajustar el tamaño según tus preferencias
                       ),
