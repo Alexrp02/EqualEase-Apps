@@ -17,7 +17,7 @@ class StudentLandingPage extends StatefulWidget {
 }
 
 class _StudentLandingPageState extends State<StudentLandingPage> {
-  Student student = new Student(
+  Student student = Student(
     id: 'id',
     name: 'name',
     surname: 'surname',
@@ -55,29 +55,41 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
       builder: (BuildContext context, Orientation orientation) {
         return Scaffold(
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(100.0),
+            preferredSize: const Size.fromHeight(100.0),
             child: AppBar(
-              backgroundColor: Color.fromARGB(255, 161, 182, 236),
+              backgroundColor: const Color.fromARGB(255, 161, 182, 236),
               toolbarHeight: 100.0,
-              leading: new IconButton(
+              leading: IconButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: new Icon(
+                  icon: const Icon(
                     Icons.arrow_back,
                     size: 50.0,
                   )),
               title: Center(
-                child: Column(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      'ESTUDIANTE',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 50.0,
+                    student.profilePicture == 'profilePicture'
+                        ? Container()
+                        : Image.network(
+                            student.profilePicture,
+                            width: 100.0,
+                            height: 100.0,
+                          ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    Flexible(
+                      child: Text(
+                        '${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0,
+                        ),
                       ),
                     ),
                   ],
@@ -122,6 +134,7 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                         MaterialPageRoute(
                             builder: (context) => (ItemCarousel(
                                   studentId: "6gsy3HsO0GQLwVcPvySA",
+                                  student: student,
                                 ))),
                       );
                     },
@@ -151,7 +164,9 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StudentCommandPage()),
+                            builder: (context) => StudentCommandPage(
+                                  student: student,
+                                )),
                       );
                     },
                     child: const Text('COMANDA'),

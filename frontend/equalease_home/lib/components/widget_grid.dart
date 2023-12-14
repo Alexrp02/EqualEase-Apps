@@ -76,6 +76,7 @@ class PictogramGridViewState extends State<PictogramGridView> {
                       concatenatedPassword: concatenatedPassword,
                       selectedPictograms: selectedPictograms,
                       gridKey: resetKey,
+                      clear: clear,
                     );
                   },
                 );
@@ -120,6 +121,14 @@ class PictogramGridViewState extends State<PictogramGridView> {
     });
   }
 
+  void clear() {
+    setState(() {
+      selectedPictograms.clear();
+      selectedPictograms = [];
+      concatenatedPassword = '';
+    });
+  }
+
   // Método para reiniciar las imágenes seleccionadas
   void resetSelectedImages() {
     setState(() {
@@ -141,6 +150,7 @@ class PictogramGridViewState extends State<PictogramGridView> {
 class PictogramCard extends StatefulWidget {
   final String imageName;
   final Function(bool isSelected) onSelected;
+  final Function() clear;
   final double height;
   final bool selectColor;
   final String studentId; // Agregamos el nuevo parámetro
@@ -157,7 +167,8 @@ class PictogramCard extends StatefulWidget {
       required this.studentId, // Agregamos el nuevo parámetro
       required this.concatenatedPassword,
       required this.selectedPictograms,
-      required this.gridKey});
+      required this.gridKey,
+      required this.clear});
 
   @override
   _PictogramCardState createState() => _PictogramCardState();
@@ -213,6 +224,7 @@ class _PictogramCardState extends State<PictogramCard> {
           print("REalizando comprobación automatica");
 
           if (loginResult["token"] != null) {
+            widget.clear();
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -222,6 +234,7 @@ class _PictogramCardState extends State<PictogramCard> {
               ),
             );
           } else {
+            widget.clear();
             showDialog(
               context: context,
               builder: (context) {

@@ -5,9 +5,14 @@ import 'package:equalease_home/models/classroom.dart';
 import 'package:equalease_home/models/teacher.dart';
 import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
+
+import 'models/student.dart';
 //import 'createRequest.dart';
 
 class StudentCommandPage extends StatefulWidget {
+  final Student student;
+
+  const StudentCommandPage({Key? key, required this.student}) : super(key: key);
   @override
   _StudentCommandPageState createState() => _StudentCommandPageState();
 }
@@ -45,20 +50,28 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
           preferredSize: Size.fromHeight(100.0),
           child: AppBar(
             toolbarHeight: 100.0,
-            leading: new IconButton(
+            leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: new Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   size: 50.0,
                 )),
             backgroundColor: Color.fromARGB(255, 161, 182, 236),
             title: Center(
-              child: Column(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  Image.network(
+                    widget.student.profilePicture,
+                    width: 100.0,
+                    height: 100.0,
+                  ),
+                  const SizedBox(
+                    width: 20.0,
+                  ),
+                  const Text(
                     'COMANDAS',
                     textAlign: TextAlign.center,
                     style: TextStyle(

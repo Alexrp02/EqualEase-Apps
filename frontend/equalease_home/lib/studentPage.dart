@@ -85,26 +85,37 @@ class _StudentPageState extends State<StudentPage> {
         child: AppBar(
           toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          leading: new IconButton(
+          leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: new Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 size: 50.0,
               )),
           title: Center(
-            child: Column(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color:
-                        Colors.white, // Cambia el color de la fuente a blanco
-                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                    fontSize: 50.0, // Cambia el tamaño de la fuente
+                Image.network(
+                  student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+                const SizedBox(
+                  width: 20.0,
+                ),
+                Flexible(
+                  child: Text(
+                    'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.fade,
+                    style: const TextStyle(
+                      color:
+                          Colors.white, // Cambia el color de la fuente a blanco
+                      fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                      fontSize: 50.0, // Cambia el tamaño de la fuente
+                    ),
                   ),
                 ),
               ],
