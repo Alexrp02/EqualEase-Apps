@@ -179,6 +179,15 @@ class _StudentDataState extends State<StudentData>
           _student!.surname,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        SizedBox(height: 20),
+        Text(
+          'Tipo de representación:',
+          style: TextStyle(fontSize: 18),
+        ),
+        Text(
+          _student!.representation,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         Image.network(
           _student!.profilePicture,
           width: 150.0,

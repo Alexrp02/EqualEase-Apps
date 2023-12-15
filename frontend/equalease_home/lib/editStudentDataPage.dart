@@ -18,11 +18,13 @@ class EditStudentDataPage extends StatefulWidget {
 class _EditStudentPageState extends State<EditStudentDataPage> {
   late TextEditingController _nameController;
   late TextEditingController _surnameController;
+  late TextEditingController _tipoController;
   final APIController _controller = APIController();
   final imageController = ImagesController();
   String pictogramURL = '';
   String? _nameErrorText;
   String? _surnameErrorText;
+  String _tipoValue = 'text'; // Valor predeterminado
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
     // Inicializa los controladores de texto con los valores actuales del estudiante
     _nameController = TextEditingController(text: widget.student.name);
     _surnameController = TextEditingController(text: widget.student.surname);
+    _tipoController = TextEditingController(text: _tipoValue);
     pictogramURL = widget.student.profilePicture;
   }
 
@@ -38,6 +41,7 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
     // Libera los recursos de los controladores de texto al cerrar la página
     _nameController.dispose();
     _surnameController.dispose();
+    _tipoController.dispose();
     super.dispose();
   }
 
@@ -49,27 +53,28 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
         child: AppBar(
           toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          leading: new IconButton(
-              onPressed: () {
-                Navigator.pop(context, widget.student);
-              },
-              icon: new Icon(
-                Icons.arrow_back,
-                size: 50.0,
-              )),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context, widget.student);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            ),
+          ),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                    'EDITAR DATOS DE ${widget.student.name.toUpperCase()}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50.0,
-                    ),
-                  )
+                  'EDITAR DATOS DE ${widget.student.name.toUpperCase()}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 50.0,
+                  ),
+                )
               ],
             ),
           ),
@@ -82,36 +87,54 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Nombre', 
-              errorText: _nameErrorText
+              decoration: InputDecoration(
+                labelText: 'Nombre',
+                errorText: _nameErrorText,
               ),
-              
             ),
             SizedBox(height: 20),
             TextField(
               controller: _surnameController,
-              decoration: InputDecoration(labelText: 'Apellidos', 
-              errorText: _surnameErrorText
+              decoration: InputDecoration(
+                labelText: 'Apellidos',
+                errorText: _surnameErrorText,
+              ),
+            ),
+            SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              value: _tipoValue,
+              onChanged: (value) {
+                setState(() {
+                  _tipoValue = value!;
+                });
+              },
+              items: ['text', 'video', 'image', 'audio']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: InputDecoration(
+                labelText: 'Tipo de representación',
               ),
             ),
             SizedBox(height: 20),
             ImageUploader(
-                    source: ImageSource.camera, controller: imageController
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PictogramSelect()
-                              )
-                            )
-                          .then((value) {
-                        pictogramURL = value;
-                      });
-                    },
-                    child: Text('Seleccionar Pictograma')
-                ),
+              source: ImageSource.camera,
+              controller: imageController,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PictogramSelect()),
+                ).then((value) {
+                  pictogramURL = value;
+                });
+              },
+              child: Text('Seleccionar Pictograma'),
+            ),
             ElevatedButton(
               onPressed: () {
                 // Guarda los cambios y vuelve a la página anterior
@@ -123,7 +146,6 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               ),
               child: Text('Guardar Cambios'),
-              
             ),
           ],
         ),
@@ -133,39 +155,33 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
 
   void _saveChanges() async {
     // Actualiza los valores del estudiante con los nuevos valores ingresados
-
-    
     String img = '';
 
     if (_nameController.text.isEmpty) {
       setState(() {
         _nameErrorText = 'ESTE CAMPO NO PUEDE ESTAR VACÍO';
       });
-    }
-    else if(_surnameController.text.isEmpty){
+    } else if (_surnameController.text.isEmpty) {
       setState(() {
         _surnameErrorText = 'ESTE CAMPO NO PUEDE ESTAR VACÍO';
       });
     } else {
-
       if (imageController.hasImage()) {
         img = pictogramURL;
       } else if (!imageController.hasImage()) {
         img = await imageController.uploadImage('student', _nameController.text);
       }
 
-      
       widget.student.name = _nameController.text;
       widget.student.surname = _surnameController.text;
       widget.student.profilePicture = img;
+      widget.student.representation = _tipoValue;
 
       print("El link de la imagen de la nueva imagen es " + img);
 
-      //Llamada al controlador para guardar internamente los cambios
+      // Llamada al controlador para guardar internamente los cambios
       _controller.updateStudent(widget.student);
       Navigator.pop(context, widget.student);
     }
-
-    
   }
 }

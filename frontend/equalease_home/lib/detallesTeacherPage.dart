@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:equalease_home/editStudentDataPage.dart';
+import 'package:equalease_home/editTeacherPage.dart';
 
 class DetallesTeacherPage extends StatefulWidget {
   final Teacher teacher;
@@ -90,13 +91,13 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
       ),
       body: Center(
         child: _teacher != null
-            ? buildStudentInfo()
-            : const Text('No se encontraron datos del estudiante'),
+            ? buildTeacherInfo()
+            : const Text('No se encontraron datos del profesor'),
       ),
     );
   }
 
-  Widget buildStudentInfo() {
+  Widget buildTeacherInfo() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -126,6 +127,16 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
           _teacher!.email,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        Text(
+          'Administrador:',
+          style: TextStyle(fontSize: 18),
+        ),
+        Text(
+          _teacher!.isAdmin
+              ? 'Sí' // Si isAdmin es true, muestra 'Sí'
+              : 'No', // Si isAdmin es false, muestra 'No'
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         Image.network(
           _teacher!.profilePicture,
           width: 150.0,
@@ -137,17 +148,17 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
           children: [
             ElevatedButton(
               onPressed: () {
-                /*Navigator.push(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EditStudentDataPage(
-                            student: _student!,
+                      builder: (context) => EditTeacherDataPage(
+                            teacher: _teacher!,
                           )),
                 ).then((value) {
                   setState(() {
-                    _student = value;
+                    _teacher = value;
                   });
-                });*/
+                });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 161, 182, 236),
@@ -159,7 +170,7 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
             SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
-               // _showDeleteConfirmationDialog(_student);
+                _showDeleteConfirmationDialog(_teacher);
 
                 print('Eliminar');
               },
@@ -176,14 +187,14 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
     );
   }
 
-  void _showDeleteConfirmationDialog(Student? student) {
+  void _showDeleteConfirmationDialog(Teacher? teacher) {
     bool isDeleted = false;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "ELIMINAR ESTUDIANTE",
+            "ELIMINAR DOCENTE",
             style: TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
               fontSize: 30.0,
@@ -227,7 +238,8 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
                 ),
               ),
               onPressed: () async {
-                await controller.deleteStudent(student!.id);
+                await controller.deleteTeacher(teacher!.id);
+               
                 isDeleted = true;
                 setState(() {
                   //_TasksAgregadas.remove(task);

@@ -1,6 +1,7 @@
 import 'package:equalease_home/models/teacher.dart';
 import 'package:flutter/material.dart';
 import 'package:equalease_home/addStudent.dart';
+import 'package:equalease_home/addTeacher.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'LISTA DE ESTUDIANTES',
+                  'MENU ADMNISTRADOR ESTUDIANTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -281,7 +282,7 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'LISTA DE DOCENTES',
+                  'MENU ADMNISTRADOR ESTUDIANTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -364,14 +365,14 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-         /* Navigator.push(
+          Navigator.push(
             context,
-          MaterialPageRoute(builder: (context) => AddStudentForm()),
+          MaterialPageRoute(builder: (context) => AddTeacherForm()),
                 ).then((value) {
             setState(() {
-              _StudentsAdded.add(value);
+              _TeachersAdded.add(value);
             });
-          });*/
+          });
         },
         child: Icon(Icons.add),
       ),

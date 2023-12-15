@@ -1,12 +1,36 @@
-import 'package:equalease_home/administrationPagePRUEBA.dart';
-import 'package:equalease_home/menuAdmin.dart';
-import 'package:equalease_home/pruebamenu.dart';
+import 'package:equalease_home/AdminRolPage.dart';
+import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
 import 'tasks.dart';
 
-class AdminPage extends StatelessWidget {
-  const AdminPage({Key? key});
+class AdminPage extends StatefulWidget {
+  final String admin;
+
+  const AdminPage({Key? key, required this.admin}) : super(key: key);
+
+  @override
+  _AdminPageState createState() => _AdminPageState();
+}
+
+class _AdminPageState extends State<AdminPage> {
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Lógica para obtener el estado de administrador al inicializar el estado
+    _checkAdminStatus();
+  }
+
+  void _checkAdminStatus() {
+    APIController controller = APIController();
+    controller.getTeacher(widget.admin).then((value) {
+      setState(() {
+        isAdmin = value.isAdmin;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +56,7 @@ class AdminPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'PÁGINA DEL ADMINISTRADOR',
+                      'PÁGINA DEL DOCENTE',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
@@ -46,27 +70,7 @@ class AdminPage extends StatelessWidget {
             ),
           ),
           body: _buildLandscapeLayout(context),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Coloca aquí el código que deseas ejecutar al presionar el botón de engranaje.
-               Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MuestraMenu()),
-                );
-            },
-            tooltip: 'Configuración',
-            backgroundColor: Color.fromARGB(255, 161, 182, 236),
-            heroTag:
-                null, // Para evitar advertencias sobre la falta de héroe en la animación
-            child: Icon(
-              Icons.settings,
-              size: 56, // Ajusta el tamaño del ícono aquí
-            ),
-            mini: false, // Asegúrate de que el botón no sea mini
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40.0), // Ajusta el radio aquí
-            ),
-          ),
+          floatingActionButton: _buildFloatingActionButton(),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
@@ -75,7 +79,7 @@ class AdminPage extends StatelessWidget {
 
   Widget _buildLandscapeLayout(BuildContext context) {
     Color buttonColor = Color.fromARGB(255, 161, 182, 236);
-    Color textColor = Colors.white; // Color blanco para el texto
+    Color textColor = Colors.white;
 
     return Center(
       child: Column(
@@ -87,12 +91,12 @@ class AdminPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(
-                    Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize:
+                    MaterialStateProperty.all(Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -111,12 +115,12 @@ class AdminPage extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(buttonColor),
                 foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize: MaterialStateProperty.all(
-                    Size(double.infinity, 100)), // Ajusta la altura aquí
+                minimumSize:
+                    MaterialStateProperty.all(Size(double.infinity, 100)),
                 textStyle: MaterialStateProperty.all(
                   TextStyle(
                     fontSize: 48,
-                    fontWeight: FontWeight.bold, // Texto en negrita
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -132,5 +136,29 @@ class AdminPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return isAdmin
+        ? FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MuestraMenu()),
+              );
+            },
+            tooltip: 'Configuración',
+            backgroundColor: Color.fromARGB(255, 161, 182, 236),
+            heroTag: null,
+            child: Icon(
+              Icons.settings,
+              size: 56,
+            ),
+            mini: false,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40.0),
+            ),
+          )
+        : Container(); // Si no tiene el rol, el contenedor es invisible
   }
 }

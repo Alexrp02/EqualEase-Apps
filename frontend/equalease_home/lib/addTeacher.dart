@@ -3,33 +3,39 @@ import 'package:image_picker/image_picker.dart';
 import 'controllers/controller_api.dart';
 import 'controllers/controller_images.dart';
 import 'models/student.dart';
+import 'models/teacher.dart';
 import 'package:equalease_home/components/select_pictogram.dart';
 import 'package:equalease_home/components/upload_image_button.dart';
 import 'dart:io';
 
-class AddStudentForm extends StatefulWidget {
+class AddTeacherForm extends StatefulWidget {
   @override
-  _AddStudentFormState createState() => _AddStudentFormState();
+  _AddTeacherFormState createState() => _AddTeacherFormState();
 }
 
-class _AddStudentFormState extends State<AddStudentForm> {
+class _AddTeacherFormState extends State<AddTeacherForm> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _surnameController = TextEditingController();
-  String _tipoValue = 'text';
+  TextEditingController _mailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+  String _tipoValue = 'No';
   final imageController = ImagesController();
   final apiController = APIController();
   String imageURL = '';
   String pictogramURL = '';
   String? _nameErrorText;
   String? _surnameErrorText;
-  String? _passwordErrorText;
-  List<String> _passwordElements = [];
+  String? _mailErrorText;
   bool _imgError = false;
 
   @override
   void dispose() {
     _nameController.dispose();
     _surnameController.dispose();
+    _mailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -50,17 +56,63 @@ class _AddStudentFormState extends State<AddStudentForm> {
       return;
     }
 
-    if (_passwordElements.length != 3) {
+    if (_mailController.text.isEmpty) {
       setState(() {
-        _passwordErrorText = 'Debe seleccionar exactamente 3 elementos para la contraseña';
+        _mailErrorText = 'ESTE CAMPO NO PUEDE ESTAR VACÍO';
       });
+      return;
+    }
+
+    if (_passwordController.text.isEmpty || _confirmPasswordController.text.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Aviso'),
+            content: const Text(
+              'Por favor, complete ambos campos de contraseña.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Aviso'),
+            content: const Text(
+              'Las contraseñas no coinciden. Por favor, inténtelo de nuevo.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
       return;
     }
 
     if (imageController.hasImage()) {
       img = pictogramURL;
     } else if (!imageController.hasImage()) {
-      img = await imageController.uploadImage('student', _nameController.text);
+      img = await imageController.uploadImage('menu', _nameController.text);
     }
 
     if (img == '') {
@@ -83,23 +135,29 @@ class _AddStudentFormState extends State<AddStudentForm> {
           );
         },
       );
-      return;
     } else {
-      Student nuevoStudent = Student(
+      bool admin = false;
+      String rol = 'teacher';
+      if (_tipoValue == 'Si') {
+        admin = true;
+        rol = 'admin';
+      }
+
+      // Ahora también se recoge la contraseña
+      String password = _passwordController.text;
+
+      Teacher nuevoTeacher = Teacher(
         id: 'subid',
         name: _nameController.text,
         surname: _surnameController.text,
-        pendingTasks: [],
-        doneTasks: [],
+        email: _mailController.text,
+        students: [],
         profilePicture: img,
-        hasRequest: false,
-        hasKitchenOrder: false,
-        representation: _tipoValue,
-        //password: _passwordElements.join(''),
+        isAdmin: admin,
       );
 
-      apiController.createStudent(nuevoStudent, _passwordElements.join(''));
-      Navigator.pop(context, nuevoStudent);
+      apiController.createTeacher(nuevoTeacher, password, rol);
+      Navigator.pop(context, nuevoTeacher);
     }
   }
 
@@ -125,7 +183,7 @@ class _AddStudentFormState extends State<AddStudentForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'AÑADIR ESTUDIANTE',
+                  'AÑADIR DOCENTE',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -168,38 +226,75 @@ class _AddStudentFormState extends State<AddStudentForm> {
                 errorText: _surnameErrorText,
               ),
             ),
+            TextFormField(
+              controller: _mailController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingrese el mail';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: 'Mail',
+                errorText: _mailErrorText,
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, ingrese la contraseña';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: 'Contraseña',
+              ),
+            ),
+            TextFormField(
+              controller: _confirmPasswordController,
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, confirme la contraseña';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: 'Confirmar Contraseña',
+              ),
+            ),
             const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               value: _tipoValue,
               onChanged: (String? value) {
                 setState(() {
-                  _tipoValue = value ?? 'text';
+                  _tipoValue = value ?? 'No';
                 });
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Por favor, seleccione el tipo';
+                  return 'Por favor, seleccione el rol';
                 }
                 return null;
               },
-              items: ['text', 'video', 'image', 'audio']
-                  .map<DropdownMenuItem<String>>((String value) {
+              items: ['No', 'Si'].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
                 );
               }).toList(),
               decoration: InputDecoration(
-                labelText: 'Tipo',
+                labelText: '¿Es administrador?',
               ),
             ),
-            const SizedBox(height: 20),
-            _buildPasswordSelection(),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveMenu,
               child: const Text(
-                'GUARDAR ESTUDIANTE',
+                'GUARDAR DOCENTE',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -254,60 +349,5 @@ class _AddStudentFormState extends State<AddStudentForm> {
         ),
       ),
     );
-  }
-
-  Widget _buildPasswordSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Selecciona tres elementos para la contraseña:',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 10,
-          children: _buildPasswordOptions(),
-        ),
-        const SizedBox(height: 10),
-        if (_passwordElements.length == 3)
-          Text(
-            'Contraseña actual: ${_passwordElements.join()}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        if (_passwordErrorText != null)
-          Text(
-            _passwordErrorText!,
-            style: TextStyle(
-              color: Colors.red,
-            ),
-          ),
-      ],
-    );
-  }
-
-  List<Widget> _buildPasswordOptions() {
-    return ['coche', 'botella', 'circulo', 'casa', 'planta', 'vaso']
-        .map<Widget>((String option) {
-      return ChoiceChip(
-        label: Text(option),
-        selected: _passwordElements.contains(option),
-        onSelected: (bool selected) {
-          setState(() {
-            if (selected) {
-              _passwordElements.add(option);
-            } else {
-              _passwordElements.remove(option);
-            }
-          });
-        },
-      );
-    }).toList();
   }
 }
