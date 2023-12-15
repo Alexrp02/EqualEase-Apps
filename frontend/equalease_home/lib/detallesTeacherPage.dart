@@ -1,9 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/teacher.dart';
-import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:equalease_home/editStudentDataPage.dart';
 import 'package:equalease_home/editTeacherPage.dart';
 
@@ -18,16 +16,13 @@ class DetallesTeacherPage extends StatefulWidget {
 
 class _DetallesTeacherPage extends State<DetallesTeacherPage>
     with TickerProviderStateMixin {
-  // Simulando la obtención de datos del estudiante
   Teacher? _teacher;
+  List<Student> _assignedStudents = [];
   APIController controller = APIController();
-  //late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-
-    //tabController = TabController(length: 2, vsync: this);
 
     _teacher = null;
 
@@ -35,12 +30,26 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
       setState(() {
         _teacher = teacher;
       });
+
+      // Obtener detalles de estudiantes asignados
+      if (_teacher != null) {
+        _loadAssignedStudentsDetails();
+      }
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _loadAssignedStudentsDetails() async {
+    List<Student> assignedStudents = [];
+
+    // Obtener detalles de cada estudiante asignado
+    for (String studentId in _teacher!.students) {
+      Student student = await controller.getStudent(studentId);
+      assignedStudents.add(student);
+    }
+
+    setState(() {
+      _assignedStudents = assignedStudents;
+    });
   }
 
   @override
@@ -51,14 +60,15 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
         child: AppBar(
           toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          leading: new IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: new Icon(
-                Icons.arrow_back,
-                size: 50.0,
-              )),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            ),
+          ),
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,9 +83,7 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
                           fontSize: 50.0,
                         ),
                       )
-                    :
-                    // Si no se ha obtenido el estudiante, se muestra un texto genérico
-                    const Text(
+                    : const Text(
                         'DATOS',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -132,11 +140,29 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
           style: TextStyle(fontSize: 18),
         ),
         Text(
-          _teacher!.isAdmin
-              ? 'Sí' // Si isAdmin es true, muestra 'Sí'
-              : 'No', // Si isAdmin es false, muestra 'No'
+          _teacher!.isAdmin ? 'Sí' : 'No',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        SizedBox(height: 5),
+        Text(
+          'Estudiantes Asignados:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        _assignedStudents.isNotEmpty
+            ? Column(
+                children: _assignedStudents
+                    .map((student) => ListTile(
+                          title: Center(
+                            child: Text(
+                              '${student.name} ${student.surname}',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          // Puedes agregar más información del estudiante aquí
+                        ))
+                    .toList(),
+              )
+            : Text('No hay estudiantes asignados'),
         Image.network(
           _teacher!.profilePicture,
           width: 150.0,
@@ -157,6 +183,7 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
                 ).then((value) {
                   setState(() {
                     _teacher = value;
+                    _loadAssignedStudentsDetails();
                   });
                 });
               },
@@ -171,8 +198,6 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
             ElevatedButton(
               onPressed: () {
                 _showDeleteConfirmationDialog(_teacher);
-
-                print('Eliminar');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 161, 182, 236),
@@ -206,7 +231,7 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
             children: [
               Center(
                 child: Text(
-                  "¿ESTA SEGURO?",
+                  "¿ESTÁ SEGURO?",
                   style: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 20.0,
@@ -239,14 +264,8 @@ class _DetallesTeacherPage extends State<DetallesTeacherPage>
               ),
               onPressed: () async {
                 await controller.deleteTeacher(teacher!.id);
-               
                 isDeleted = true;
-                setState(() {
-                  //_TasksAgregadas.remove(task);
-
-                  // Llamar al controlador de eliminación
-                });
-                //Navigator.of(context).pop();
+                setState(() {});
                 Navigator.pop(context);
               },
             ),

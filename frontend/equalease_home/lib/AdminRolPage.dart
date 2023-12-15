@@ -1,4 +1,5 @@
 import 'package:equalease_home/models/teacher.dart';
+import 'package:equalease_home/teacherAssignedStudent.dart';
 import 'package:flutter/material.dart';
 import 'package:equalease_home/addStudent.dart';
 import 'package:equalease_home/addTeacher.dart';
@@ -9,7 +10,6 @@ import 'package:getwidget/getwidget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'detallesStudentPage.dart';
 import 'detallesTeacherPage.dart';
-
 
 class MuestraMenu extends StatefulWidget {
   @override
@@ -121,7 +121,7 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'MENU ADMNISTRADOR ESTUDIANTES',
+                  'MENU ADIMNISTRADOR ESTUDIANTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -206,8 +206,8 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
         onPressed: () {
           Navigator.push(
             context,
-          MaterialPageRoute(builder: (context) => AddStudentForm()),
-                ).then((value) {
+            MaterialPageRoute(builder: (context) => AddStudentForm()),
+          ).then((value) {
             setState(() {
               _StudentsAdded.add(value);
             });
@@ -215,12 +215,8 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
         },
         child: Icon(Icons.add),
       ),
-      
     );
   }
-
- 
-     
 }
 
 class TeacherAdministrationPage extends StatefulWidget {
@@ -282,7 +278,7 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'MENU ADMNISTRADOR ESTUDIANTES',
+                  'MENU ADMINISTRADOR DOCENTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -346,6 +342,19 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                                   fontSize: 30.0, // Ajusta el tamaño del texto
                                 ),
                               ),
+                              // Icono person_add al lado del profesor
+                              IconButton(
+                                icon: Icon(Icons.person_add),
+                                onPressed: () {
+                                  Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TeacherAssignedStudent(
+                                      TeacherAgregada.id, TeacherAgregada.students),
+                                ),
+                              );
+                                },
+                              ),
                             ],
                           ),
                           tileColor: Colors.white,
@@ -367,8 +376,8 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
         onPressed: () {
           Navigator.push(
             context,
-          MaterialPageRoute(builder: (context) => AddTeacherForm()),
-                ).then((value) {
+            MaterialPageRoute(builder: (context) => AddTeacherForm()),
+          ).then((value) {
             setState(() {
               _TeachersAdded.add(value);
             });
@@ -376,14 +385,9 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
         },
         child: Icon(Icons.add),
       ),
-      
     );
   }
-
- 
-     
 }
-
 
 class SecondPage extends StatelessWidget {
   @override
