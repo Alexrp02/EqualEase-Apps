@@ -1,3 +1,4 @@
+
 import 'package:equalease_home/StudentsAssignedTask.dart';
 import 'package:equalease_home/components/menu_widget.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
@@ -9,10 +10,13 @@ import 'package:flutter/material.dart';
 import 'models/student.dart';
 //import 'createRequest.dart';
 
-class StudentCommandPage extends StatefulWidget {
-  final Student student;
 
-  const StudentCommandPage({Key? key, required this.student}) : super(key: key);
+class StudentCommandPage extends StatefulWidget {
+  final String representation;
+  final Student student;
+  const StudentCommandPage({Key? key,required this.representation, required this.student}): super(key: key);
+
+
   @override
   _StudentCommandPageState createState() => _StudentCommandPageState();
 }
@@ -59,19 +63,30 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                   size: 50.0,
                 )),
             backgroundColor: Color.fromARGB(255, 161, 182, 236),
-            title: const Center(
+            title:  Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'COMANDAS',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50.0,
+                  if(widget.representation == "text" || widget.representation == "audio" )
+                    Text(
+                      'COMANDAS',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50.0,
+                      ),
+                    )
+                  else 
+                  SizedBox(
+                    width: 100.0, // Ajusta el ancho deseado
+                    height: 100.0, // Ajusta la altura deseada
+                    child: Image.asset(
+                      'assets/comida.png', // Reemplaza con la ruta de tu imagen local
+                      fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
                     ),
                   ),
+                    
                 ],
               ),
             ),
@@ -233,21 +248,43 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                           ),
                           SizedBox(width: 16.0),
                           // Mostrar la cantidad de KitchenOrders en el listado
-                          Text(
-                            "${classroomAdded.letter}",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 24.0,
+                         if(widget.representation == "text" || widget.representation=="audio")
+                            Text(
+                              "${classroomAdded.letter}",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 24.0,
+                              ),
+                            )
+                          else
+                            SizedBox(
+                              width: 100.0, // Ajusta el ancho deseado
+                              height: 100.0, // Ajusta la altura deseada
+                              child: Image.asset(
+                                'assets/clase${classroomAdded.letter}.png', // Reemplaza con la ruta de tu imagen local
+                                fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                              ),
                             ),
-                          ),
+
                           SizedBox(width: 300),
-                          Text(
-                            "COMPLETADO",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 24.0,
-                            ),
-                          )
+
+                          if(widget.representation == "text" || widget.representation=="audio")
+                            Text(
+                              "COMPLETADO",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontSize: 24.0,
+                              ),
+                            )
+                          else
+                            SizedBox(
+                              width: 100.0, // Ajusta el ancho deseado
+                              height: 100.0, // Ajusta la altura deseada
+                              child: Image.asset(
+                                'assets/bien.png', // Reemplaza con la ruta de tu imagen local
+                                fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                              ),
+                            )
                         ],
                       ),
                       onTap: () {
@@ -255,6 +292,8 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                             MaterialPageRoute(builder: (context) {
                           return MenuCarousel(
                             classroom: _classrooms[i],
+                            teacherPic: _teachers[i].profilePicture,
+                            representation: widget.representation,
                             student: widget.student,
                           );
                         }));

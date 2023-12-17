@@ -72,13 +72,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   
   assets:
-    - assets/coche.png
-    - assets/botella.png
-    - assets/circulo.png
-    - assets/casa.png
-    - assets/planta.png
-    - assets/vaso.png
     - assets/.
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

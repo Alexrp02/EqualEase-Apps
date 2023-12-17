@@ -1147,14 +1147,7 @@ class APIController {
 
   /// 2a iteracion
 
-  /// returns a request through a student connecting with the database
-  ///
-  /// Params:
-  ///
-  ///   -[studentId]: Student identifier
-  ///
-  /// Returns: List<Request>
-
+  // devuelve una lista de request del estudiante
   Future<List<Request>> getRequestsFromStudent(String studentId) async {
     final String apiUrl = '$baseUrl/request/student/$studentId';
 

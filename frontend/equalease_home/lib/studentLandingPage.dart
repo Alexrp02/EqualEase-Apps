@@ -184,8 +184,8 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => StudentCommandPage(
-                                  student: student,
-                                )),
+                                student: student,
+                                representation: student.representation)),
                       );
                     },
                     child: Column(
