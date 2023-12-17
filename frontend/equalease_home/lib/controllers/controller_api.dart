@@ -1,6 +1,7 @@
 // External packages
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_tts/flutter_tts.dart';
 
 // Project models
 import '../models/classroom.dart';
@@ -16,7 +17,8 @@ import '../models/request.dart';
 /// class containing all operations with API
 class APIController {
   //String baseUrl = 'http://localhost:3000/api';
-   String baseUrl = "http://10.0.2.2:3000/api";
+  String baseUrl = "http://10.0.2.2:3000/api";
+  FlutterTts flutterTts = FlutterTts();
 
   //-----------------------------------------------------------------------//
   //Subtask operations
@@ -1874,6 +1876,12 @@ class APIController {
     } catch (e) {
       throw Exception('Error de red: $e');
     }
+  }
+
+  Future<void> speak(String text) async {
+    await flutterTts.setLanguage("es-ES");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
   }
 }
 
