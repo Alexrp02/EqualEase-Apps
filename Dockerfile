@@ -1,8 +1,8 @@
 # Use an official Node runtime as a base image
-FROM node:14
+FROM node:18
 
 # Set the working directory in the container
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to the working directory
 COPY ./app/package.json ./
@@ -17,4 +17,4 @@ RUN npm install -g nodemon
 EXPOSE 3000
 
 # Start the application
-CMD ["nodemon", "--legacy-watch", "./app/index.js"]
+CMD ["nodemon", "--legacy-watch", "index.js"]
