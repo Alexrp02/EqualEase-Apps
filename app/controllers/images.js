@@ -20,6 +20,9 @@ async function uploadImage(req, res) {
        console.log("File available at", downloadURL) ;
 
        res.status(201).json({image:downloadURL})
+   }else{
+         res.status(400).json({message: "Invalid file"});
+    
    }
 }
 
