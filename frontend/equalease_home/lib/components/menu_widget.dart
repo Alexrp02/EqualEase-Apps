@@ -2,18 +2,19 @@
 import 'package:equalease_home/models/classroom.dart';
 import 'package:equalease_home/models/kitchen_order.dart';
 import 'package:equalease_home/models/menu.dart';
+import 'package:equalease_home/models/teacher.dart';
 import 'package:flutter/material.dart';
 
 import '../models/subtask.dart';
 import '../controllers/controller_api.dart';
 bool _changed = false;
-bool debug = false;
 
 class MenuWidget extends StatefulWidget {
   final Map<String, dynamic> order;
+  final String representation;
  
 
-  const MenuWidget({Key? key, required this.order})
+  const MenuWidget({Key? key, required this.order, required this.representation})
       : super(key: key);
 
   @override
@@ -94,7 +95,7 @@ class _MenuWidgetState extends State<MenuWidget> {
             ),
             SizedBox(width: 16),
 
-            if (debug)
+            if (widget.representation == "text" || widget.representation =="audio")
               Text(
                 '${widget.order['quantity']}',
                 style: TextStyle(fontSize: 50),
@@ -105,7 +106,7 @@ class _MenuWidgetState extends State<MenuWidget> {
                 width: 100.0, // Ajusta el ancho deseado
                 height: 100.0, // Ajusta la altura deseada
                 child: Image.asset(
-                  'assets/cero.png', // Reemplaza con la ruta de tu imagen local
+                  'assets/${widget.order['quantity']}.png', // Reemplaza con la ruta de tu imagen local
                   fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
                 ),
               ),
@@ -114,12 +115,17 @@ class _MenuWidgetState extends State<MenuWidget> {
 
             SizedBox(width: 16),
             InkWell(
+              
               onTap: () {
-                _changed = true;
-                setState(() {
+              
+                if(widget.order['quantity']+1<=10){
+                  _changed = true;
+                  setState(() {
                   
-                  widget.order['quantity'] = widget.order['quantity'] + 1;
-                });
+                   widget.order['quantity'] = widget.order['quantity'] + 1;
+                  });
+                }
+                
               },
               child: Container(
                 width: 80,
@@ -147,9 +153,11 @@ class _MenuWidgetState extends State<MenuWidget> {
 // Main carousel widget
 class MenuCarousel extends StatefulWidget {
   final Classroom classroom;
+  final String teacherPic;
   bool quantityChanged = false;
+  final String representation;
 
-  MenuCarousel({Key? key, required this.classroom}) : super(key: key);
+  MenuCarousel({Key? key, required this.classroom, required this.teacherPic, required this.representation}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -161,6 +169,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
   int page = 0;
   final Classroom classroom;
   List<Subtask> subtasks = [];
+  
 
   KitchenOrder kitchenOrder =
       KitchenOrder(classroom: "", revised: false, orders: [], date: "");
@@ -169,6 +178,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
   APIController controller = APIController();
 
   _MenuCarouselState({required this.classroom});
+  
 
   @override
   void initState() {
@@ -213,20 +223,57 @@ class _MenuCarouselState extends State<MenuCarousel> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'COMANDA DE LA CLASE ${classroom.letter}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color:
-                        Colors.white, // Cambia el color de la fuente a blanco
-                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                    fontSize: 50.0, // Cambia el tamaño de la fuente
+                if(widget.representation == "text" || widget.representation =="audio" )
+
+                
+                  Text(
+                    'COMANDA DE LA CLASE ${classroom.letter}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color:
+                          Colors.white, // Cambia el color de la fuente a blanco
+                      fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                      fontSize: 50.0, // Cambia el tamaño de la fuente
+                    ),
+                  )
+                else
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: SizedBox(
+                          width: 100.0,
+                          height: 100.0,
+                          child: Image.asset(
+                            'assets/comida.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: SizedBox(
+                          width: 100.0,
+                          height: 100.0,
+                          child: Image.asset(
+                            'assets/clase${widget.classroom.letter.toUpperCase()}.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Image.network(
+                            widget.teacherPic,
+                            width: 120.0,
+                            height: 120.0,
+                        ),
+                      ),
+                    ]
                   ),
-                ),
               ],
             ),
           ),
-        ),
+       ),
+          
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 32.0),
@@ -240,7 +287,9 @@ class _MenuCarouselState extends State<MenuCarousel> {
                       itemCount: kitchenOrder.orders.length,
                       itemBuilder: (context, index) {
                         return MenuWidget(
-                            order: kitchenOrder.orders[index]);
+                            order: kitchenOrder.orders[index],
+                            representation: widget.representation,  
+                          );
                       },
                     ),
                   ),

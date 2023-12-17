@@ -151,7 +151,7 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => StudentCommandPage()),
+                            builder: (context) => StudentCommandPage(representation: student.representation)),
                       );
                     },
                     child: const Text('COMANDA'),
