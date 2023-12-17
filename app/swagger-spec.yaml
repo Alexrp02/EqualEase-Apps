@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: EqualEase-home API
   version: 1.0.0
-  description: API para gestionar las alumnos, profesores y tareas y subtareas
+  description: API para gestionar las clases, alumnos, profesores, tareas, subtareas y peticiones de comedor y material.
 servers:
   - url: "http://localhost:3000/api"
     description: Local server
@@ -43,7 +43,7 @@ paths:
     post:
       tags:
         - Student
-      summary: Create a new student
+      summary: Creates a new student and also creates its account
       requestBody:
         required: true
         content:
@@ -66,6 +66,21 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Student"
+  /student/stats/{id}:
+    get:
+      tags:
+        - Student
+      summary: Get student's (sorted by ID) weekly stats
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Statistic data from student related with its duties (tasks)
+
   /student/id/{id}:
     get:
       tags:
@@ -99,6 +114,19 @@ paths:
       responses:
         "200":
           description: Student updated successfully
+    delete:
+      tags:
+        - Student
+      summary: Delete a student by ID and all its references in database
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Student deleted savefully
   /student/name/{name}:
     get:
       tags:
@@ -888,14 +916,28 @@ components:
         doneTasks:
           type: array
           items:
-            type: string
-            format: Reference to Task
+            type: object
+            properties:
+              taskID:
+                type: string
+                format: Reference to Task
+              doneDate:
+                type: string
+                format: YYYY-MM-DD
         hasRequest:
           type: boolean
           default: false
         hasKitchenOrder:
           type: boolean
           default: false
+        representation:
+          type: string
+          enum:
+            - video
+            - text
+            - image
+            - audio
+          default: text
       required:
         - name
         - surname
@@ -971,6 +1013,9 @@ components:
           items:
             type: string
             format: Reference to Student
+        isAdmin:
+          type: boolean
+          default: false
       required:
         - name
         - surname
@@ -1069,3 +1114,23 @@ components:
         date:
           type: string
           format: YYYY-MM-DD
+
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: random, unique identifier
+        username:
+          type: string
+          format: Reference to Students'id or Teacher's id
+        password:
+          type: string
+          format: encrypted password
+        role:
+          type: string
+          enum:
+            - student
+            - admin
+            - teacher
+          default: student
