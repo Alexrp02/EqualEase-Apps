@@ -80,20 +80,23 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4, // Número de columnas en la cuadrícula
-                  crossAxisSpacing: 130.0, // Espaciado horizontal entre elementos
+                  crossAxisSpacing:
+                      130.0, // Espaciado horizontal entre elementos
                   mainAxisSpacing: 130.0, // Espaciado vertical entre elementos
                 ),
                 itemCount: teachers.length,
                 itemBuilder: (context, index) {
                   Teacher teacher = teachers[index];
-                  ImageProvider profilePicture = AssetImage('teacher.profilePicture');
+                  ImageProvider profilePicture =
+                      NetworkImage(teacher.profilePicture);
                   return GestureDetector(
                     onTap: () {
                       print('Profesor seleccionado: ${teacher.name}');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EnterAdminPasswordPage(adminId: teacher.id),
+                          builder: (context) =>
+                              EnterAdminPasswordPage(adminId: teacher.id),
                         ),
                       );
                     },
@@ -104,7 +107,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       ),
                       footer: Container(
                         color: Colors.black.withOpacity(0.7),
-                        padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
                         child: Text(
                           '${teacher.name} ${teacher.surname}',
                           style: TextStyle(color: Colors.white),
@@ -121,7 +125,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           }
         },
       ),
-
     );
   }
 }

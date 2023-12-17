@@ -6,12 +6,16 @@ import 'package:equalease_home/models/classroom.dart';
 import 'package:equalease_home/models/teacher.dart';
 import 'package:equalease_home/studentData.dart';
 import 'package:flutter/material.dart';
+
+import 'models/student.dart';
 //import 'createRequest.dart';
 
 
 class StudentCommandPage extends StatefulWidget {
   final String representation;
-  const StudentCommandPage({Key? key,required this.representation});
+  final Student student;
+  const StudentCommandPage({Key? key,required this.representation, required this.student}): super(key: key);
+
 
   @override
   _StudentCommandPageState createState() => _StudentCommandPageState();
@@ -50,17 +54,17 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
           preferredSize: Size.fromHeight(100.0),
           child: AppBar(
             toolbarHeight: 100.0,
-            leading: new IconButton(
+            leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: new Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   size: 50.0,
                 )),
             backgroundColor: Color.fromARGB(255, 161, 182, 236),
-            title: Center(
-              child: Column(
+            title:  Center(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   if(widget.representation == "text" || widget.representation == "audio" )
@@ -86,6 +90,18 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                 ],
               ),
             ),
+            actions: [
+              ClipOval(
+                child: Container(
+                  color: const Color.fromARGB(107, 255, 255, 255),
+                  child: Image.network(
+                    widget.student.profilePicture,
+                    width: 100.0,
+                    height: 100.0,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         body: _teachers.isNotEmpty
@@ -278,6 +294,7 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                             classroom: _classrooms[i],
                             teacherPic: _teachers[i].profilePicture,
                             representation: widget.representation,
+                            student: widget.student,
                           );
                         }));
                       },

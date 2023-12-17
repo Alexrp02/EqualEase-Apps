@@ -85,7 +85,7 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AdminPage(),
+                      builder: (context) => AdminPage(admin: widget.adminId),
                     ),
                   );
                 } else {

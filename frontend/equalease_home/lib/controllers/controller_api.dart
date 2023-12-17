@@ -15,8 +15,8 @@ import '../models/request.dart';
 
 /// class containing all operations with API
 class APIController {
-  // String baseUrl = 'http://localhost:3000/api';
-  String baseUrl = "http://10.0.2.2:3000/api";
+  //String baseUrl = 'http://localhost:3000/api';
+   String baseUrl = "http://10.0.2.2:3000/api";
 
   //-----------------------------------------------------------------------//
   //Subtask operations
@@ -822,13 +822,14 @@ class APIController {
   /// Params:
   ///
   ///   -[student]: Object of type student
+  ///   -[password]: String with the password
   ///
-  /// Returns: Boolean with the result of the operation, and the updated studentId
-  Future<bool> createStudent(Student student) async {
+  /// Returns: String with the result of the operation: the updated studentId
+  Future<String> createStudent(Student student, String password) async {
     final String apiUrl = '$baseUrl/student';
 
-    // Necesitamos convertir el objeto a JSON pero sin su id
-    String jsonBody = student.toJsonWithoutId();
+    Map<String, dynamic> jsonBody = student.toMap();
+    jsonBody['password'] = password;
 
     try {
       final response = await http.post(
@@ -836,26 +837,24 @@ class APIController {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonBody,
+        body: json.encode(jsonBody),
       );
-
-      print(jsonBody);
 
       if (response.statusCode == 201) {
         // La solicitud POST fue exitosa.
-        // La respuesta incluye los datos de la tarea recién creada,
+        // La respuesta incluye los datos del alumno recién creado,
         // Tenemos que extraer de esta el id y asignarselo al objeto parámetro
         // Como en dart los parametros se pasan por referencia, los cambios perdurarán.
         final body = json.decode(response.body);
         student.id = body['id'];
-        return true;
+        return student.id;
+      } else {
+        return "";
       }
     } catch (e) {
       print(e);
+      return "";
     }
-    // ¿Crear un usuario en accounts, con una contraseña por defecto?
-
-    return false;
   }
 
   //-----------------------------------------------------------------------//
@@ -1878,7 +1877,7 @@ class APIController {
   }
 }
 
-void main() {
+void main() async {
   var controller = APIController();
   // // Create a new teacher and then delete it
   // Teacher teacher = Teacher(
@@ -1914,7 +1913,47 @@ void main() {
   //   });
   // });
 
-  controller
-      .getStudentStatistics("6gsy3HsO0GQLwVcPvySA")
-      .then((value) => print(value));
+  // controller
+  //     .getStudentStatistics("6gsy3HsO0GQLwVcPvySA")
+  //     .then((value) => print(value));
+
+  // Create a new student and then delete it
+  Student student = Student(
+      id: '',
+      name: 'prueba',
+      surname: 'borrame',
+      profilePicture: "",
+      pendingTasks: [],
+      doneTasks: [],
+      hasRequest: false,
+      hasKitchenOrder: false,
+      representation: "video");
+
+  await controller.createStudent(student, "contrasenia").then((studentId) {
+    print("Created student with id $studentId");
+
+    // Print all the teachers
+    controller.getStudents().then((value) {
+      print("Students:");
+      for (Student st in value) {
+        print(st.toMap());
+      }
+
+      print("HE LLEGADO AQUI");
+      // Delete the created student
+      controller.deleteStudent(studentId).then((value) {
+        if (value) {
+          print("Student deleted");
+          // Print all students again
+          controller.getStudents().then((value) {
+            print("Students (after delete):");
+            for (Student st in value) {
+              print(st.toMap());
+            }
+          });
+        } else
+          print("Student not deleted");
+      });
+    });
+  });
 }

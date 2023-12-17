@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/request.dart';
 import '../models/item.dart';
 import '../controllers/controller_api.dart';
+import '../models/student.dart';
 
 class ItemWidget extends StatefulWidget {
   final Item item;
@@ -60,8 +61,10 @@ class _ItemWidgetState extends State<ItemWidget> {
 // Main carousel widget
 class ItemCarousel extends StatefulWidget {
   final String studentId;
+  final Student student;
 
-  ItemCarousel({Key? key, required this.studentId}) : super(key: key);
+  const ItemCarousel({Key? key, required this.studentId, required this.student})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -107,20 +110,20 @@ class _ItemsCarouselState extends State<ItemCarousel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
+        preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           toolbarHeight: 100.0,
-          backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          leading: new IconButton(
+          backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+          leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: new Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 size: 50.0,
               )),
           title: const Center(
-            child: Column(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
@@ -136,6 +139,18 @@ class _ItemsCarouselState extends State<ItemCarousel> {
               ],
             ),
           ),
+          actions: [
+            ClipOval(
+              child: Container(
+                color: const Color.fromARGB(107, 255, 255, 255),
+                child: Image.network(
+                  widget.student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(

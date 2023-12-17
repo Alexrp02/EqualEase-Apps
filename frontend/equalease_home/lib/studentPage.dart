@@ -85,31 +85,46 @@ class _StudentPageState extends State<StudentPage> {
         child: AppBar(
           toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          leading: new IconButton(
+          leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: new Icon(
+              icon: const Icon(
                 Icons.arrow_back,
                 size: 50.0,
               )),
           title: Center(
-            child: Column(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color:
-                        Colors.white, // Cambia el color de la fuente a blanco
-                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                    fontSize: 50.0, // Cambia el tamaño de la fuente
+                Flexible(
+                  child: Text(
+                    'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.fade,
+                    style: const TextStyle(
+                      color:
+                          Colors.white, // Cambia el color de la fuente a blanco
+                      fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                      fontSize: 50.0, // Cambia el tamaño de la fuente
+                    ),
                   ),
                 ),
               ],
             ),
           ),
+          actions: [
+            ClipOval(
+              child: Container(
+                color: const Color.fromARGB(107, 255, 255, 255),
+                child: Image.network(
+                  widget.student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: Padding(
@@ -163,6 +178,7 @@ class _StudentPageState extends State<StudentPage> {
                                   MaterialPageRoute(builder: (context) {
                                 return SubtasksCarousel(
                                   taskId: pendingTasks[i].id,
+                                  student: student,
                                 );
                               }));
                             },
@@ -197,6 +213,7 @@ class _StudentPageState extends State<StudentPage> {
                                       MaterialPageRoute(builder: (context) {
                                     return SubtasksCarousel(
                                       taskId: doneTasks[i].id,
+                                      student: student,
                                     );
                                   }));
                                 },

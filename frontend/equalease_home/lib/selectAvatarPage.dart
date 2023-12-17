@@ -45,7 +45,16 @@ class SelectAvatarPage extends StatelessWidget {
               },
               child: Text('ADMINISTRADOR',
                   style:
-                      GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+                    GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 110, 136, 204),
+                    foregroundColor: Color.fromARGB(255, 22, 42, 94),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+
+                  ),
+
             ),
           ],
         ),

@@ -2,20 +2,20 @@
 import 'package:equalease_home/models/classroom.dart';
 import 'package:equalease_home/models/kitchen_order.dart';
 import 'package:equalease_home/models/menu.dart';
+import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/teacher.dart';
 import 'package:flutter/material.dart';
 
 import '../models/subtask.dart';
 import '../controllers/controller_api.dart';
+
 bool _changed = false;
 
 class MenuWidget extends StatefulWidget {
   final Map<String, dynamic> order;
   final String representation;
- 
 
-  const MenuWidget({Key? key, required this.order, required this.representation})
-      : super(key: key);
+  const MenuWidget({Key? key, required this.order, required this.representation}) : super(key: key);
 
   @override
   _MenuWidgetState createState() => _MenuWidgetState();
@@ -24,7 +24,7 @@ class MenuWidget extends StatefulWidget {
 class _MenuWidgetState extends State<MenuWidget> {
   APIController controller = APIController();
 
-  Menu menu = Menu(name:"",image: "",type:"");
+  Menu menu = Menu(name: "", image: "", type: "");
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,7 @@ class _MenuWidgetState extends State<MenuWidget> {
       });
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -70,9 +70,8 @@ class _MenuWidgetState extends State<MenuWidget> {
             InkWell(
               onTap: () {
                 if (widget.order['quantity'] > 0) {
-                    _changed = true;
+                  _changed = true;
                   setState(() {
-                    
                     widget.order['quantity'] = widget.order['quantity'] - 1;
                   });
                 }
@@ -156,8 +155,10 @@ class MenuCarousel extends StatefulWidget {
   final String teacherPic;
   bool quantityChanged = false;
   final String representation;
+  final Student student;
 
-  MenuCarousel({Key? key, required this.classroom, required this.teacherPic, required this.representation}) : super(key: key);
+  MenuCarousel({Key? key, required this.classroom, required this.teacherPic, required this.representation, required this.student})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -272,8 +273,19 @@ class _MenuCarouselState extends State<MenuCarousel> {
               ],
             ),
           ),
-       ),
-          
+          actions: [
+            ClipOval(
+              child: Container(
+                color: const Color.fromARGB(107, 255, 255, 255),
+                child: Image.network(
+                  widget.student.profilePicture,
+                  width: 100.0,
+                  height: 100.0,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 32.0),
@@ -286,8 +298,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                       controller: pageController,
                       itemCount: kitchenOrder.orders.length,
                       itemBuilder: (context, index) {
-                        return MenuWidget(
-                            order: kitchenOrder.orders[index],
+                        return MenuWidget(order: kitchenOrder.orders[index],
                             representation: widget.representation,  
                           );
                       },
@@ -301,7 +312,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_back),
                               iconSize: 120,
                               onPressed: () {
-                                if(_changed){
+                                if (_changed) {
                                   _changed = false;
                                   controller.updateKitchenOrder(kitchenOrder);
                                 }
@@ -319,12 +330,12 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.arrow_forward),
                               iconSize: 120,
                               onPressed: () {
-                        
-                                if(_changed){
+                                if (_changed) {
                                   controller.updateKitchenOrder(kitchenOrder);
-                                  _changed=false;
+                                  _changed = false;
                                 }
-                                if (pageController.page! < kitchenOrder.orders.length - 1) {
+                                if (pageController.page! <
+                                    kitchenOrder.orders.length - 1) {
                                   pageController.nextPage(
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.easeInOut,
@@ -336,7 +347,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
                               icon: Icon(Icons.check),
                               iconSize: 120,
                               onPressed: () {
-                                if(_changed){
+                                if (_changed) {
                                   _changed = false;
                                   controller.updateKitchenOrder(kitchenOrder);
                                 }
