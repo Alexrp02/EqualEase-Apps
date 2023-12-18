@@ -98,7 +98,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                           builder: (context) =>
                               EnterAdminPasswordPage(adminId: teacher.id),
                         ),
-                      );
+                      ).then((value) {
+                        setState(() {});
+                      });
                     },
                     child: GridTile(
                       child: CircleAvatar(
