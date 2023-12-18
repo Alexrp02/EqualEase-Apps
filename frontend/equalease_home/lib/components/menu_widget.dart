@@ -53,10 +53,13 @@ class _MenuWidgetState extends State<MenuWidget> {
             children: [
               menu.image != ''
                   ? Center(
-                      child: Image.network(
-                        menu.image,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Semantics(
+                        label: "Pictograma de ${menu.name}.",
+                        child: Image.network(
+                          menu.image,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                     )
                   : Container(),
               SizedBox(width: 40),
@@ -104,10 +107,13 @@ class _MenuWidgetState extends State<MenuWidget> {
               SizedBox(
                 width: 100.0, // Ajusta el ancho deseado
                 height: 100.0, // Ajusta la altura deseada
-                child: Image.asset(
-                  'assets/${widget.order['quantity']}.png', // Reemplaza con la ruta de tu imagen local
-                  fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
-                ),
+                child: Semantics( 
+                  label:"Pictograma representando el número de menús. ${widget.order['quantity']}",
+                  child: Image.asset(
+                    'assets/${widget.order['quantity']}.png', // Reemplaza con la ruta de tu imagen local
+                    fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                  ),
+                )
               ),
         
               
@@ -171,7 +177,7 @@ class _MenuCarouselState extends State<MenuCarousel> {
   final Classroom classroom;
   List<Subtask> subtasks = [];
   
-
+  Teacher teacher = Teacher(email:"",id:"",isAdmin:false,name:"",profilePicture: "",surname: "",students: []);
   KitchenOrder kitchenOrder =
       KitchenOrder(classroom: "", revised: false, orders: [], date: "");
 
@@ -180,10 +186,25 @@ class _MenuCarouselState extends State<MenuCarousel> {
 
   _MenuCarouselState({required this.classroom});
   
-
+ 
   @override
-  void initState() {
+  void initState()   {
     super.initState();
+     
+
+     String audioInstructions;
+     if(widget.student.representation=="audio"){
+      audioInstructions="Estás en la clase ${widget.classroom.letter} ."+
+     "Para añadir una comida al menú pulsa sobre el botón más."+
+     "Para quitar una comida del menú pulsa sobre el botón menos."+
+     "Para pasar a la siguiente comida del menú pulsa sobre la flecha de avanzar."+
+     "Para retroceder a la comida anterior del menú pulsa sobre la flecha de retroceder en la esquina inferior izquierda.";
+     }else{
+      audioInstructions="Estás en la clase ${widget.classroom.letter}.";
+     }
+     
+      controller.speak(audioInstructions);
+    
     pageController.addListener(() {
       setState(() {
         page = pageController.page!.round();
@@ -193,6 +214,12 @@ class _MenuCarouselState extends State<MenuCarousel> {
     controller.getKitchenOrder(classroom.id!).then((value) {
       setState(() {
         kitchenOrder = value;
+      });
+    });
+
+    controller.getTeacher(widget.classroom.assignedTeacher).then((value){
+      setState(() {
+        teacher = value;
       });
     });
   }
@@ -245,28 +272,37 @@ class _MenuCarouselState extends State<MenuCarousel> {
                         child: SizedBox(
                           width: 100.0,
                           height: 100.0,
-                          child: Image.asset(
-                            'assets/comida.png',
-                            fit: BoxFit.cover,
-                          ),
+                          child: Semantics(
+                              label: "Pictograma de comanda",
+                              child:Image.asset(
+                                'assets/comida.png',
+                                fit: BoxFit.cover,
+                              ),
+                          )
                         ),
                       ),
                       Container(
                         child: SizedBox(
                           width: 100.0,
                           height: 100.0,
-                          child: Image.asset(
-                            'assets/clase${widget.classroom.letter.toUpperCase()}.png',
-                            fit: BoxFit.cover,
-                          ),
+                          child: Semantics(
+                            label: "Pictograma de la clase ${widget.classroom.letter}.",
+                            child:Image.asset(
+                              'assets/clase${widget.classroom.letter.toUpperCase()}.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )
                         ),
                       ),
                       Container(
-                        child: Image.network(
-                            widget.teacherPic,
-                            width: 120.0,
-                            height: 120.0,
-                        ),
+                        child: Semantics(
+                          label: "Foto de perfil de ${teacher.name}",
+                          child:Image.network(
+                              widget.teacherPic,
+                              width: 120.0,
+                              height: 120.0,
+                          ),
+                        )
                       ),
                     ]
                   ),
@@ -277,11 +313,14 @@ class _MenuCarouselState extends State<MenuCarousel> {
             ClipOval(
               child: Container(
                 color: const Color.fromARGB(107, 255, 255, 255),
-                child: Image.network(
-                  widget.student.profilePicture,
-                  width: 100.0,
-                  height: 100.0,
-                ),
+                child: Semantics(
+                  label: "Foto de perfil de  ${widget.student.name}",
+                  child: Image.network(
+                    widget.student.profilePicture,
+                    width: 100.0,
+                    height: 100.0,
+                  ),
+                )
               ),
             ),
           ],

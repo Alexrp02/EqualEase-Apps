@@ -39,15 +39,27 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
       setState(() {
         student = value;
       });
-      _speakStudentName();
+
+      String audioHelp="";
+      if(value.representation == "audio"){
+        audioHelp = "Hola ${value.name} .";
+       
+        if(value.hasRequest)
+          audioHelp += "Pulsa sobre el botón de pedido para comenzar la actividad.";
+
+        if(value.hasKitchenOrder)
+          audioHelp += "Pulsa sobre el botón de comanda para comenzar la actividad.";
+        
+        audioHelp += "Pulsa sobre el botón de tareas para ver las tareas que tienes asignadas.";
+        
+
+      }else{
+        audioHelp = "Hola ${value.name} .";
+      }
+      controller.speak(audioHelp);
     });
   }
 
-  Future<void> _speakStudentName() async {
-    await flutterTts.setLanguage("es-ES");
-    await flutterTts.setSpeechRate(0.5);
-    await flutterTts.speak("Hola ${student.name}");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +103,14 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                     color: const Color.fromARGB(107, 255, 255, 255),
                     child: student.profilePicture == 'profilePicture'
                         ? Container()
-                        : Image.network(
-                            student.profilePicture,
-                            width: 100.0,
-                            height: 100.0,
+                        : Semantics(
+                            label: "Foto de perfil de ${student.name}",
+                            child:Image.network(
+                              student.profilePicture,
+                              width: 100.0,
+                              height: 100.0,
                           ),
+                        )
                   ),
                 ),
               ],
@@ -134,11 +149,14 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset(
-                        'assets/materialEscolar.png',
-                        height: 300,
-                        width: 300,
-                        //fit: BoxFit.contain,
+                      Semantics(
+                        label: "Pictograma de pedido de material.",
+                        child: Image.asset(
+                          'assets/materialEscolar.png',
+                          height: 300,
+                          width: 300,
+                          //fit: BoxFit.contain,
+                        )
                       ),
                       SizedBox(height: 50.0),
                       Text(
@@ -191,11 +209,14 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Image.asset(
-                          'assets/comida.png',
-                          height: 300,
-                          width: 300,
-                          //fit: BoxFit.contain,
+                        Semantics(
+                          label: "Pictograma de comanda.",
+                          child: Image.asset(
+                            'assets/comida.png',
+                            height: 300,
+                            width: 300,
+                            //fit: BoxFit.contain,
+                          ),
                         ),
                         SizedBox(height: 50.0),
                         Text(
@@ -240,11 +261,14 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/tareas.png',
-                    height: 300,
-                    width: 300,
-                    //fit: BoxFit.contain,
+                  Semantics(
+                    label:"Pictograma de tareas.",
+                    child:Image.asset(
+                      'assets/tareas.png',
+                      height: 300,
+                      width: 300,
+                      //fit: BoxFit.contain,
+                    ),
                   ),
                   SizedBox(height: 50.0),
                   Text(

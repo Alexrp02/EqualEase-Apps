@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class EnterPasswordPage extends StatefulWidget {
   final String studentId;
+  String representation= "";
 
   EnterPasswordPage({required this.studentId});
 
@@ -20,6 +21,26 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
 
   final GlobalKey<PictogramGridViewState> _passwordGridKey =
       GlobalKey<PictogramGridViewState>();
+  
+  @override
+  void initState() {
+    super.initState();
+    _controller.getStudent(widget.studentId).then((value) {
+      setState((){
+        widget.representation = value.representation;
+        
+        String audioHelp="";
+        if(value.representation =="audio" ){
+          audioHelp = "Estás en la página de introducir contraseña de ${value.name} ." +
+          "Pulsa sobre las imágenes en el orden correcto para entrar en la aplicación.";
+        }
+        else{
+          audioHelp = "Estás en la página de introducir contraseña de ${value.name} .";
+        }
+        _controller.speak(audioHelp);
+      });
+    });
+  }
 
   void updatePassword(String newPassword) {
     setState(() {
@@ -48,15 +69,29 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'ACCESO DE ALUMNO',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50.0,
-                  ),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  if(widget.representation =="text" || widget.representation =="audio")
+                      Text(
+                        'ACCESO DE ALUMNO',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50.0,
+                        ),
+                      ),
+                    if(widget.representation =="image") 
+                      Semantics(
+                          label: "Pictograma de contraseña",
+                          child:Image.asset(
+                            "assets/contraseña.png",
+                            width: 100.0,
+                            height: 100.0,
+                        ),
+                      )
+                  ],)
               ],
             ),
           ),

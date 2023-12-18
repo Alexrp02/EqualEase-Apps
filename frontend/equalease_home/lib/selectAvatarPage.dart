@@ -20,15 +20,27 @@ class SelectAvatarPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  '¿QUIÉN ERES?',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50.0,
-                  ),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '¿QUIÉN ERES?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50.0,
+                      ),
+                    ),
+                    Semantics(
+                        label: "Pictograma representando la pregunta '¿quién eres?'",
+                        child:Image.asset(
+                          "assets/quien.png",
+                          width: 100.0,
+                          height: 100.0,
+                      ),
+                    )
+                ],)
               ],
             ),
           ),
