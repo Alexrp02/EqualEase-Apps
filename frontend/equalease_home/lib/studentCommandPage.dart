@@ -30,6 +30,18 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
   @override
   void initState() {
     super.initState();
+    
+
+    String audioInstructions;
+    if(widget.student.representation=="audio"){
+      audioInstructions="Estás en la página de comanda."+
+      " Selecciona una clase para comenzar la comanda.";
+    }else{
+       audioInstructions="Estás en la página de comanda.";
+    }
+
+    _controller.speak(audioInstructions);
+
     _controller.getClassrooms().then((classrooms) {
       setState(() {
         _classrooms = classrooms;
@@ -81,10 +93,13 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                   SizedBox(
                     width: 100.0, // Ajusta el ancho deseado
                     height: 100.0, // Ajusta la altura deseada
-                    child: Image.asset(
-                      'assets/comida.png', // Reemplaza con la ruta de tu imagen local
-                      fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
-                    ),
+                    child: Semantics(
+                      label: 'Pictograma de comanda',
+                      child: Image.asset(
+                        'assets/comida.png', // Reemplaza con la ruta de tu imagen local
+                        fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                      ),
+                    )
                   ),
                     
                 ],
@@ -94,11 +109,14 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
               ClipOval(
                 child: Container(
                   color: const Color.fromARGB(107, 255, 255, 255),
-                  child: Image.network(
-                    widget.student.profilePicture,
-                    width: 100.0,
-                    height: 100.0,
-                  ),
+                  child: Semantics(
+                    label: "Foto de perfil de ${widget.student.name}",
+                    child: Image.network(
+                      widget.student.profilePicture,
+                      width: 100.0,
+                      height: 100.0,
+                    ),
+                  )
                 ),
               ),
             ],
@@ -226,10 +244,13 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                       title: Row(
                         children: [
                           // Mostrar la imagen del menú
-                          Image.network(
-                            _teachers[i].profilePicture,
-                            width: 120.0,
-                            height: 120.0,
+                          Semantics(
+                            label: "Foto de perfil de ${_teachers[i].name}",
+                            child: Image.network(
+                              _teachers[i].profilePicture,
+                              width: 120.0,
+                              height: 120.0,
+                            ),
                           ),
                           SizedBox(width: 16.0),
                           // Mostrar el título del menú con manejo de desbordamiento
@@ -260,10 +281,13 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                             SizedBox(
                               width: 100.0, // Ajusta el ancho deseado
                               height: 100.0, // Ajusta la altura deseada
-                              child: Image.asset(
-                                'assets/clase${classroomAdded.letter}.png', // Reemplaza con la ruta de tu imagen local
-                                fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
-                              ),
+                                child: Semantics(
+                                  label: "Pictograma de la clase ${classroomAdded.letter}",
+                                  child: Image.asset(
+                                    'assets/clase${classroomAdded.letter}.png', // Reemplaza con la ruta de tu imagen local
+                                    fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                                  ),
+                                ),
                             ),
 
                           SizedBox(width: 300),
@@ -280,10 +304,13 @@ class _StudentCommandPageState extends State<StudentCommandPage> {
                             SizedBox(
                               width: 100.0, // Ajusta el ancho deseado
                               height: 100.0, // Ajusta la altura deseada
-                              child: Image.asset(
-                                'assets/bien.png', // Reemplaza con la ruta de tu imagen local
-                                fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
-                              ),
+                              child: Semantics(
+                                label: "Pictograma representando menú de la clase completado",
+                                child: Image.asset(
+                                  'assets/bien.png', // Reemplaza con la ruta de tu imagen local
+                                  fit: BoxFit.cover, // Puedes ajustar el modo de ajuste según tus necesidades
+                                ),
+                              )
                             )
                         ],
                       ),
