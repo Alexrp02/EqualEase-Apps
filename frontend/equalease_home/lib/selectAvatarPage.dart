@@ -5,7 +5,12 @@ import 'package:equalease_home/enterPasswordPage.dart'; // Importa la página En
 import 'package:google_fonts/google_fonts.dart';
 import 'adminLoginPage.dart';
 
-class SelectAvatarPage extends StatelessWidget {
+class SelectAvatarPage extends StatefulWidget {
+  @override
+  State<SelectAvatarPage> createState() => _SelectAvatarPageState();
+}
+
+class _SelectAvatarPageState extends State<SelectAvatarPage> {
   final APIController _controller = APIController();
 
   @override
@@ -41,20 +46,20 @@ class SelectAvatarPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => AdminLoginPage(),
                   ),
-                );
+                ).then((value) {
+                  setState(() {});
+                });
               },
               child: Text('ADMINISTRADOR',
                   style:
-                    GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 110, 136, 204),
-                    foregroundColor: Color.fromARGB(255, 22, 42, 94),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40.0),
-                    ),
-
-                  ),
-
+                      GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 110, 136, 204),
+                foregroundColor: Color.fromARGB(255, 22, 42, 94),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40.0),
+                ),
+              ),
             ),
           ],
         ),
@@ -96,7 +101,9 @@ class SelectAvatarPage extends StatelessWidget {
                           builder: (context) =>
                               EnterPasswordPage(studentId: student.id),
                         ),
-                      );
+                      ).then((value) {
+                        setState(() {});
+                      });
                     },
                     child: GridTile(
                       child: CircleAvatar(
