@@ -121,7 +121,7 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'MENU ADIMNISTRADOR ESTUDIANTES',
+                  'MENU ADMINISTRADOR ESTUDIANTES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
@@ -142,7 +142,12 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
           : Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8, // Ancho del 80%
-                child: ListView.builder(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, // Dos elementos por fila
+                    crossAxisSpacing: 10.0, // Espacio entre elementos
+                    mainAxisSpacing: 10.0, // Espacio entre filas
+                  ),
                   itemCount: _StudentsAdded.length,
                   itemBuilder: (context, i) {
                     final Student StudentAgregada = _StudentsAdded[i];
@@ -178,22 +183,36 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'ESTUDIANTE $currentIndex: ${StudentAgregada.name} ${StudentAgregada.surname}',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 30.0, // Ajusta el tamaño del texto
+                              Expanded(
+                                child: Text(
+                                  'ESTUDIANTE $currentIndex: ${StudentAgregada.name} ${StudentAgregada.surname}',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontSize:
+                                        30.0, // Ajusta el tamaño del texto
+                                  ),
                                 ),
                               ),
                             ],
                           ),
+                          subtitle: Row(children: [
+                            Expanded(
+                              child: SizedBox(
+                                  width: 200,
+                                  height: 200,
+                                  child: Image.network(
+                                    StudentAgregada.profilePicture,
+                                    fit: BoxFit.contain,
+                                  )),
+                            )
+                          ]),
                           tileColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             side: BorderSide(
                               color: Color.fromARGB(255, 170, 172, 174),
                               width: 2.0,
                             ),
-                            borderRadius: BorderRadius.circular(0),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
@@ -347,12 +366,14 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                                 icon: Icon(Icons.person_add),
                                 onPressed: () {
                                   Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TeacherAssignedStudent(
-                                      TeacherAgregada.id, TeacherAgregada.students),
-                                ),
-                              );
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          TeacherAssignedStudent(
+                                              TeacherAgregada.id,
+                                              TeacherAgregada.students),
+                                    ),
+                                  );
                                 },
                               ),
                             ],
