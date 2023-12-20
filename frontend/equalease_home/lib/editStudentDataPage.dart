@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
@@ -82,8 +84,7 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: ListView(
           children: [
             TextFormField(
               controller: _nameController,
@@ -147,6 +148,22 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
               ),
               child: Text('Guardar Cambios'),
             ),
+            if (imageController.getImage() != null)
+              Image.file(
+                File(imageController.getImage()!.path),
+                fit: BoxFit.contain,
+                width: 300,
+                height: 300,
+              )
+            else if (pictogramURL != '')
+              Image.network(
+                pictogramURL,
+                fit: BoxFit.contain,
+                width: 300,
+                height: 300,
+              )
+            else
+              const Text('No se ha seleccionado ninguna imagen'),
           ],
         ),
       ),
@@ -169,7 +186,8 @@ class _EditStudentPageState extends State<EditStudentDataPage> {
       if (imageController.hasImage()) {
         img = pictogramURL;
       } else if (!imageController.hasImage()) {
-        img = await imageController.uploadImage('student', _nameController.text);
+        img =
+            await imageController.uploadImage('student', _nameController.text);
       }
 
       widget.student.name = _nameController.text;

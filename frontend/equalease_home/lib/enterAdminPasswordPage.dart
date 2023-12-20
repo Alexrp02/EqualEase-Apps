@@ -78,10 +78,12 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
             ElevatedButton(
               onPressed: () async {
                 // Realiza la validación de la contraseña
-                Map<String, dynamic> loginResult = await _controller.login(widget.adminId, _passwordController.text);
+                Map<String, dynamic> loginResult = await _controller.login(
+                    widget.adminId, _passwordController.text);
 
                 if (loginResult["token"] != null) {
                   // Contraseña válida, navega a la página de administrador
+                  _passwordController.clear();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -95,7 +97,8 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
                     builder: (context) {
                       return AlertDialog(
                         title: Text('Contraseña Incorrecta'),
-                        content: Text('La contraseña introducida no es válida.'),
+                        content:
+                            Text('La contraseña introducida no es válida.'),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -109,7 +112,9 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
                   );
                 }
               },
-              child: Text('Acceder', style: GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+              child: Text('Acceder',
+                  style:
+                      GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
             ),
           ],
         ),
