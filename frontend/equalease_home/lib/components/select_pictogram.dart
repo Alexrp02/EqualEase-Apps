@@ -97,8 +97,49 @@ class _PictogramSelectState extends State<PictogramSelect> {
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Buscador de pictogramas'),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0),
+          child: AppBar(
+            actions: [
+              // Agrega el botón de cerrar sesión en el AppBar
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+                icon: Icon(
+                  Icons.exit_to_app,
+                  size: 70.0,
+                ),
+              ),
+            ],
+            toolbarHeight: 100.0,
+            backgroundColor: Color.fromARGB(255, 161, 182, 236),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                size: 50.0,
+              ),
+            ),
+            title: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'CREACIÓN DE OBJETO',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 50.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         body: Column(
           children: [
