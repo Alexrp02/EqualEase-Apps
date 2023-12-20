@@ -195,6 +195,7 @@ class _TasksPageState extends State<TasksPage> {
         height: 100.0,
         child: FittedBox(
           child: FloatingActionButton(
+            backgroundColor: const Color.fromARGB(255, 161, 182, 236),
             onPressed: () {
               Navigator.push(
                 context,

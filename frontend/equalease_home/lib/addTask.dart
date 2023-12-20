@@ -51,8 +51,17 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
+        preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            ),
+            onPressed: () {
+              Navigator.pop(context, null);
+            },
+          ),
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           title: Center(
             child: Column(
