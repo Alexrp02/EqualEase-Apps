@@ -323,6 +323,7 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                     crossAxisCount: 3, // Dos elementos por fila
                     crossAxisSpacing: 10.0, // Espacio entre elementos
                     mainAxisSpacing: 10.0, // Espacio entre filas
+                    childAspectRatio: 0.85,
                   ),
                   itemCount: _TeachersAdded.length,
                   itemBuilder: (context, i) {
