@@ -1,5 +1,6 @@
 import 'package:equalease_home/AdminRolPage.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
+import 'package:equalease_home/menuAdmin.dart';
 import 'package:flutter/material.dart';
 import 'students.dart';
 import 'tasks.dart';
@@ -140,24 +141,46 @@ class _AdminPageState extends State<AdminPage> {
 
   Widget _buildFloatingActionButton() {
     return isAdmin
-        ? FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MuestraMenu()),
-              );
-            },
-            tooltip: 'Configuración',
-            backgroundColor: Color.fromARGB(255, 161, 182, 236),
-            heroTag: null,
-            child: Icon(
-              Icons.settings,
-              size: 56,
-            ),
-            mini: false,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40.0),
-            ),
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MuestraMenu()),
+                  );
+                },
+                tooltip: 'Configuración',
+                backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+                heroTag: null,
+                mini: false,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40.0),
+                ),
+                child: const Icon(
+                  Icons.settings,
+                  size: 56,
+                ),
+              ),
+              const SizedBox(height: 10),
+              FloatingActionButton(
+                  tooltip: "Administrar menús",
+                  heroTag: null,
+                  mini: false,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MenuPage()));
+                  },
+                  child: const Icon(
+                    Icons.restaurant,
+                    size: 50,
+                  ))
+            ],
           )
         : Container(); // Si no tiene el rol, el contenedor es invisible
   }

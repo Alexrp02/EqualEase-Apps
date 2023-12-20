@@ -318,7 +318,12 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
           : Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8, // Ancho del 80%
-                child: ListView.builder(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, // Dos elementos por fila
+                    crossAxisSpacing: 10.0, // Espacio entre elementos
+                    mainAxisSpacing: 10.0, // Espacio entre filas
+                  ),
                   itemCount: _TeachersAdded.length,
                   itemBuilder: (context, i) {
                     final Teacher TeacherAgregada = _TeachersAdded[i];
@@ -354,11 +359,14 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'DOCENTE $currentIndex: ${TeacherAgregada.name} ${TeacherAgregada.surname}',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 30.0, // Ajusta el tamaño del texto
+                              Expanded(
+                                child: Text(
+                                  'DOCENTE $currentIndex: ${TeacherAgregada.name} ${TeacherAgregada.surname}',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontSize:
+                                        30.0, // Ajusta el tamaño del texto
+                                  ),
                                 ),
                               ),
                               // Icono person_add al lado del profesor
@@ -378,6 +386,17 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                               ),
                             ],
                           ),
+                          subtitle: Row(children: [
+                            Expanded(
+                              child: SizedBox(
+                                  width: 200,
+                                  height: 200,
+                                  child: Image.network(
+                                    TeacherAgregada.profilePicture,
+                                    fit: BoxFit.contain,
+                                  )),
+                            )
+                          ]),
                           tileColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             side: BorderSide(

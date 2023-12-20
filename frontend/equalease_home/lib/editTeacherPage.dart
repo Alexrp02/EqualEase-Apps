@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:equalease_home/models/student.dart';
 import 'package:equalease_home/models/teacher.dart';
@@ -122,15 +124,16 @@ class _EditTeacherPageState extends State<EditTeacherDataPage> {
                     _isAdmin = _tipoValue == 'Si';
                   });
                 },
-                items: ['Si', 'No'].map<DropdownMenuItem<String>>((String value) {
+                items:
+                    ['Si', 'No'].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
                 decoration: InputDecoration(
-                labelText: '¿Es administrador?',
-              ),
+                  labelText: '¿Es administrador?',
+                ),
               ),
               SizedBox(height: 20),
               ImageUploader(
@@ -159,6 +162,22 @@ class _EditTeacherPageState extends State<EditTeacherDataPage> {
                 ),
                 child: Text('Guardar Cambios'),
               ),
+              if (imageController.getImage() != null)
+                Image.file(
+                  File(imageController.getImage()!.path),
+                  fit: BoxFit.contain,
+                  width: 300,
+                  height: 300,
+                )
+              else if (pictogramURL != '')
+                Image.network(
+                  pictogramURL,
+                  fit: BoxFit.contain,
+                  width: 300,
+                  height: 300,
+                )
+              else
+                const Text('No se ha seleccionado ninguna imagen'),
             ],
           ),
         ),
@@ -181,7 +200,8 @@ class _EditTeacherPageState extends State<EditTeacherDataPage> {
       if (imageController.hasImage()) {
         img = pictogramURL;
       } else if (!imageController.hasImage()) {
-        img = await imageController.uploadImage('teacher', _nameController.text);
+        img =
+            await imageController.uploadImage('teacher', _nameController.text);
       }
 
       widget.teacher.name = _nameController.text;
