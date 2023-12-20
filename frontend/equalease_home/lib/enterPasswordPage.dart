@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class EnterPasswordPage extends StatefulWidget {
   final String studentId;
-  String representation= "";
+  String representation = "";
 
   EnterPasswordPage({required this.studentId});
 
@@ -21,21 +21,22 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
 
   final GlobalKey<PictogramGridViewState> _passwordGridKey =
       GlobalKey<PictogramGridViewState>();
-  
+
   @override
   void initState() {
     super.initState();
     _controller.getStudent(widget.studentId).then((value) {
-      setState((){
+      setState(() {
         widget.representation = value.representation;
-        
-        String audioHelp="";
-        if(value.representation =="audio" ){
-          audioHelp = "Estás en la página de introducir contraseña de ${value.name} ." +
-          "Pulsa sobre las imágenes en el orden correcto para entrar en la aplicación.";
-        }
-        else{
-          audioHelp = "Estás en la página de introducir contraseña de ${value.name} .";
+
+        String audioHelp = "";
+        if (value.representation == "audio") {
+          audioHelp =
+              "Estás en la página de introducir contraseña de ${value.name} ." +
+                  "Pulsa sobre las imágenes en el orden correcto para entrar en la aplicación.";
+        } else {
+          audioHelp =
+              "Estás en la página de introducir contraseña de ${value.name} .";
         }
         _controller.speak(audioHelp);
       });
@@ -52,15 +53,15 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
+        preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          backgroundColor: const Color.fromARGB(255, 161, 182, 236),
           toolbarHeight: 100.0,
-          leading: new IconButton(
+          leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: new Icon(
+            icon: const Icon(
               Icons.arrow_back,
               size: 50.0,
             ),
@@ -72,7 +73,8 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  if(widget.representation =="text" || widget.representation =="audio")
+                    if (widget.representation == "text" ||
+                        widget.representation == "audio")
                       Text(
                         'ACCESO DE ALUMNO',
                         textAlign: TextAlign.center,
@@ -82,16 +84,17 @@ class _EnterPasswordPageState extends State<EnterPasswordPage> {
                           fontSize: 50.0,
                         ),
                       ),
-                    if(widget.representation =="image") 
+                    if (widget.representation == "image")
                       Semantics(
-                          label: "Pictograma de contraseña",
-                          child:Image.asset(
-                            "assets/contraseña.png",
-                            width: 100.0,
-                            height: 100.0,
+                        label: "Pictograma de contraseña",
+                        child: Image.asset(
+                          "assets/contraseña.png",
+                          width: 100.0,
+                          height: 100.0,
                         ),
                       )
-                  ],)
+                  ],
+                )
               ],
             ),
           ),
