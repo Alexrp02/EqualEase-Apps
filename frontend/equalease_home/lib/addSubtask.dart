@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equalease_home/components/select_pictogram.dart';
 import 'package:equalease_home/components/upload_image_button.dart';
 import 'package:flutter/material.dart';
@@ -64,10 +66,19 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
+        preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
-          backgroundColor: Color.fromARGB(255, 161, 182, 236),
-          title: Center(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              size: 50.0,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+          title: const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -96,65 +107,96 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
                   controller: _titleController,
                   decoration: InputDecoration(
                     labelText: 'TITULO',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       color: Colors.black,
                       fontSize: 30.0,
                       fontWeight: FontWeight.bold,
                     ),
                     errorText: _titleErrorText,
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 25.0,
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 TextFormField(
                   controller: _descriptionController,
                   decoration: InputDecoration(
                     labelText: 'DESCRIPCION',
-                    labelStyle: TextStyle(
+                    labelStyle: const TextStyle(
                       color: Colors.black,
                       fontSize: 30.0,
                       fontWeight: FontWeight.bold,
                     ),
                     errorText: _descriptionErrorText,
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 25.0,
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _saveSubtask,
-                  child: Text(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
                     'GUARDAR SUBTAREA',
                     style: TextStyle(color: Colors.white, fontSize: 40.0),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 161, 182, 236),
-                    foregroundColor: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 20),
                 ImageUploader(
-                    source: ImageSource.camera, controller: imageController),
+                  source: ImageSource.camera,
+                  controller: imageController,
+                  onImageSelected: () {
+                    setState(() {
+                      imageURL = imageController.getImage()!.path;
+                      pictogramURL = '';
+                    });
+                  },
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PictogramSelect()))
-                          .then((value) {
-                        pictogramURL = value;
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const PictogramSelect())).then((value) {
+                        setState(() {
+                          imageController.setImageToNull();
+                          pictogramURL = value;
+                        });
                       });
                     },
-                    child: Text(
+                    child: const Text(
                       'Seleccionar Pictograma',
                       style: TextStyle(fontSize: 40.0),
-                    ))
+                    )),
+                const SizedBox(height: 20),
+                if (imageController.getImage() != null)
+                  Image.file(
+                    File(imageController.getImage()!.path),
+                    fit: BoxFit.contain,
+                    width: 300,
+                    height: 300,
+                  )
+                else if (pictogramURL != '')
+                  Image.network(
+                    pictogramURL,
+                    fit: BoxFit.contain,
+                    width: 300,
+                    height: 300,
+                  )
+                else
+                  const Text(
+                    'No se ha seleccionado ninguna imagen',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
               ],
             )
           ],

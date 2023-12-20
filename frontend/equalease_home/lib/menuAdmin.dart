@@ -163,10 +163,11 @@ class _MenuPageState extends State<MenuPage> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
+          SizedBox(
             width: 90,
             height: 90,
             child: FloatingActionButton(
+              backgroundColor: const Color.fromARGB(255, 161, 182, 236),
               onPressed: () {
                 // Lógica para el botón "Añadir"
                 Navigator.push(
@@ -187,6 +188,7 @@ class _MenuPageState extends State<MenuPage> {
             width: 90,
             height: 90,
             child: FloatingActionButton(
+              backgroundColor: const Color.fromARGB(255, 161, 182, 236),
               onPressed: () {
                 Navigator.push(
                   context,
