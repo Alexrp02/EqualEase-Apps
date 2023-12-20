@@ -83,58 +83,61 @@ class _AdminPageState extends State<AdminPage> {
     Color textColor = Colors.white;
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize:
-                    MaterialStateProperty.all(Size(double.infinity, 100)),
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 100.0, right: 100.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(buttonColor),
+                  foregroundColor: MaterialStateProperty.all(textColor),
+                  minimumSize:
+                      MaterialStateProperty.all(Size(double.infinity, 100)),
+                  textStyle: MaterialStateProperty.all(
+                    TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TasksPage()),
+                  );
+                },
+                child: const Text('TAREAS'),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TasksPage()),
-                );
-              },
-              child: const Text('TAREAS'),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                foregroundColor: MaterialStateProperty.all(textColor),
-                minimumSize:
-                    MaterialStateProperty.all(Size(double.infinity, 100)),
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(buttonColor),
+                  foregroundColor: MaterialStateProperty.all(textColor),
+                  minimumSize:
+                      MaterialStateProperty.all(Size(double.infinity, 100)),
+                  textStyle: MaterialStateProperty.all(
+                    TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => StudentsPage()),
+                  );
+                },
+                child: const Text('ESTUDIANTES'),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StudentsPage()),
-                );
-              },
-              child: const Text('ESTUDIANTES'),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -144,42 +147,50 @@ class _AdminPageState extends State<AdminPage> {
         ? Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MuestraMenu()),
-                  );
-                },
-                tooltip: 'Configuración',
-                backgroundColor: const Color.fromARGB(255, 161, 182, 236),
-                heroTag: null,
-                mini: false,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40.0),
-                ),
-                child: const Icon(
-                  Icons.settings,
-                  size: 56,
-                ),
-              ),
-              const SizedBox(height: 10),
-              FloatingActionButton(
-                  tooltip: "Administrar menús",
+              SizedBox(
+                height: 100,
+                width: 100,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MuestraMenu()),
+                    );
+                  },
+                  tooltip: 'Configuración',
+                  backgroundColor: const Color.fromARGB(255, 161, 182, 236),
                   heroTag: null,
                   mini: false,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40.0),
                   ),
-                  backgroundColor: const Color.fromARGB(255, 161, 182, 236),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MenuPage()));
-                  },
                   child: const Icon(
-                    Icons.restaurant,
-                    size: 50,
-                  ))
+                    Icons.settings,
+                    size: 56,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 100,
+                width: 100,
+                child: FloatingActionButton(
+                    tooltip: "Administrar menús",
+                    heroTag: null,
+                    mini: false,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MenuPage()));
+                    },
+                    child: const Icon(
+                      Icons.restaurant,
+                      size: 50,
+                    )),
+              )
             ],
           )
         : Container(); // Si no tiene el rol, el contenedor es invisible

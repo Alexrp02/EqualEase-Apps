@@ -113,7 +113,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                             horizontal: 8.0, vertical: 4.0),
                         child: Text(
                           '${teacher.name} ${teacher.surname}',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           textAlign: TextAlign.center,
                         ),
                       ),

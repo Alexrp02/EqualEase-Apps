@@ -84,13 +84,13 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   labelText: 'TITULO',
                   labelStyle: TextStyle(
                     color: Colors.black,
-                    fontSize: 20.0,
+                    fontSize: 30.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18.0,
+                  fontSize: 25.0,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -107,13 +107,13 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   labelText: 'DESCRIPCION',
                   labelStyle: TextStyle(
                     color: Colors.black,
-                    fontSize: 20.0,
+                    fontSize: 30.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18.0,
+                  fontSize: 25.0,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -127,7 +127,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
               SizedBox(height: 30),
               Text('SUBTAREAS:',
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 30,
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
               Column(
@@ -198,9 +198,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                 },
                 child: Text(
                   'AÑADIR SUBTAREA',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 40.0),
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromARGB(255, 161, 182, 236),
@@ -215,7 +213,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                   labelText: 'TIPO',
                   labelStyle: TextStyle(
                     color: Colors.black,
-                    fontSize: 20.0,
+                    fontSize: 30.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -267,9 +265,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                 },
                 child: Text(
                   'GUARDAR TAREA',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 40.0),
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromARGB(255, 161, 182, 236),
@@ -301,7 +297,7 @@ class _AgregarTaskPageState extends State<AgregarTaskPage> {
                 child: Text('MOSTRAR TAREA'),
               ),*/
               //SizedBox(
-                //  height: 30), // Agrega un espacio adicional entre los campos
+              //  height: 30), // Agrega un espacio adicional entre los campos
             ],
           ),
         ),

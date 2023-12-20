@@ -105,8 +105,7 @@ class MyApp extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => SelectAvatarPage()),
+                  MaterialPageRoute(builder: (context) => SelectAvatarPage()),
                 );
               },
               child: const Text('ESTUDIANTE'),

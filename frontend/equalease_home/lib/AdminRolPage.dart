@@ -221,18 +221,25 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddStudentForm()),
-          ).then((value) {
-            setState(() {
-              _StudentsAdded.add(value);
+      floatingActionButton: SizedBox(
+        width: 100,
+        height: 100,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddStudentForm()),
+            ).then((value) {
+              setState(() {
+                _StudentsAdded.add(value);
+              });
             });
-          });
-        },
-        child: Icon(Icons.add),
+          },
+          child: Icon(
+            Icons.add,
+            size: 50.0,
+          ),
+        ),
       ),
     );
   }
@@ -413,18 +420,25 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddTeacherForm()),
-          ).then((value) {
-            setState(() {
-              _TeachersAdded.add(value);
+      floatingActionButton: SizedBox(
+        width: 100,
+        height: 100,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddTeacherForm()),
+            ).then((value) {
+              setState(() {
+                _TeachersAdded.add(value);
+              });
             });
-          });
-        },
-        child: Icon(Icons.add),
+          },
+          child: Icon(
+            Icons.add,
+            size: 50.0,
+          ),
+        ),
       ),
     );
   }

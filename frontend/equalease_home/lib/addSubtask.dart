@@ -35,8 +35,6 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
   }
 
   void _saveSubtask() async {
-    
-
     if (_titleController.text.isEmpty) {
       setState(() {
         _titleErrorText = 'ESTE CAMPO NO PUEDE ESTAR VACIO';
@@ -100,14 +98,14 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
                     labelText: 'TITULO',
                     labelStyle: TextStyle(
                       color: Colors.black,
-                      fontSize: 20.0,
+                      fontSize: 30.0,
                       fontWeight: FontWeight.bold,
                     ),
                     errorText: _titleErrorText,
                   ),
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 18.0,
+                    fontSize: 25.0,
                   ),
                 ),
                 SizedBox(height: 30),
@@ -117,14 +115,14 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
                     labelText: 'DESCRIPCION',
                     labelStyle: TextStyle(
                       color: Colors.black,
-                      fontSize: 20.0,
+                      fontSize: 30.0,
                       fontWeight: FontWeight.bold,
                     ),
                     errorText: _descriptionErrorText,
                   ),
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 18.0,
+                    fontSize: 25.0,
                   ),
                 ),
                 SizedBox(height: 30),
@@ -132,32 +130,31 @@ class _CrearSubtaskFormState extends State<CrearSubtaskForm> {
                   onPressed: _saveSubtask,
                   child: Text(
                     'GUARDAR SUBTAREA',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 40.0),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 161, 182, 236),
                     foregroundColor: Colors.white,
                   ),
                 ),
+                const SizedBox(height: 20),
                 ImageUploader(
-                    source: ImageSource.camera, controller: imageController
-                ),
+                    source: ImageSource.camera, controller: imageController),
+                const SizedBox(height: 20),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PictogramSelect()
-                              )
-                            )
+                                  builder: (context) => PictogramSelect()))
                           .then((value) {
                         pictogramURL = value;
                       });
                     },
-                    child: Text('Seleccionar Pictograma')
-                )
+                    child: Text(
+                      'Seleccionar Pictograma',
+                      style: TextStyle(fontSize: 40.0),
+                    ))
               ],
             )
           ],

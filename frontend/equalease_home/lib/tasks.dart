@@ -68,7 +68,7 @@ class _TasksPageState extends State<TasksPage> {
           title: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: const <Widget>[
                 Text(
                   'LISTA DE TAREAS',
                   textAlign: TextAlign.center,
@@ -122,11 +122,14 @@ class _TasksPageState extends State<TasksPage> {
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'TAREA $currentIndex: ${TaskAgregada.title}',
-                                style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 30.0, // Ajusta el tamaño del texto
+                              Expanded(
+                                child: Text(
+                                  'TAREA $currentIndex: ${TaskAgregada.title}',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    fontSize:
+                                        50.0, // Ajusta el tamaño del texto
+                                  ),
                                 ),
                               ),
                               Row(
@@ -175,24 +178,30 @@ class _TasksPageState extends State<TasksPage> {
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AgregarTaskPage(
-                onTaskSaved: (task) {
-                  // Ajusta el parámetro para que sea de tipo Task
-                },
-              ),
-            ),
-          ).then((value) {
-            setState(() {
-              _TasksAgregadas.add(value);
-            });
-          });
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: SizedBox(
+        width: 100.0,
+        height: 100.0,
+        child: FittedBox(
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AgregarTaskPage(
+                    onTaskSaved: (task) {
+                      // Ajusta el parámetro para que sea de tipo Task
+                    },
+                  ),
+                ),
+              ).then((value) {
+                setState(() {
+                  _TasksAgregadas.add(value);
+                });
+              });
+            },
+            child: const Icon(Icons.add),
+          ),
+        ),
       ),
     );
   }
