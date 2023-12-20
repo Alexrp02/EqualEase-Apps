@@ -182,13 +182,15 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
                     : Container(
                         width: 136,
                       ),
-                Expanded(
-                  child: GFProgressBar(
-                      percentage: (page + 1) / subtasks.length,
-                      backgroundColor: Colors.black26,
-                      lineHeight: 50,
-                      progressBarColor: GFColors.SUCCESS),
-                ),
+                subtasks.isNotEmpty
+                    ? Expanded(
+                        child: GFProgressBar(
+                            percentage: (page + 1) / subtasks.length,
+                            backgroundColor: Colors.black26,
+                            lineHeight: 50,
+                            progressBarColor: GFColors.SUCCESS),
+                      )
+                    : Container(),
                 page < subtasks.length - 1
                     ? IconButton(
                         icon: Icon(Icons.arrow_forward),
