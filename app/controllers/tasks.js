@@ -247,6 +247,9 @@ async function deleteTask(req, res) {
                 //     console.log(`Updated 'doneTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
                 // }
                 studentData.doneTasks = studentData.doneTasks.filter(taskId => taskId !== id);
+
+                // Actualizar el documento del alumno
+                await updateDoc(studentDoc.ref, studentData);
             });
 
             // Tras las comprobaciones, eliminar la tarea.
