@@ -19,11 +19,6 @@ class SubtaskWidget extends StatelessWidget {
           subtask.title,
           style: TextStyle(fontSize: 60),
         )),
-        Center(
-            child: Text(
-          subtask.description,
-          style: TextStyle(fontSize: 40),
-        )),
         // Image of the subtask
         Expanded(
           child: Row(
@@ -49,6 +44,11 @@ class SubtaskWidget extends StatelessWidget {
             ],
           ),
         ),
+        Center(
+            child: Text(
+          subtask.description,
+          style: TextStyle(fontSize: 40),
+        )),
         // Add buttons or gestures to play audio and video if they are available
       ],
     );
@@ -92,6 +92,7 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
         subtasks = value;
       });
     });
+      
   }
 
   @override
@@ -121,6 +122,7 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                if(widget.student.representation == "text" || widget.student.representation=="audio")
                 Text(
                   'PASOS PARA REALIZAR LA TAREA',
                   textAlign: TextAlign.center,
@@ -130,7 +132,27 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
                     fontWeight: FontWeight.bold, // Hace la fuente más gruesa
                     fontSize: 50.0, // Cambia el tamaño de la fuente
                   ),
-                ),
+                )
+                else
+                 Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: SizedBox(
+                            width: 100.0,
+                            height: 100.0,
+                            child: Semantics(
+                              label: "Pictograma de la tarea de poner la mesa",
+                              child:Image.asset(
+                                'assets/PONER LA MESA.png',
+                                fit: BoxFit.cover,
+                              ),
+                          )
+                        ),
+                      ),
+                    ]
+                  )
+                
               ],
             ),
           ),

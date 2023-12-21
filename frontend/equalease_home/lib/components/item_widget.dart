@@ -1,21 +1,23 @@
 // Example widget for a item
 import 'package:flutter/material.dart';
-
-import '../models/request.dart';
+import '../models/classroom.dart';
+import '../models/teacher.dart';
+import '../models/student.dart';
 import '../models/item.dart';
 import '../controllers/controller_api.dart';
-import '../models/student.dart';
 
 class ItemWidget extends StatefulWidget {
   final Item item;
+  final String representation;
 
-  const ItemWidget({Key? key, required this.item}) : super(key: key);
+  const ItemWidget({Key? key, required this.item, required this.representation}) : super(key: key);
 
   @override
   State<ItemWidget> createState() => _ItemWidgetState();
 }
 
 class _ItemWidgetState extends State<ItemWidget> {
+  bool debug = false;
   bool checked = false;
 
   @override
@@ -27,16 +29,45 @@ class _ItemWidgetState extends State<ItemWidget> {
           widget.item.name,
           style: const TextStyle(fontSize: 60),
         )),
-        Center(
-            child: Text(
-          "TE FALTAN: ${widget.item.quantity}",
-          style: const TextStyle(fontSize: 60),
-        )),
-        Center(
-            child: Text(
+
+        if(widget.representation == "text" || widget.representation == "audio")
+          Center(
+              child:Text(
+            "TE FALTAN: ${widget.item.quantity}",
+            style: const TextStyle(fontSize: 60),
+          ))
+        
+        else
+
+          SizedBox(
+            height: 100,
+             width: 100,
+             child: Semantics(
+              label: "Pictogtrama representando el número de items. ${widget.item.quantity}",
+              child: Image.asset('assets/${widget.item.quantity}.png',
+              fit: BoxFit.cover,),
+              )
+            ),
+          
+        if(widget.representation == "text" || widget.representation == "audio")
+          Center(
+              child: Text(
           widget.item.size,
           style: const TextStyle(fontSize: 40),
-        )),
+        ))
+        
+        else
+
+          SizedBox(
+            height: 100,
+             width: 100,
+             child: Semantics(
+              label: "Pictogtrama representando el tamaño del items. ${widget.item.size}",
+              child: Image.asset('assets/${widget.item.size}.png',
+              fit: BoxFit.cover,),
+              )
+            ),
+
         // Image of the subtask
         Expanded(
           child: Row(
@@ -50,6 +81,7 @@ class _ItemWidgetState extends State<ItemWidget> {
                       ),
                     )
                   : Container()
+                  
             ],
           ),
         ),
@@ -61,30 +93,49 @@ class _ItemWidgetState extends State<ItemWidget> {
 // Main carousel widget
 class ItemCarousel extends StatefulWidget {
   final String studentId;
+  final Classroom classroom;
+  final String teacherPic;
+  bool quantityChanged = false;
+  final String representation;
   final Student student;
 
-  const ItemCarousel({Key? key, required this.studentId, required this.student})
-      : super(key: key);
+  ItemCarousel({Key? key, required this.studentId,required this.student, required this.representation, required this.classroom, required this.teacherPic}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _ItemsCarouselState();
+    return _ItemsCarouselState(classroom: classroom);
   }
 }
 
 class _ItemsCarouselState extends State<ItemCarousel> {
   int page = 0;
+  final Classroom classroom;
   late String studentId;
   List<Item> items = [];
+  Teacher teacher = Teacher(email:"",id:"",isAdmin:false,name:"",profilePicture: "",surname: "",students: []);  
   final PageController pageController = PageController();
   APIController controller = APIController();
   bool changed = false;
 
-  _ItemsCarouselState();
+  _ItemsCarouselState({required this.classroom});
 
   @override
   void initState() {
     super.initState();
+
+    String audioInstructions;
+     if(widget.student.representation=="audio"){
+      audioInstructions="Estás en la clase ${widget.classroom.letter} ."+
+     "Para añadir un objeto al pedido pulsa sobre el botón más."+
+     "Para quitar un objeto al pedido pulsa sobre el botón menos."+
+     "Para pasar al siguiente objeto del pedido pulsa sobre la flecha de avanzar."+
+     "Para retroceder al objeto anterior del pedido pulsa sobre la flecha de retroceder en la esquina inferior izquierda.";
+     }else{
+      audioInstructions="Estás en la clase ${widget.classroom.letter}.";
+     }
+
+      controller.speak(audioInstructions);
+
     pageController.addListener(() {
       setState(() {
         page = pageController.page!.round();
@@ -95,6 +146,12 @@ class _ItemsCarouselState extends State<ItemCarousel> {
     controller.getItemsFromStudentRequest(studentId).then((value) {
       setState(() {
         items = value;
+      });
+    });
+
+    controller.getTeacher(widget.classroom.assignedTeacher).then((value){
+      setState(() {
+        teacher = value;
       });
     });
   }
@@ -110,32 +167,75 @@ class _ItemsCarouselState extends State<ItemCarousel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
+        preferredSize: Size.fromHeight(100.0),
         child: AppBar(
           toolbarHeight: 100.0,
-          backgroundColor: const Color.fromARGB(255, 161, 182, 236),
-          leading: IconButton(
+          backgroundColor: Color.fromARGB(255, 161, 182, 236),
+          leading: new IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: const Icon(
+              icon: new Icon(
                 Icons.arrow_back,
                 size: 50.0,
               )),
-          title: const Center(
-            child: Row(
+          title: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'MATERIALES DE PEDIDO',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color:
-                        Colors.white, // Cambia el color de la fuente a blanco
-                    fontWeight: FontWeight.bold, // Hace la fuente más gruesa
-                    fontSize: 50.0, // Cambia el tamaño de la fuente
+                if(widget.representation == "text" || widget.representation == "audio")
+                  Text(
+                    'MATERIALES DE PEDIDO}',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color:
+                          Colors.white, // Cambia el color de la fuente a blanco
+                      fontWeight: FontWeight.bold, // Hace la fuente más gruesa
+                      fontSize: 50.0, // Cambia el tamaño de la fuente
+                    ),
+                  )
+                  else
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: SizedBox(
+                            width: 100.0,
+                            height: 100.0,
+                            child: Semantics(
+                              label: "Pictograma de comanda",
+                              child:Image.asset(
+                                'assets/materialEscolar.png',
+                                fit: BoxFit.cover,
+                              ),
+                          )
+                        ),
+                      ),
+                      Container(
+                        child: SizedBox(
+                          width: 100.0,
+                          height: 100.0,
+                          child: Semantics(
+                            label: "Pictograma de la clase ${widget.classroom.letter}.",
+                            child:Image.asset(
+                              'assets/clase${widget.classroom.letter.toUpperCase()}.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        ),
+                      ),
+                      Container(
+                        child: Semantics(
+                          label: "Foto de perfil de ${teacher.name}",
+                          child:Image.network(
+                              widget.teacherPic,
+                              width: 120.0,
+                              height: 120.0,
+                          ),
+                        )
+                      ),
+                    ]
                   ),
-                ),
               ],
             ),
           ),
@@ -143,16 +243,20 @@ class _ItemsCarouselState extends State<ItemCarousel> {
             ClipOval(
               child: Container(
                 color: const Color.fromARGB(107, 255, 255, 255),
-                child: Image.network(
-                  widget.student.profilePicture,
-                  width: 100.0,
-                  height: 100.0,
-                ),
+                child: Semantics(
+                  label: "Foto de perfil de  ${widget.student.name}",
+                  child: Image.network(
+                    widget.student.profilePicture,
+                    width: 100.0,
+                    height: 100.0,
+                  ),
+                )
               ),
             ),
           ],
         ),
       ),
+ 
       body: Padding(
         padding: const EdgeInsets.only(top: 32.0),
         child: Column(
@@ -166,7 +270,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                   if (items.isEmpty) {
                     return Container();
                   } else {
-                    return ItemWidget(item: items[index]);
+                    return ItemWidget(item: items[index], representation: widget.representation,);
                   }
                 },
               ),
@@ -231,7 +335,7 @@ class _ItemsCarouselState extends State<ItemCarousel> {
                         iconSize: 60,
                         icon: Icon(Icons.add),
                         onPressed: () {
-                          if (items.isNotEmpty) {
+                          if (items.isNotEmpty && items[page].quantity < 10) {
                             changed = true;
                             setState(() {
                               items[page].quantity++;
