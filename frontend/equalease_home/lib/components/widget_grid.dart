@@ -33,7 +33,7 @@ class PictogramGridViewState extends State<PictogramGridView> {
 
   List<String> selectedPictograms = [];
   String concatenatedPassword = '';
-  final double bottomContainerHeight = 100.0;
+  final double bottomContainerHeight = 160.0;
 
   // Lista de claves para acceder al estado de las tarjetas
   final List<GlobalKey<_PictogramCardState>> cardKeys = [];
@@ -47,39 +47,62 @@ class PictogramGridViewState extends State<PictogramGridView> {
             child: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
                 double gridHeight = constraints.maxHeight;
-                return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 8.0,
-                    mainAxisSpacing: 8.0,
-                    childAspectRatio: constraints.maxWidth /
-                        (gridHeight * 2 - 250 - bottomContainerHeight),
-                  ),
-                  itemCount: pictogramAssets.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final imageName = pictogramAssets[index];
+                double gridWidth = constraints.maxWidth;
+                return Column(
+                    children: List.generate((pictogramAssets.length / 3).ceil(),
+                        (rowIndex) {
+                  return Wrap(
+                    children: List.generate(3, (colIndex) {
+                      int index = rowIndex * 3 + colIndex;
+                      if (index < pictogramAssets.length) {
+                        final imageName = pictogramAssets[index];
+                        final cardKey = GlobalKey<_PictogramCardState>();
+                        cardKeys.add(cardKey);
+                        final resetKey = GlobalKey<PictogramGridViewState>();
+                        return PictogramCard(
+                          key: cardKey,
+                          imageName: imageName,
+                          onSelected: (isSelected) {
+                            updateSelectedPictograms(imageName, isSelected);
+                          },
+                          height: gridHeight,
+                          width: gridWidth,
+                          selectColor: selectedPictograms.contains(imageName),
+                          studentId: widget.studentId, // Pasamos el studentId
+                          concatenatedPassword: concatenatedPassword,
+                          selectedPictograms: selectedPictograms,
+                          gridKey: resetKey,
+                          clear: clear,
+                        );
+                      } else {
+                        return SizedBox
+                            .shrink(); // return an empty widget if there's no item
+                      }
+                    }),
+                  );
+                })
 
-                    // Crear una clave para cada tarjeta
-                    final cardKey = GlobalKey<_PictogramCardState>();
-                    cardKeys.add(cardKey);
-                    final resetKey = GlobalKey<PictogramGridViewState>();
+                    // final imageName = pictogramAssets[index];
 
-                    return PictogramCard(
-                      key: cardKey,
-                      imageName: imageName,
-                      onSelected: (isSelected) {
-                        updateSelectedPictograms(imageName, isSelected);
-                      },
-                      height: gridHeight,
-                      selectColor: selectedPictograms.contains(imageName),
-                      studentId: widget.studentId, // Pasamos el studentId
-                      concatenatedPassword: concatenatedPassword,
-                      selectedPictograms: selectedPictograms,
-                      gridKey: resetKey,
-                      clear: clear,
+                    // // Crear una clave para cada tarjeta
+                    // final cardKey = GlobalKey<_PictogramCardState>();
+                    // cardKeys.add(cardKey);
+                    // final resetKey = GlobalKey<PictogramGridViewState>();
+
+                    // return PictogramCard(
+                    //   key: cardKey,
+                    //   imageName: imageName,
+                    //   onSelected: (isSelected) {
+                    //     updateSelectedPictograms(imageName, isSelected);
+                    //   },
+                    //   height: gridHeight,
+                    //   selectColor: selectedPictograms.contains(imageName),
+                    //   studentId: widget.studentId, // Pasamos el studentId
+                    //   concatenatedPassword: concatenatedPassword,
+                    //   selectedPictograms: selectedPictograms,
+                    //   gridKey: resetKey,
+                    //   clear: clear,
                     );
-                  },
-                );
               },
             ),
           ),
@@ -93,8 +116,8 @@ class PictogramGridViewState extends State<PictogramGridView> {
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
                     'assets/${selectedPictograms[index]}.png',
-                    height: 80.0,
-                    width: 80.0,
+                    height: bottomContainerHeight,
+                    width: bottomContainerHeight,
                   ),
                 );
               },
@@ -161,6 +184,7 @@ class PictogramCard extends StatefulWidget {
   final Function(bool isSelected) onSelected;
   final Function() clear;
   final double height;
+  final double width;
   final bool selectColor;
   final String studentId; // Agregamos el nuevo parámetro
   final String concatenatedPassword;
@@ -171,6 +195,7 @@ class PictogramCard extends StatefulWidget {
       {required this.imageName,
       required this.onSelected,
       required this.height,
+      required this.width,
       required GlobalKey<_PictogramCardState> key,
       required this.selectColor,
       required this.studentId, // Agregamos el nuevo parámetro
@@ -299,8 +324,8 @@ class _PictogramCardState extends State<PictogramCard> {
           color: widget.selectColor ? Colors.blue : Colors.transparent,
         ),
         child: SizedBox(
-          height: widget.height,
-          width: widget.height,
+          height: widget.height / 2,
+          width: widget.width / 3,
           child: Center(
             child: Image.asset(
               'assets/${widget.imageName}.png',
