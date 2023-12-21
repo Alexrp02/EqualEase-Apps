@@ -34,97 +34,129 @@ class PictogramGridViewState extends State<PictogramGridView> {
   List<String> selectedPictograms = [];
   String concatenatedPassword = '';
   final double bottomContainerHeight = 160.0;
+  bool isPasswordIncorrect = false;
 
   // Lista de claves para acceder al estado de las tarjetas
   final List<GlobalKey<_PictogramCardState>> cardKeys = [];
 
+  void showIncorrect() {
+    setState(() {
+      isPasswordIncorrect = true;
+    });
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        isPasswordIncorrect = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                double gridHeight = constraints.maxHeight;
-                double gridWidth = constraints.maxWidth;
-                return Column(
-                    children: List.generate((pictogramAssets.length / 3).ceil(),
-                        (rowIndex) {
-                  return Wrap(
-                    children: List.generate(3, (colIndex) {
-                      int index = rowIndex * 3 + colIndex;
-                      if (index < pictogramAssets.length) {
-                        final imageName = pictogramAssets[index];
-                        final cardKey = GlobalKey<_PictogramCardState>();
-                        cardKeys.add(cardKey);
-                        final resetKey = GlobalKey<PictogramGridViewState>();
-                        return PictogramCard(
-                          key: cardKey,
-                          imageName: imageName,
-                          onSelected: (isSelected) {
-                            updateSelectedPictograms(imageName, isSelected);
-                          },
-                          height: gridHeight,
-                          width: gridWidth,
-                          selectColor: selectedPictograms.contains(imageName),
-                          studentId: widget.studentId, // Pasamos el studentId
-                          concatenatedPassword: concatenatedPassword,
-                          selectedPictograms: selectedPictograms,
-                          gridKey: resetKey,
-                          clear: clear,
-                        );
-                      } else {
-                        return SizedBox
-                            .shrink(); // return an empty widget if there's no item
-                      }
-                    }),
-                  );
-                })
-
-                    // final imageName = pictogramAssets[index];
-
-                    // // Crear una clave para cada tarjeta
-                    // final cardKey = GlobalKey<_PictogramCardState>();
-                    // cardKeys.add(cardKey);
-                    // final resetKey = GlobalKey<PictogramGridViewState>();
-
-                    // return PictogramCard(
-                    //   key: cardKey,
-                    //   imageName: imageName,
-                    //   onSelected: (isSelected) {
-                    //     updateSelectedPictograms(imageName, isSelected);
-                    //   },
-                    //   height: gridHeight,
-                    //   selectColor: selectedPictograms.contains(imageName),
-                    //   studentId: widget.studentId, // Pasamos el studentId
-                    //   concatenatedPassword: concatenatedPassword,
-                    //   selectedPictograms: selectedPictograms,
-                    //   gridKey: resetKey,
-                    //   clear: clear,
+      body: Stack(children: [
+        Column(
+          children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  double gridHeight = constraints.maxHeight;
+                  double gridWidth = constraints.maxWidth;
+                  return Column(
+                      children: List.generate(
+                          (pictogramAssets.length / 3).ceil(), (rowIndex) {
+                    return Wrap(
+                      children: List.generate(3, (colIndex) {
+                        int index = rowIndex * 3 + colIndex;
+                        if (index < pictogramAssets.length) {
+                          final imageName = pictogramAssets[index];
+                          final cardKey = GlobalKey<_PictogramCardState>();
+                          cardKeys.add(cardKey);
+                          final resetKey = GlobalKey<PictogramGridViewState>();
+                          return PictogramCard(
+                            key: cardKey,
+                            imageName: imageName,
+                            onSelected: (isSelected) {
+                              updateSelectedPictograms(imageName, isSelected);
+                            },
+                            height: gridHeight,
+                            width: gridWidth,
+                            selectColor: selectedPictograms.contains(imageName),
+                            studentId: widget.studentId, // Pasamos el studentId
+                            concatenatedPassword: concatenatedPassword,
+                            selectedPictograms: selectedPictograms,
+                            gridKey: resetKey,
+                            clear: clear,
+                            showIncorrect: showIncorrect,
+                          );
+                        } else {
+                          return SizedBox
+                              .shrink(); // return an empty widget if there's no item
+                        }
+                      }),
                     );
-              },
+                  })
+
+                      // final imageName = pictogramAssets[index];
+
+                      // // Crear una clave para cada tarjeta
+                      // final cardKey = GlobalKey<_PictogramCardState>();
+                      // cardKeys.add(cardKey);
+                      // final resetKey = GlobalKey<PictogramGridViewState>();
+
+                      // return PictogramCard(
+                      //   key: cardKey,
+                      //   imageName: imageName,
+                      //   onSelected: (isSelected) {
+                      //     updateSelectedPictograms(imageName, isSelected);
+                      //   },
+                      //   height: gridHeight,
+                      //   selectColor: selectedPictograms.contains(imageName),
+                      //   studentId: widget.studentId, // Pasamos el studentId
+                      //   concatenatedPassword: concatenatedPassword,
+                      //   selectedPictograms: selectedPictograms,
+                      //   gridKey: resetKey,
+                      //   clear: clear,
+                      );
+                },
+              ),
             ),
-          ),
-          SizedBox(
-            height: bottomContainerHeight,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: selectedPictograms.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    'assets/${selectedPictograms[index]}.png',
-                    height: bottomContainerHeight,
-                    width: bottomContainerHeight,
-                  ),
-                );
-              },
+            SizedBox(
+              height: bottomContainerHeight,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: selectedPictograms.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      'assets/${selectedPictograms[index]}.png',
+                      height: bottomContainerHeight,
+                      width: bottomContainerHeight,
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+        if (isPasswordIncorrect)
+          Positioned.fromRect(
+            rect: Rect.fromCenter(
+              center: Offset(
+                MediaQuery.of(context).size.width / 2,
+                MediaQuery.of(context).size.height / 4,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+            ),
+            child: Icon(
+              Icons.close,
+              color: Colors.red,
+              size: MediaQuery.of(context).size.width - bottomContainerHeight,
+            ),
+          )
+      ]),
     );
   }
 
@@ -190,6 +222,7 @@ class PictogramCard extends StatefulWidget {
   final String concatenatedPassword;
   List<String> selectedPictograms;
   final GlobalKey<PictogramGridViewState> gridKey; // Nueva línea
+  final Function() showIncorrect;
 
   PictogramCard(
       {required this.imageName,
@@ -202,7 +235,8 @@ class PictogramCard extends StatefulWidget {
       required this.concatenatedPassword,
       required this.selectedPictograms,
       required this.gridKey,
-      required this.clear});
+      required this.clear,
+      required this.showIncorrect});
 
   @override
   _PictogramCardState createState() => _PictogramCardState();
@@ -270,52 +304,53 @@ class _PictogramCardState extends State<PictogramCard> {
             );
           } else {
             widget.clear();
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text('INTÉNTALO OTRA VEZ'),
-                  content: Row(
-                    children: [
-                      Icon(
-                        Icons
-                            .sentiment_satisfied, // El icono de la cara sonriente
-                        color: Colors
-                            .orange, // Puedes ajustar el color según tus preferencias
-                        size:
-                            80.0, // Puedes ajustar el tamaño según tus preferencias
-                      ),
-                      SizedBox(
-                          width: 10.0), // Espaciado entre el icono y el texto
-                      Text(
-                        'ÁNIMO',
-                        style: TextStyle(
-                          fontSize:
-                              20.0, // Ajusta el tamaño del texto según tus preferencias
-                        ),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          // Llamar a la función para resetear las imágenes
-                          //_passwordGridKey.currentState?.resetSelectedImages();
-                          widget.gridKey.currentState?.resetSelectedImages();
+            widget.showIncorrect();
+            // showDialog(
+            //   context: context,
+            //   builder: (context) {
+            //     return AlertDialog(
+            //       title: Text('INTÉNTALO OTRA VEZ'),
+            //       content: Row(
+            //         children: [
+            //           Icon(
+            //             Icons
+            //                 .sentiment_satisfied, // El icono de la cara sonriente
+            //             color: Colors
+            //                 .orange, // Puedes ajustar el color según tus preferencias
+            //             size:
+            //                 80.0, // Puedes ajustar el tamaño según tus preferencias
+            //           ),
+            //           SizedBox(
+            //               width: 10.0), // Espaciado entre el icono y el texto
+            //           Text(
+            //             'ÁNIMO',
+            //             style: TextStyle(
+            //               fontSize:
+            //                   20.0, // Ajusta el tamaño del texto según tus preferencias
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //       actions: [
+            //         TextButton(
+            //           onPressed: () {
+            //             setState(() {
+            //               // Llamar a la función para resetear las imágenes
+            //               //_passwordGridKey.currentState?.resetSelectedImages();
+            //               widget.gridKey.currentState?.resetSelectedImages();
 
-                          selectedPictograms.clear();
-                          selectedPictograms = [];
+            //               selectedPictograms.clear();
+            //               selectedPictograms = [];
 
-                          Navigator.pop(context);
-                        });
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
+            //               Navigator.pop(context);
+            //             });
+            //           },
+            //           child: Text('OK'),
+            //         ),
+            //       ],
+            //     );
+            //   },
+            // );
           }
         }
       },
