@@ -233,18 +233,20 @@ async function deleteTask(req, res) {
                 const studentData = studentDoc.data();
 
                 // Comprobar si la tarea está en el array de pendingTasks
-                if (studentData.pendingTasks.includes(id)) {
-                    const pendingTasks = studentData.pendingTasks.filter(taskId => taskId !== id);
-                    await updateDoc(studentDoc.ref, { pendingTasks });
-                    console.log(`Updated 'pendingTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
-                }
+                // if (studentData.pendingTasks.includes(id)) {
+                //     const pendingTasks = studentData.pendingTasks.filter(taskId => taskId !== id);
+                //     await updateDoc(studentDoc.ref, { pendingTasks });
+                //     console.log(`Updated 'pendingTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
+                // }
+                studentData.pendingTasks = studentData.pendingTasks.filter(taskId => taskId !== id);
 
                 // Comprobar si la tarea está en el array de doneTasks
-                if (studentData.doneTasks.includes(id)) {
-                    const doneTasks = studentData.doneTasks.filter(taskId => taskId !== id);
-                    await updateDoc(studentDoc.ref, { doneTasks });
-                    console.log(`Updated 'doneTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
-                }
+                // if (studentData.doneTasks.includes(id)) {
+                //     const doneTasks = studentData.doneTasks.filter(taskId => taskId !== id);
+                //     await updateDoc(studentDoc.ref, { doneTasks });
+                //     console.log(`Updated 'doneTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
+                // }
+                studentData.doneTasks = studentData.doneTasks.filter(taskId => taskId !== id);
             });
 
             // Tras las comprobaciones, eliminar la tarea.
