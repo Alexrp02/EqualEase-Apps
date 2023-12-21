@@ -17,7 +17,8 @@ import '../models/request.dart';
 /// class containing all operations with API
 class APIController {
   //String baseUrl = 'http://localhost:3000/api';
-  String baseUrl = "http://10.0.2.2:3000/api";
+  // String baseUrl = "http://10.0.2.2:3000/api";
+  String baseUrl = "http://130.61.87.88:3000/api";
   FlutterTts flutterTts = FlutterTts();
 
   //-----------------------------------------------------------------------//
