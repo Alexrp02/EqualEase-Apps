@@ -107,18 +107,27 @@ class PictogramGridViewState extends State<PictogramGridView> {
 
   void updateSelectedPictograms(String imageName, bool isSelected) {
     setState(() {
-      if (isSelected) {
-        selectedPictograms.add(imageName);
-      } else {
+      // if (isSelected) {
+      //   selectedPictograms.add(imageName);
+      // } else {
+      //   selectedPictograms.remove(imageName);
+      // }
+
+      if (selectedPictograms.contains(imageName)) {
         selectedPictograms.remove(imageName);
+      } else {
+        selectedPictograms.add(imageName);
       }
 
       concatenatedPassword = selectedPictograms.join();
       print(concatenatedPassword);
 
       // Notificar cambios a través del callback
-      widget.onPasswordChanged(concatenatedPassword);
     });
+    widget.onPasswordChanged(concatenatedPassword);
+
+    print("Updated password " + concatenatedPassword);
+    print("Updated array" + selectedPictograms.toString());
   }
 
   void clear() {
@@ -192,35 +201,37 @@ class _PictogramCardState extends State<PictogramCard> {
     setState(() {
       isSelected = false;
       _colorfondo = Colors.transparent;
-      
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Color cardColor = widget.selectColor ? Colors.blue : Colors.transparent;
-
-    if (!isSelected) {
-      cardColor = _colorfondo;
-    }
+    // Color cardColor = widget.selectColor ? Colors.blue : Colors.transparent;
+    // Color cardColor;
+    // if (!isSelected) {
+    //   cardColor = _colorfondo;
+    // }
 
     return GestureDetector(
       onTap: () async {
-        setState(() {
-          isSelected = !isSelected;
-          _colorfondo = isSelected ? Colors.blue : Colors.transparent;
-          widget.onSelected(isSelected);
-          selectedPictograms = widget.selectedPictograms;
-          concatenatedPassword = widget.concatenatedPassword;
-          concatenatedPassword = concatenatedPassword + this.widget.imageName;
-        });
-        
-        if (selectedPictograms.length >= 3) {
+        // setState(() {
+        //   isSelected = !isSelected;
+        // });
+        widget.onSelected(isSelected);
+        // isSelected = !isSelected;
+        concatenatedPassword = widget.concatenatedPassword + widget.imageName;
+        // setState(() {
+        //   isSelected = !isSelected;
+        //   _colorfondo = isSelected ? Colors.blue : Colors.transparent;
+        //   widget.onSelected(isSelected);
+        //   selectedPictograms = widget.selectedPictograms;
+        //   concatenatedPassword = widget.concatenatedPassword;
+        //   concatenatedPassword = concatenatedPassword + this.widget.imageName;
+        // });
+        if (widget.selectedPictograms.length >= 3) {
           Map<String, dynamic> loginResult =
               await _controller.login(widget.studentId, concatenatedPassword);
-
-          
-          print("Realizando comprobación automatica");
+          // isSelected = false;
 
           if (loginResult["token"] != null) {
             widget.clear();
@@ -285,7 +296,7 @@ class _PictogramCardState extends State<PictogramCard> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: cardColor,
+          color: widget.selectColor ? Colors.blue : Colors.transparent,
         ),
         child: SizedBox(
           height: widget.height,

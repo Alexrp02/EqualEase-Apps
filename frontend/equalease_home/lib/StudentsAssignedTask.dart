@@ -63,6 +63,18 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          actions: [
+            // Agrega el botón de cerrar sesión en el AppBar
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                size: 70.0,
+              ),
+            ),
+          ],
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           toolbarHeight: 100.0,
           leading: new IconButton(
@@ -131,7 +143,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                 in _student!.pendingTasks)
                               Container(
                                 padding: EdgeInsets.all(0),
-                                height: 80,
+                                // height: 80,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 255, 255, 255),
                                   border: Border.all(
@@ -145,13 +157,18 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: <Widget>[
-                                    Text(
-                                      totalTasks
-                                          .firstWhere(
-                                              (task) => task.id == taskId['id'])
-                                          .title,
+                                    Expanded(
+                                      child: Text(
+                                        totalTasks
+                                            .firstWhere((task) =>
+                                                task.id == taskId['id'])
+                                            .title,
+                                        style: const TextStyle(
+                                          fontSize: 40,
+                                        ),
+                                      ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: 200,
                                       height: 50,
                                       child: ElevatedButton(
@@ -166,7 +183,7 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.white,
-                                          padding: EdgeInsets.all(0),
+                                          padding: const EdgeInsets.all(0),
                                           shape: RoundedRectangleBorder(
                                             side: BorderSide(
                                               color: Color.fromARGB(
@@ -191,12 +208,20 @@ class _StudentsAssignedTaskState extends State<StudentsAssignedTask> {
                 ],
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _openTaskSelectionDialog(context);
-          },
-          child: Icon(Icons.add, color: Colors.white),
-          backgroundColor: Color.fromARGB(255, 161, 182, 236)),
+      floatingActionButton: SizedBox(
+        width: 100,
+        height: 100,
+        child: FloatingActionButton(
+            onPressed: () {
+              _openTaskSelectionDialog(context);
+            },
+            backgroundColor: const Color.fromARGB(255, 161, 182, 236),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 50.0,
+            )),
+      ),
     );
   }
 }
@@ -276,14 +301,20 @@ class _CustomDialogState extends State<CustomDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Seleccionar Tareas"),
+      title: const Text(
+        "Seleccionar Tareas",
+        style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             for (Task task in widget.totalTasks)
               CheckboxListTile(
-                title: Text(task.title),
+                title: Text(
+                  task.title,
+                  style: const TextStyle(fontSize: 40.0),
+                ),
                 value: widget.student!.pendingTasks
                     .any((arrayTask) => task.id == arrayTask['id']),
                 onChanged: (bool? value) async {
@@ -336,7 +367,10 @@ class _CustomDialogState extends State<CustomDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text("Aceptar"),
+          child: const Text(
+            "Aceptar",
+            style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },

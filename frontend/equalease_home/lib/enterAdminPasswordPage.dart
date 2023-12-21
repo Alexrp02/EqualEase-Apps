@@ -58,65 +58,78 @@ class _EnterAdminPasswordPageState extends State<EnterAdminPasswordPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Introduce la contraseña',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 70),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Contraseña',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                // Realiza la validación de la contraseña
-                Map<String, dynamic> loginResult = await _controller.login(
-                    widget.adminId, _passwordController.text);
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Introduce la contraseña',
+                  style: TextStyle(fontSize: 50),
+                ),
+                const SizedBox(height: 70),
+                TextField(
+                  style: const TextStyle(fontSize: 30),
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    // Realiza la validación de la contraseña
+                    Map<String, dynamic> loginResult = await _controller.login(
+                        widget.adminId, _passwordController.text);
 
-                if (loginResult["token"] != null) {
-                  // Contraseña válida, navega a la página de administrador
-                  _passwordController.clear();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AdminPage(admin: widget.adminId),
-                    ),
-                  );
-                } else {
-                  // Contraseña incorrecta, muestra un mensaje o realiza otra acción
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Contraseña Incorrecta'),
-                        content:
-                            Text('La contraseña introducida no es válida.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
+                    if (loginResult["token"] != null) {
+                      // Contraseña válida, navega a la página de administrador
+                      _passwordController.clear();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AdminPage(admin: widget.adminId),
+                        ),
                       );
-                    },
-                  );
-                }
-              },
-              child: Text('Acceder',
-                  style:
-                      GoogleFonts.notoSansInscriptionalPahlavi(fontSize: 18)),
+                    } else {
+                      // Contraseña incorrecta, muestra un mensaje o realiza otra acción
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Contraseña Incorrecta',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 50.0,
+                                )),
+                            content: const Text(
+                                'La contraseña introducida no es válida.',
+                                style: TextStyle(
+                                  fontSize: 25.0,
+                                )),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  child: Text('Acceder',
+                      style: GoogleFonts.notoSansInscriptionalPahlavi(
+                          fontSize: 40)),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

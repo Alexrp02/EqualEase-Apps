@@ -1,6 +1,7 @@
 // Example widget for a subtask item
 import 'package:equalease_home/models/student.dart';
 import 'package:flutter/material.dart';
+import 'package:getwidget/getwidget.dart';
 
 import '../models/subtask.dart';
 import '../controllers/controller_api.dart';
@@ -200,6 +201,17 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
                           }
                         },
                       )
+                    : Container(
+                        width: 136,
+                      ),
+                subtasks.isNotEmpty
+                    ? Expanded(
+                        child: GFProgressBar(
+                            percentage: (page + 1) / subtasks.length,
+                            backgroundColor: Colors.black26,
+                            lineHeight: 50,
+                            progressBarColor: GFColors.SUCCESS),
+                      )
                     : Container(),
                 page < subtasks.length - 1
                     ? IconButton(
@@ -214,7 +226,7 @@ class _SubtasksCarouselState extends State<SubtasksCarousel> {
                           }
                         },
                       )
-                    : Container(),
+                    : Container(width: 136),
               ],
             ),
           ],

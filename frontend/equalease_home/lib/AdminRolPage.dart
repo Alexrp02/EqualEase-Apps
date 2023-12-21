@@ -106,6 +106,18 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          actions: [
+            // Agrega el botón de cerrar sesión en el AppBar
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                size: 70.0,
+              ),
+            ),
+          ],
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           toolbarHeight: 100.0,
           leading: new IconButton(
@@ -221,18 +233,25 @@ class _StudentAdministrationPage extends State<StudentAdministrationPage>
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddStudentForm()),
-          ).then((value) {
-            setState(() {
-              _StudentsAdded.add(value);
+      floatingActionButton: SizedBox(
+        width: 100,
+        height: 100,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddStudentForm()),
+            ).then((value) {
+              setState(() {
+                _StudentsAdded.add(value);
+              });
             });
-          });
-        },
-        child: Icon(Icons.add),
+          },
+          child: Icon(
+            Icons.add,
+            size: 50.0,
+          ),
+        ),
       ),
     );
   }
@@ -282,6 +301,18 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          actions: [
+            // Agrega el botón de cerrar sesión en el AppBar
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                size: 70.0,
+              ),
+            ),
+          ],
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           toolbarHeight: 100.0,
           leading: new IconButton(
@@ -323,6 +354,7 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                     crossAxisCount: 3, // Dos elementos por fila
                     crossAxisSpacing: 10.0, // Espacio entre elementos
                     mainAxisSpacing: 10.0, // Espacio entre filas
+                    childAspectRatio: 0.85,
                   ),
                   itemCount: _TeachersAdded.length,
                   itemBuilder: (context, i) {
@@ -412,18 +444,25 @@ class _TeacherAdministrationPage extends State<TeacherAdministrationPage>
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddTeacherForm()),
-          ).then((value) {
-            setState(() {
-              _TeachersAdded.add(value);
+      floatingActionButton: SizedBox(
+        width: 100,
+        height: 100,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddTeacherForm()),
+            ).then((value) {
+              setState(() {
+                _TeachersAdded.add(value);
+              });
             });
-          });
-        },
-        child: Icon(Icons.add),
+          },
+          child: Icon(
+            Icons.add,
+            size: 50.0,
+          ),
+        ),
       ),
     );
   }
