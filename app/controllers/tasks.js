@@ -238,7 +238,7 @@ async function deleteTask(req, res) {
                 //     await updateDoc(studentDoc.ref, { pendingTasks });
                 //     console.log(`Updated 'pendingTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
                 // }
-                studentData.pendingTasks = studentData.pendingTasks.filter(taskId => taskId !== id);
+                studentData.pendingTasks = studentData.pendingTasks.filter(taskId => taskId.id !== id);
 
                 // Comprobar si la tarea está en el array de doneTasks
                 // if (studentData.doneTasks.includes(id)) {
@@ -246,7 +246,7 @@ async function deleteTask(req, res) {
                 //     await updateDoc(studentDoc.ref, { doneTasks });
                 //     console.log(`Updated 'doneTasks' for student (ID: ${studentDoc.ref.id}). Removed task with ID ${id}`);
                 // }
-                studentData.doneTasks = studentData.doneTasks.filter(taskId => taskId !== id);
+                studentData.doneTasks = studentData.doneTasks.filter(taskId => taskId.id !== id);
 
                 // Actualizar el documento del alumno
                 await updateDoc(studentDoc.ref, studentData);
