@@ -85,6 +85,18 @@ class _AddMenuFormState extends State<AddMenuForm> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          actions: [
+            // Agrega el botón de cerrar sesión en el AppBar
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                size: 70.0,
+              ),
+            ),
+          ],
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           toolbarHeight: 100.0,
           leading: new IconButton(
@@ -127,6 +139,15 @@ class _AddMenuFormState extends State<AddMenuForm> {
               },
               decoration: InputDecoration(
                 labelText: 'Nombre',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                helperStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                ),
                 errorText: _nameErrorText,
               ),
             ),
@@ -153,22 +174,29 @@ class _AddMenuFormState extends State<AddMenuForm> {
               }).toList(),
               decoration: InputDecoration(
                 labelText: 'Tipo',
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveMenu,
-              child: const Text(
-                'GUARDAR MENÚ',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 161, 182, 236),
                 onPrimary: Colors.white,
               ),
+              child: const Text(
+                'GUARDAR MENÚ',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40.0,
+                ),
+              ),
             ),
+            const SizedBox(height: 20),
             ImageUploader(
               source: ImageSource.camera,
               controller: imageController,
@@ -179,6 +207,7 @@ class _AddMenuFormState extends State<AddMenuForm> {
                 });
               },
             ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -192,7 +221,12 @@ class _AddMenuFormState extends State<AddMenuForm> {
                   });
                 });
               },
-              child: const Text('Seleccionar Pictograma'),
+              child: const Text(
+                'Seleccionar Pictograma',
+                style: TextStyle(
+                  fontSize: 40.0,
+                ),
+              ),
             ),
             if (imageController.getImage() != null)
               Image.file(

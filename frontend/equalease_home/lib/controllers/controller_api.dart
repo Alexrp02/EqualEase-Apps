@@ -825,9 +825,8 @@ class APIController {
   /// Params:
   ///
   ///   -[student]: Object of type student
-  ///   -[password]: String with the password
   ///
-  /// Returns: String with the result of the operation: the updated studentId
+  /// Returns: Boolean with the result of the operation, and the updated studentId
   Future<String> createStudent(Student student, String password) async {
     final String apiUrl = '$baseUrl/student';
 
@@ -859,7 +858,6 @@ class APIController {
       return "";
     }
   }
-
   //-----------------------------------------------------------------------//
   // Teacher operations
 
@@ -1150,7 +1148,14 @@ class APIController {
 
   /// 2a iteracion
 
-  // devuelve una lista de request del estudiante
+  /// returns a request through a student connecting with the database
+  ///
+  /// Params:
+  ///
+  ///   -[studentId]: Student identifier
+  ///
+  /// Returns: List<Request>
+
   Future<List<Request>> getRequestsFromStudent(String studentId) async {
     final String apiUrl = '$baseUrl/request/student/$studentId';
 
@@ -1878,7 +1883,6 @@ class APIController {
       throw Exception('Error de red: $e');
     }
   }
-
   Future<void> speak(String text) async {
     await flutterTts.setLanguage("es-ES");
     await flutterTts.setSpeechRate(0.5);
@@ -1886,7 +1890,11 @@ class APIController {
   }
 }
 
-void main() async {
+
+  
+
+
+void main() async{
   var controller = APIController();
   // // Create a new teacher and then delete it
   // Teacher teacher = Teacher(
@@ -1922,47 +1930,7 @@ void main() async {
   //   });
   // });
 
-  // controller
-  //     .getStudentStatistics("6gsy3HsO0GQLwVcPvySA")
-  //     .then((value) => print(value));
-
-  // Create a new student and then delete it
-  Student student = Student(
-      id: '',
-      name: 'prueba',
-      surname: 'borrame',
-      profilePicture: "",
-      pendingTasks: [],
-      doneTasks: [],
-      hasRequest: false,
-      hasKitchenOrder: false,
-      representation: "video");
-
-  await controller.createStudent(student, "contrasenia").then((studentId) {
-    print("Created student with id $studentId");
-
-    // Print all the teachers
-    controller.getStudents().then((value) {
-      print("Students:");
-      for (Student st in value) {
-        print(st.toMap());
-      }
-
-      print("HE LLEGADO AQUI");
-      // Delete the created student
-      controller.deleteStudent(studentId).then((value) {
-        if (value) {
-          print("Student deleted");
-          // Print all students again
-          controller.getStudents().then((value) {
-            print("Students (after delete):");
-            for (Student st in value) {
-              print(st.toMap());
-            }
-          });
-        } else
-          print("Student not deleted");
-      });
-    });
-  });
+  controller
+      .getStudentStatistics("6gsy3HsO0GQLwVcPvySA")
+      .then((value) => print(value));
 }

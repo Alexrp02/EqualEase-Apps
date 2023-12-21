@@ -1,4 +1,6 @@
+import 'package:equalease_home/models/classroom.dart';
 import 'package:flutter/material.dart';
+import 'package:equalease_home/studentOrderPage.dart';
 import 'package:equalease_home/components/item_widget.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:equalease_home/controllers/controller_api.dart';
@@ -17,6 +19,7 @@ class StudentLandingPage extends StatefulWidget {
 }
 
 class _StudentLandingPageState extends State<StudentLandingPage> {
+
   Student student = Student(
     id: 'id',
     name: 'name',
@@ -139,9 +142,11 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ItemCarousel(
-                          studentId: student.id,
+                        builder: (context) => StudentOrderPage(
                           student: student,
+                          studentId: student.id,
+                          representation: student.representation
+
                         ),
                       ),
                     );
@@ -255,6 +260,7 @@ class _StudentLandingPageState extends State<StudentLandingPage> {
                   MaterialPageRoute(
                       builder: (context) => StudentPage(
                             student: student,
+                            representation: student.representation,
                           )),
                 );
               },

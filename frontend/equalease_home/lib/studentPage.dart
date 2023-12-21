@@ -1,17 +1,22 @@
 import 'package:equalease_home/models/task.dart';
 import 'package:flutter/material.dart';
 import 'models/student.dart';
+import 'models/classroom.dart';
 import 'controllers/controller_api.dart';
 import 'components/subtasks_widget.dart';
 import 'models/subtask.dart';
+import 'models/teacher.dart';
 
 class StudentPage extends StatefulWidget {
   final Student student;
+  final String representation;
 
-  const StudentPage({Key? key, required this.student}) : super(key: key);
+  StudentPage({Key? key, required this.student, required this.representation}) : super(key: key);
 
   @override
-  _StudentPageState createState() => _StudentPageState();
+  _StudentPageState createState(){
+    return _StudentPageState();
+  }
 }
 
 class _StudentPageState extends State<StudentPage> {
@@ -19,6 +24,7 @@ class _StudentPageState extends State<StudentPage> {
   //     ControllerStudent('http://www.google.es');
 
   APIController controller = APIController();
+  Teacher teacher = Teacher(email:"",id:"",isAdmin:false,name:"",profilePicture: "",surname: "",students: []);
   Student student = Student(
     id: "",
     name: "",
@@ -46,6 +52,7 @@ class _StudentPageState extends State<StudentPage> {
     //     type: "FixedType"),
   ];
 
+ 
   @override
   void initState() {
     super.initState();
@@ -64,6 +71,20 @@ class _StudentPageState extends State<StudentPage> {
     //     });
     //   });
     // });
+
+ String audioInstructions;
+     if(widget.student.representation=="audio"){
+      audioInstructions="Estás en la sección de tareas ."+
+     "Aquí podrás ver las tareas que tienes que hacer"+
+     "Para meterte en una tarea pulsa la que vaya a hacer";
+     }else{
+      audioInstructions="Estás en la sección de tareas.";
+     }
+     
+      controller.speak(audioInstructions);
+
+
+
     student = widget.student;
     controller.getPendingTasksTodayFromStudent(student.id).then((value) {
       setState(() {
@@ -97,8 +118,10 @@ class _StudentPageState extends State<StudentPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                if(student.representation == "text" || student.representation == "audio")
                 Flexible(
-                  child: Text(
+                  child: 
+                  Text(
                     'LISTA DE TAREAS DE ${student.name.toUpperCase()} ${student.surname.toUpperCase()}',
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.fade,
@@ -109,7 +132,26 @@ class _StudentPageState extends State<StudentPage> {
                       fontSize: 50.0, // Cambia el tamaño de la fuente
                     ),
                   ),
-                ),
+                )
+                else
+                Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: SizedBox(
+                            width: 100.0,
+                            height: 100.0,
+                            child: Semantics(
+                              label: "Pictograma de tareas",
+                              child:Image.asset(
+                                'assets/tareas.png',
+                                fit: BoxFit.cover,
+                              ),
+                          )
+                        ),
+                      ),
+                    ]
+                  )
               ],
             ),
           ),
@@ -185,18 +227,23 @@ class _StudentPageState extends State<StudentPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(
-                                  '${pendingTasks[i].title}',
-                                  style: TextStyle(
-                                    fontSize: 40.0,
-                                  ),
-                                ), // Primera parte
-                                Text(
-                                  pendingTasks[i].description,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                  ),
-                                ),
+                                // if(student.representation == "text" || student.representation=="audio")
+                                // Text(
+                                //   '${pendingTasks[i].title}',
+                                //   style: TextStyle(
+                                //     fontSize: 40.0,
+                                //   ),
+                                // ),
+                                // if(student.representation == "text" || student.representation=="audio") // Primera parte
+                                // Text(
+                                //   pendingTasks[i].description,
+                                //   style: TextStyle(
+                                //     fontSize: 20.0,
+                                //   ),
+                                // )
+                                // else
+                                // Image.network(pendingTasks[i].pictogram)
+                                
                               ],
                             ),
                           ),
@@ -246,18 +293,30 @@ class _StudentPageState extends State<StudentPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
+                                          if(student.representation == "text" || student.representation=="audio")
                                           Text(
                                             '${doneTasks[i].title}',
                                             style: TextStyle(
                                               fontSize: 40.0,
                                             ),
                                           ), // Primera parte
+                                          if(student.representation == "text" || student.representation=="audio")
                                           Text(
                                             doneTasks[i].description,
                                             style: TextStyle(
                                               fontSize: 20.0,
                                             ),
-                                          ),
+                                          )
+                                          else
+                                          SizedBox(
+                                            height: 100,
+                                            width: 100,
+                                            child: Semantics(
+                                              label: "Pictogtrama representando la tarea. ${doneTasks[i].title}",
+                                              child: Image.asset('assets/${doneTasks[i].title}.png',
+                                              fit: BoxFit.cover,),
+                                              )
+                                            ),
                                         ],
                                       ),
                                     ],

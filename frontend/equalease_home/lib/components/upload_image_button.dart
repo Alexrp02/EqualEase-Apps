@@ -24,6 +24,9 @@ class _ImageUploaderState extends State<ImageUploader> {
           await widget.controller.pickImage(widget.source);
           widget.onImageSelected?.call();
         },
-        child: Text('Elegir imagen'));
+        child: const Text(
+          'Elegir imagen',
+          style: TextStyle(fontSize: 40.0),
+        ));
   }
 }

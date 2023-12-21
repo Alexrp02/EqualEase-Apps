@@ -31,6 +31,18 @@ class _StudentsPageState extends State<StudentsPage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100.0),
         child: AppBar(
+          actions: [
+            // Agrega el botón de cerrar sesión en el AppBar
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                size: 70.0,
+              ),
+            ),
+          ],
           toolbarHeight: 100.0,
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           leading: new IconButton(
