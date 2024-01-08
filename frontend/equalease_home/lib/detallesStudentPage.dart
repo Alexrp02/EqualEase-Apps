@@ -63,7 +63,7 @@ class _DetallesStudentPage extends State<DetallesStudentPage>
           backgroundColor: Color.fromARGB(255, 161, 182, 236),
           leading: new IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, false);
               },
               icon: new Icon(
                 Icons.arrow_back,
@@ -246,7 +246,7 @@ class _DetallesStudentPage extends State<DetallesStudentPage>
                   // Llamar al controlador de eliminación
                 });
                 //Navigator.of(context).pop();
-                Navigator.pop(context);
+                Navigator.pop(context, true);
               },
             ),
           ],
