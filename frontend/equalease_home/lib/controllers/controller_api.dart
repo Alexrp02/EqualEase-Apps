@@ -16,7 +16,7 @@ import '../models/request.dart';
 
 /// class containing all operations with API
 class APIController {
-  //String baseUrl = 'http://localhost:3000/api';
+  // String baseUrl = 'http://localhost:3000/api';
   // String baseUrl = "http://10.0.2.2:3000/api";
   String baseUrl = "http://130.61.87.88:3000/api";
   FlutterTts flutterTts = FlutterTts();
@@ -1883,6 +1883,7 @@ class APIController {
       throw Exception('Error de red: $e');
     }
   }
+
   Future<void> speak(String text) async {
     await flutterTts.setLanguage("es-ES");
     await flutterTts.setSpeechRate(0.5);
@@ -1890,11 +1891,7 @@ class APIController {
   }
 }
 
-
-  
-
-
-void main() async{
+void main() async {
   var controller = APIController();
   // // Create a new teacher and then delete it
   // Teacher teacher = Teacher(

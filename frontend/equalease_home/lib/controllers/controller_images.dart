@@ -43,7 +43,7 @@ class ImagesController {
     if (_imageFile == null) return "";
 
     try {
-      final uri = Uri.parse('http://10.0.2.2:3000/api/image');
+      final uri = Uri.parse('http://130.61.87.88:3000/api/image');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath(
           'image',
